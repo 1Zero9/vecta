@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { wipeAllUserData, exportAllUserData } from "@/lib/storage";
+import { APP_VERSION, EXPORT_SCHEMA_VERSION } from "@/lib/version";
+import { SKILL_TAXONOMY_VERSION } from "@/lib/skillTaxonomy";
 import confetti from "canvas-confetti";
 import { 
   X, 
@@ -309,7 +311,7 @@ export function GovernanceModal({
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-1">
                   <span className="font-bold text-amber-700 block">Hallucination Mitigation</span>
                   <p className="text-slate-400">
-                    Generative prompts are bounded to the exact text extracted from the candidate's input and job specification, preventing fabricated credentials.
+                    Generative prompts are bounded to the exact text extracted from the candidate&apos;s input and job specification, preventing fabricated credentials.
                   </p>
                 </div>
 
@@ -350,7 +352,7 @@ export function GovernanceModal({
         {/* Footer */}
         <div className="p-4 sm:p-6 border-t border-slate-200 bg-white flex items-center justify-between">
           <div className="text-[11px] text-slate-500 font-mono">
-            Vecta Governance Suite v2.4 • Compliant with EU AI Act & GDPR
+            Vecta v{APP_VERSION} · Taxonomy v{SKILL_TAXONOMY_VERSION} · Export schema v{EXPORT_SCHEMA_VERSION}
           </div>
 
           <button

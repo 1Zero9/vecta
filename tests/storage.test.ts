@@ -51,7 +51,13 @@ describe("profile storage", () => {
     saveStoredProfile(makeProfile({
       evidence: [{ id: "evidence-1", type: "Project", title: "Migration", description: "Moved the platform.", claims: ["AWS"] }],
     }));
-    expect(JSON.parse(exportAllUserData()).profile.evidence).toHaveLength(1);
+    const exported = JSON.parse(exportAllUserData());
+    expect(exported.profile.evidence).toHaveLength(1);
+    expect(exported).toMatchObject({
+      schemaVersion: 1,
+      appVersion: "0.2.0",
+      skillTaxonomyVersion: "1.1.0",
+    });
     wipeAllUserData();
     expect(localStorage.getItem("vecta_candidate_profile")).toBeNull();
   });

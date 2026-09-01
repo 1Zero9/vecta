@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { applySkillMatchOverrides, getSkillConcepts, matchSkillRequirement, skillsOverlap } from "@/lib/skillMatching";
+import { SKILL_TAXONOMY, SKILL_TAXONOMY_VERSION } from "@/lib/skillTaxonomy";
+import { APP_VERSION } from "@/lib/version";
 
 describe("skill matching", () => {
   it("normalizes explicit aliases and spelling variants", () => {
@@ -42,5 +44,18 @@ describe("skill matching", () => {
 
     expect(corrected[0]).toMatchObject({ matched: false, userDecision: "exclude" });
     expect(corrected[1]).toMatchObject({ matched: true, matchedBy: "User correction", userDecision: "include" });
+  });
+
+  it("matches vocabulary added from the current job and profile catalogue", () => {
+    expect(skillsOverlap("Azure AD", "Microsoft Entra ID")).toBe(true);
+    expect(skillsOverlap("OTel", "OpenTelemetry")).toBe(true);
+    expect(skillsOverlap("Vector DBs", "Vector Databases")).toBe(true);
+    expect(skillsOverlap("TPRM", "Third-Party Risk")).toBe(true);
+  });
+
+  it("publishes independently traceable product and taxonomy versions", () => {
+    expect(APP_VERSION).toBe("0.2.0");
+    expect(SKILL_TAXONOMY_VERSION).toBe("1.1.0");
+    expect(Object.keys(SKILL_TAXONOMY.aliases).length).toBeGreaterThanOrEqual(30);
   });
 });

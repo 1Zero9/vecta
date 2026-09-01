@@ -2,6 +2,8 @@
 
 Vecta is a light-only recruitment workspace for specialist candidates in AI, cybersecurity, governance, and cloud/IT. It combines a curated role catalogue, a local-first candidate profile, explainable fit estimates, résumé review, evidence linking, and an application pipeline.
 
+Current release: **Vecta v0.2.0 Preview** · Skill taxonomy **v1.1.0** · Export schema **v1**.
+
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. For the product, it means bringing experience, evidence, and ambition together to carry a career forward with clarity.
 
 This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. Production authentication, self-service user management, an auditable admin workbench, durable multi-device ownership, and verified job ingestion remain roadmap work.
@@ -102,6 +104,7 @@ This is a prototype privacy model, not a claim of production compliance. Product
 ## Documentation
 
 - [Demo guide](docs/DEMO_GUIDE.md)
+- [Versioning and releases](docs/VERSIONING.md)
 - [Build and validation](docs/BUILD.md)
 - [User guide](docs/USER_GUIDE.md)
 - [Technical handover](docs/HANDOVER.md)

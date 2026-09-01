@@ -2,6 +2,8 @@
 
 Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data and stores candidate information primarily on the current device.
 
+The current milestone is **Vecta v0.2.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
+
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. In Vecta, your experience, evidence, and ambitions come together to carry your career forward with clarity.
 
 To present the product to someone else, use the repeatable [Demo Guide](DEMO_GUIDE.md).
@@ -127,8 +129,9 @@ These controls cover the current local prototype state. They should not be prese
 - No OCR for scanned résumés.
 - No verified live job-ingestion service.
 - No external AI drafting service.
-- Skill matching uses an initial curated alias registry rather than a complete industry taxonomy. Corrections are local, role-specific decisions and do not teach or update the shared taxonomy.
+- Skill matching uses versioned taxonomy v1.1.0 rather than a complete industry vocabulary. Corrections are local, role-specific decisions and do not teach or update the shared taxonomy.
 - Market and company records are curated demonstration data.
 - Core scoring, profile-completion, storage, filtering, and pipeline rules have automated unit coverage. Onboarding, résumé review, job empty states, and pipeline actions have component coverage, and the first role-search-to-pipeline browser journey is automated. Broader end-to-end workflow coverage is still being built.
 
 For implementation status and planned work, see [ROADMAP.md](ROADMAP.md).
+For the version policy and current identifiers, see [VERSIONING.md](VERSIONING.md).

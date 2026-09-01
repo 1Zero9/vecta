@@ -174,6 +174,7 @@ export interface CandidateProfile {
 }
 
 export interface VectorMatchResult {
+  taxonomy_version: string;
   overall_score: number; // 0 - 100
   skills_score: number;
   required_skills_score: number;

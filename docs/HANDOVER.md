@@ -4,6 +4,8 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
+Current identifiers are Vecta **v0.2.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
+
 The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
 
 The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. Candidate state is primarily device-local until authentication and durable ownership are implemented.
@@ -53,7 +55,9 @@ flowchart TD
 | Evidence editor | `components/ProfileEvidenceManager.tsx` | Adds, edits, removes, and links evidence to profile claims. |
 | Fit explanation | `components/FitEvaluatorModal.tsx` | Score breakdown, confidence, evidence coverage, gaps, and ATS feedback. |
 | Fit logic | `lib/fitEngine.ts` | Deterministic matching, evidence lookup, confidence, and ATS checks. |
-| Skill normalization | `lib/skillMatching.ts` | Explicit alias registry, compound alternatives, bounded résumé matching, and match provenance. |
+| Skill normalization | `lib/skillMatching.ts` | Compound alternatives, bounded résumé matching, candidate overrides, and match provenance. |
+| Skill taxonomy | `lib/skillTaxonomy.ts` | Versioned canonical concepts and explicit aliases observed in job/profile language. |
+| Release identifiers | `lib/version.ts`, `package.json` | Product and export-schema versions exposed to the UI and exports. |
 | Job filtering | `lib/jobFiltering.ts` | Pure search, discipline, location, work-mode, and seniority filtering. |
 | Pipeline logic | `lib/pipeline.ts` | Converts a selected job into a new saved-stage application. |
 | Résumé parsing | `lib/resumeExtraction.ts` | Local PDF/DOCX extraction and deterministic skill/certification suggestions. |
@@ -107,14 +111,13 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Résumé files are limited to 10 MB.
 - Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- Vitest covers 38 domain, persistence, parser-boundary, matching, and component scenarios across twelve test files.
+- Vitest covers 40 domain, persistence, parser-boundary, matching, versioning, and component scenarios across twelve test files.
 - Playwright covers the first full browser journey from role search through pipeline persistence and duplicate tracking feedback.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
 
 ## Next engineering priorities
 
-1. Expand the alias registry from observed job/profile language and record taxonomy versioning.
-2. Extend browser coverage to onboarding, fit review, correction controls, and pipeline-stage changes.
-3. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
-4. Add a Sites-compatible deployment build or choose another production hosting target.
-5. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.
+1. Extend browser coverage to onboarding, fit review, correction controls, and pipeline-stage changes.
+2. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
+3. Add a Sites-compatible deployment build or choose another production hosting target.
+4. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.

@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { APP_VERSION, EXPORT_SCHEMA_VERSION } from "@/lib/version";
+import { SKILL_TAXONOMY_VERSION } from "@/lib/skillTaxonomy";
 import { Header } from "@/components/Header";
 import { MetricCards } from "@/components/MetricCards";
 import { JobBoard } from "@/components/JobBoard";
@@ -401,6 +403,8 @@ export default function Home() {
             </button>
             <span>•</span>
             <span className="text-emerald-700">Local-first workspace</span>
+            <span>•</span>
+            <span title={`Skill taxonomy v${SKILL_TAXONOMY_VERSION} · Export schema v${EXPORT_SCHEMA_VERSION}`}>Vecta v{APP_VERSION}</span>
           </div>
 
         </div>

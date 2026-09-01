@@ -1,4 +1,6 @@
 import { ApplicationTrack, CandidateProfile, UserAccount, ConsentSettings } from "./types";
+import { SKILL_TAXONOMY_VERSION } from "./skillTaxonomy";
+import { APP_VERSION, EXPORT_SCHEMA_VERSION } from "./version";
 
 const FAVOURITES_KEY = "vecta_favourite_companies";
 const SAVED_JOBS_KEY = "vecta_saved_jobs";
@@ -255,6 +257,9 @@ export function wipeAllUserData(): void {
 export function exportAllUserData(): string {
   if (typeof window === "undefined") return "{}";
   const bundle = {
+    schemaVersion: EXPORT_SCHEMA_VERSION,
+    appVersion: APP_VERSION,
+    skillTaxonomyVersion: SKILL_TAXONOMY_VERSION,
     exportDate: new Date().toISOString(),
     user: getStoredUser(),
     profile: getStoredProfile(),

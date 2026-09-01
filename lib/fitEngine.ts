@@ -1,5 +1,6 @@
 import { CandidateProfile, Job, VectorMatchResult } from "./types";
 import { applySkillMatchOverrides, matchSkillRequirement, skillsOverlap } from "./skillMatching";
+import { SKILL_TAXONOMY_VERSION } from "./skillTaxonomy";
 
 function claimsOverlap(first: string, second: string): boolean {
   const normalizedFirst = first.toLowerCase().trim();
@@ -199,6 +200,7 @@ export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMa
   }
 
   return {
+    taxonomy_version: SKILL_TAXONOMY_VERSION,
     overall_score: Math.min(100, overallScore),
     skills_score: skillsScore,
     required_skills_score: requiredSkillsScore,

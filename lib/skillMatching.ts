@@ -1,4 +1,5 @@
 import { SkillMatchDecision, SkillMatchOverride } from "./types";
+import { SKILL_TAXONOMY } from "./skillTaxonomy";
 
 export type SkillPriority = "required" | "preferred";
 
@@ -34,25 +35,7 @@ export function applySkillMatchOverrides(
   });
 }
 
-const SKILL_ALIASES: Record<string, readonly string[]> = {
-  "amazon web services": ["amazon web services", "aws", "aws cloud", "aws multi cloud", "aws security"],
-  "microsoft azure": ["microsoft azure", "azure", "azure cloud"],
-  "google cloud platform": ["google cloud platform", "google cloud", "gcp"],
-  kubernetes: ["kubernetes", "k8s"],
-  "continuous integration and delivery": ["continuous integration", "continuous delivery", "continuous deployment", "ci cd", "cicd"],
-  "generative ai": ["generative ai", "genai", "gen ai", "large language models", "large language model", "llms", "llm"],
-  "machine learning": ["machine learning", "ml"],
-  "machine learning operations": ["machine learning operations", "mlops", "ml ops"],
-  "artificial intelligence governance": ["artificial intelligence governance", "ai governance", "responsible ai", "responsible artificial intelligence"],
-  "identity and access management": ["identity and access management", "identity access management", "iam"],
-  "security information and event management": ["security information and event management", "siem"],
-  "infrastructure as code": ["infrastructure as code", "iac"],
-  "threat modelling": ["threat modelling", "threat modeling"],
-  "risk management": ["risk management", "risk assessment", "risk assessments"],
-  "stakeholder management": ["stakeholder management", "stakeholder engagement"],
-  "incident response": ["incident response", "incident management"],
-  "data governance": ["data governance", "information governance"],
-};
+const SKILL_ALIASES: Record<string, readonly string[]> = SKILL_TAXONOMY.aliases;
 
 function normalizeLabel(value: string): string {
   return value

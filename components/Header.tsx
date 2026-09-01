@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Briefcase, Compass, Users, Kanban, Search, Scale, ChevronDown } from "lucide-react";
 import { UserAccount } from "@/lib/types";
+import { APP_VERSION, PRODUCT_STAGE } from "@/lib/version";
 
 type Tab = "jobs" | "radar" | "recruiter" | "pipeline" | "governance";
 
@@ -43,7 +44,7 @@ export function Header({
             <span>
               <span className="flex items-center gap-2">
                 <span className="text-lg font-bold tracking-[-0.03em] text-slate-900 sm:hidden">Vecta</span>
-                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700">Preview</span>
+                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700">{PRODUCT_STAGE} v{APP_VERSION}</span>
               </span>
               <span className="hidden text-xs text-slate-500 md:block">Your career, carried forward.</span>
             </span>

@@ -168,7 +168,7 @@ export function FitEvaluatorModal({
           <section className="space-y-3" aria-labelledby="fit-skills-heading">
             <div>
               <h4 id="fit-skills-heading" className="text-sm font-semibold text-slate-900">Required and preferred skill coverage</h4>
-              <p className="mt-0.5 text-[11px] leading-4 text-slate-500">Required skills contribute 75% of skills alignment; preferred skills contribute 25%. Recognised aliases are shown with their source, and you can correct the result.</p>
+              <p className="mt-0.5 text-[11px] leading-4 text-slate-500">Required skills contribute 75% of skills alignment; preferred skills contribute 25%. Taxonomy v{fit.taxonomy_version} shows recognised aliases and their source, and you can correct the result.</p>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {[

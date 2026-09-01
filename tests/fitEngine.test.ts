@@ -78,6 +78,7 @@ describe("evaluateVectorFit", () => {
     expect(fit.required_skills_score).toBe(75);
     expect(fit.preferred_skills_score).toBe(100);
     expect(fit.skills_score).toBe(81);
+    expect(fit.taxonomy_version).toBe("1.1.0");
   });
 
   it("gives required skills most of the skills-alignment weight", () => {
