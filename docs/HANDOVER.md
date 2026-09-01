@@ -19,6 +19,7 @@ The catalogue, market records, and drafting outputs are curated or deterministic
 - PDF.js 6 and Mammoth 1 for browser-side résumé extraction
 
 Use [BUILD.md](BUILD.md) as the operational build checklist.
+Use [DEMO_GUIDE.md](DEMO_GUIDE.md) for the approved product walkthrough, reset procedure, fallback paths, and prototype claims.
 
 ## Architecture
 
@@ -67,8 +68,9 @@ flowchart TD
 3. PDF and DOCX files are read as `ArrayBuffer` values in the browser.
 4. Extracted text and suggestions remain temporary until **Apply reviewed details**.
 5. Evidence records link a description to selected skill or certification strings.
-6. Saving updates browser storage and immediately recalculates role fit.
-7. JSON export includes the full profile, résumé text, and evidence records; erasure removes them.
+6. Candidate match corrections are stored against a role ID and requirement, then immediately recalculate role fit.
+7. Saving updates browser storage and immediately recalculates role fit.
+8. JSON export includes the full profile, résumé text, evidence records, and match corrections; erasure removes them.
 
 The file bytes themselves are not persisted or sent to an API.
 
@@ -84,6 +86,7 @@ overall = skills × 0.50 + seniority × 0.25 + domain × 0.25
 - Within skills alignment, required skills contribute 75% and preferred skills contribute 25%. When a role supplies only one category, that category carries the full skills weight.
 - A curated alias registry normalizes common equivalents such as AWS/Amazon Web Services, K8s/Kubernetes, and Threat Modeling/Threat Modelling. Compound requirements such as `Python / Go` match either explicit alternative.
 - Match provenance records the profile term or résumé source used for each match. Short terms do not use loose substring matching, preventing collisions such as Go/Google Cloud.
+- Candidate overrides can include a missed requirement or exclude a false positive for one role. Overrides affect scoring, remain visibly labelled, and do not create evidence.
 - Seniority compares years of experience with the role tier.
 - Domain gives full credit for a direct discipline match and partial credit for defined adjacent disciplines.
 - Evidence does not increase the match percentage. It produces a separate coverage measure for matched claims.
@@ -94,7 +97,7 @@ Gap talking points must describe transferable experience and learning plans hone
 
 ## Persistence boundary
 
-`CandidateProfile.evidence` is currently part of the browser-stored TypeScript profile. The existing Prisma `Profile` model does not yet persist evidence records or preferred locations. Do not describe the current prototype as multi-device or fully database-backed.
+`CandidateProfile.evidence` and `CandidateProfile.skill_match_overrides` are currently part of the browser-stored TypeScript profile. The existing Prisma `Profile` model does not yet persist evidence records, preferred locations, or match corrections. Do not describe the current prototype as multi-device or fully database-backed.
 
 The Phase 3 data-model work should normalize profile evidence with ownership and authorization checks before production use.
 
@@ -102,17 +105,16 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 
 - Scanned/image-only PDFs are not OCR’d and should show a manual-paste fallback.
 - Résumé files are limited to 10 MB.
-- Older saved profiles are hydrated with empty `preferred_locations` and `evidence` collections.
+- Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- Vitest covers 35 domain, persistence, parser-boundary, matching, and component scenarios across twelve test files.
+- Vitest covers 38 domain, persistence, parser-boundary, matching, and component scenarios across twelve test files.
 - Playwright covers the first full browser journey from role search through pipeline persistence and duplicate tracking feedback.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
 
 ## Next engineering priorities
 
-1. Add correction controls for mistaken matches and exclusions.
-2. Expand the alias registry from observed job/profile language and record taxonomy versioning.
-3. Extend browser coverage to onboarding, fit review, and pipeline-stage changes.
-4. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
-5. Add a Sites-compatible deployment build or choose another production hosting target.
-6. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.
+1. Expand the alias registry from observed job/profile language and record taxonomy versioning.
+2. Extend browser coverage to onboarding, fit review, correction controls, and pipeline-stage changes.
+3. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
+4. Add a Sites-compatible deployment build or choose another production hosting target.
+5. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.

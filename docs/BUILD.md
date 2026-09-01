@@ -68,9 +68,9 @@ npx eslint --quiet \
 
 - Production build: passing.
 - Candidate Profile v1 focused lint: passing.
-- Automated unit and component suite: 35 tests across 12 files, passing.
+- Automated unit and component suite: 38 tests across 12 files, passing.
 - Playwright candidate journey: 1 Chromium end-to-end test, passing.
-- Current V8 coverage: 80.76% statements, 65.21% branches, 90.27% functions, and 85.41% lines across the selected domain modules. Skill normalization has 100% statement, branch, function, and line coverage.
+- Current V8 coverage: 81.08% statements, 67.34% branches, 90.66% functions, and 85.76% lines across the selected domain modules. Skill normalization has 100% statement, branch, function, and line coverage.
 - Repository-wide `npm run lint`: currently reports legacy errors and warnings in older screens. It is not yet a passing quality gate.
 - Onboarding validation, résumé upload/review, job empty states, and pipeline actions have component interaction coverage. The first find-to-pipeline browser journey is covered; broader end-to-end coverage remains roadmap work.
 
@@ -95,4 +95,5 @@ npx eslint --quiet \
 5. Run `npm run test:e2e`.
 6. Run the focused lint command above.
 7. Confirm the root route returns a successful response.
-8. Review roadmap and user-facing language for feature-status changes.
+8. Run the core walkthrough in [DEMO_GUIDE.md](DEMO_GUIDE.md), including one match correction and reset.
+9. Review roadmap and user-facing language for feature-status changes.

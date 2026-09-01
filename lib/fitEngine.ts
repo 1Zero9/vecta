@@ -1,5 +1,5 @@
 import { CandidateProfile, Job, VectorMatchResult } from "./types";
-import { matchSkillRequirement, skillsOverlap } from "./skillMatching";
+import { applySkillMatchOverrides, matchSkillRequirement, skillsOverlap } from "./skillMatching";
 
 function claimsOverlap(first: string, second: string): boolean {
   const normalizedFirst = first.toLowerCase().trim();
@@ -14,11 +14,15 @@ export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMa
   const resumeTextLower = (profile.resume_text || "").toLowerCase();
 
   const allJobSkills = [...job.req_skills, ...job.preferred_skills];
-  const requiredSkillMatches = job.req_skills.map((skill) =>
-    matchSkillRequirement(skill, profile.skills, profile.resume_text, "required"),
+  const requiredSkillMatches = applySkillMatchOverrides(
+    job.req_skills.map((skill) => matchSkillRequirement(skill, profile.skills, profile.resume_text, "required")),
+    profile.skill_match_overrides ?? [],
+    job.id,
   );
-  const preferredSkillMatches = job.preferred_skills.map((skill) =>
-    matchSkillRequirement(skill, profile.skills, profile.resume_text, "preferred"),
+  const preferredSkillMatches = applySkillMatchOverrides(
+    job.preferred_skills.map((skill) => matchSkillRequirement(skill, profile.skills, profile.resume_text, "preferred")),
+    profile.skill_match_overrides ?? [],
+    job.id,
   );
   const skillMatches = [...requiredSkillMatches, ...preferredSkillMatches];
   const matchingRequiredSkills = requiredSkillMatches.filter((match) => match.matched).map((match) => match.requirement);

@@ -16,6 +16,7 @@ The current local and production Next.js builds pass. Publishing through the con
 - Link employment, project, and certification evidence to individual profile claims.
 - Compare a profile with a role using deterministic skills, seniority, and domain scoring.
 - Match common skill aliases and score required requirements more heavily than preferred ones.
+- Correct false-positive or missed skill matches for an individual role without creating unsupported evidence.
 - See evidence coverage, unsupported claims, confidence limitations, and insufficient-information states.
 - Save roles and manage applications through a local pipeline.
 - Export or erase locally stored candidate data.
@@ -100,6 +101,7 @@ This is a prototype privacy model, not a claim of production compliance. Product
 
 ## Documentation
 
+- [Demo guide](docs/DEMO_GUIDE.md)
 - [Build and validation](docs/BUILD.md)
 - [User guide](docs/USER_GUIDE.md)
 - [Technical handover](docs/HANDOVER.md)

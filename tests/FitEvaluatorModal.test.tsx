@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { FitEvaluatorModal } from "@/components/FitEvaluatorModal";
 import { makeJob, makeProfile } from "./fixtures";
@@ -22,6 +22,7 @@ describe("FitEvaluatorModal", () => {
         onClose={vi.fn()}
         onOpenCopilot={vi.fn()}
         onOpenProfile={vi.fn()}
+        onUpdateSkillMatchOverride={vi.fn()}
       />,
     );
 
@@ -35,5 +36,31 @@ describe("FitEvaluatorModal", () => {
     expect(within(requiredCard!).getByText("via AWS Security")).toBeDefined();
     expect(within(preferredCard!).getByText("100%")).toBeDefined();
     expect(within(preferredCard!).getByText("via Go")).toBeDefined();
+  });
+
+  it("lets the candidate correct and exclude skill matches", () => {
+    const onUpdateSkillMatchOverride = vi.fn();
+    const job = makeJob({
+      req_skills: ["AWS", "Rust"],
+      preferred_skills: [],
+      certifications: [],
+    });
+    render(
+      <FitEvaluatorModal
+        job={job}
+        profile={makeProfile({ skills: ["AWS"], resume_text: "" })}
+        isOpen
+        onClose={vi.fn()}
+        onOpenCopilot={vi.fn()}
+        onOpenProfile={vi.fn()}
+        onUpdateSkillMatchOverride={onUpdateSkillMatchOverride}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Exclude AWS" }));
+    fireEvent.click(screen.getByRole("button", { name: "Count as match Rust" }));
+
+    expect(onUpdateSkillMatchOverride).toHaveBeenNthCalledWith(1, job.id, "AWS", "required", "exclude");
+    expect(onUpdateSkillMatchOverride).toHaveBeenNthCalledWith(2, job.id, "Rust", "required", "include");
   });
 });

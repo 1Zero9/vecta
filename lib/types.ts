@@ -149,6 +149,15 @@ export interface ProfileEvidence {
   claims: string[];
 }
 
+export type SkillMatchDecision = "include" | "exclude";
+
+export interface SkillMatchOverride {
+  job_id: string;
+  requirement: string;
+  priority: "required" | "preferred";
+  decision: SkillMatchDecision;
+}
+
 export interface CandidateProfile {
   full_name: string;
   current_title: string;
@@ -161,6 +170,7 @@ export interface CandidateProfile {
   preferred_locations?: string[];
   resume_text: string;
   evidence?: ProfileEvidence[];
+  skill_match_overrides?: SkillMatchOverride[];
 }
 
 export interface VectorMatchResult {
@@ -182,6 +192,7 @@ export interface VectorMatchResult {
     matched: boolean;
     matchedBy?: string;
     normalizedAs?: string;
+    userDecision?: SkillMatchDecision;
   }>;
   matching_certs: string[];
   missing_certs: string[];

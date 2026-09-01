@@ -126,6 +126,7 @@ export function getStoredProfile(): CandidateProfile {
       ...stored,
       preferred_locations: stored.preferred_locations ?? [],
       evidence: stored.evidence ?? [],
+      skill_match_overrides: stored.skill_match_overrides ?? [],
     };
   } catch (e) {
     return DEMO_PERSONAS["alex-ai-sec"].profile;

@@ -96,4 +96,24 @@ describe("evaluateVectorFit", () => {
     expect(preferredOnly.skills_score).toBe(25);
     expect(requiredOnly.overall_score).toBeGreaterThan(preferredOnly.overall_score);
   });
+
+  it("recalculates fit from candidate corrections without changing other jobs", () => {
+    const job = makeJob({ id: "job-corrected", req_skills: ["AWS", "Rust"], preferred_skills: [], certifications: [] });
+    const fit = evaluateVectorFit(makeProfile({
+      skills: ["AWS"],
+      resume_text: "",
+      skill_match_overrides: [
+        { job_id: job.id, requirement: "AWS", priority: "required", decision: "exclude" },
+        { job_id: job.id, requirement: "Rust", priority: "required", decision: "include" },
+      ],
+    }), job);
+
+    expect(fit.matching_required_skills).toEqual(["Rust"]);
+    expect(fit.missing_required_skills).toEqual(["AWS"]);
+    expect(fit.required_skills_score).toBe(50);
+    expect(fit.skill_matches).toEqual(expect.arrayContaining([
+      expect.objectContaining({ requirement: "AWS", userDecision: "exclude", matched: false }),
+      expect.objectContaining({ requirement: "Rust", userDecision: "include", matched: true }),
+    ]));
+  });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getSkillConcepts, matchSkillRequirement, skillsOverlap } from "@/lib/skillMatching";
+import { applySkillMatchOverrides, getSkillConcepts, matchSkillRequirement, skillsOverlap } from "@/lib/skillMatching";
 
 describe("skill matching", () => {
   it("normalizes explicit aliases and spelling variants", () => {
@@ -27,5 +27,20 @@ describe("skill matching", () => {
       "Designed production workloads on AWS and Kubernetes.",
       "required",
     )).toMatchObject({ matched: true, matchedBy: "Résumé text", normalizedAs: "amazon web services" });
+  });
+
+  it("applies job-specific candidate corrections", () => {
+    const matches = [
+      matchSkillRequirement("AWS", ["AWS"], "", "required"),
+      matchSkillRequirement("Rust", [], "", "preferred"),
+    ];
+    const corrected = applySkillMatchOverrides(matches, [
+      { job_id: "job-1", requirement: "AWS", priority: "required", decision: "exclude" },
+      { job_id: "job-1", requirement: "Rust", priority: "preferred", decision: "include" },
+      { job_id: "another-job", requirement: "AWS", priority: "required", decision: "include" },
+    ], "job-1");
+
+    expect(corrected[0]).toMatchObject({ matched: false, userDecision: "exclude" });
+    expect(corrected[1]).toMatchObject({ matched: true, matchedBy: "User correction", userDecision: "include" });
   });
 });

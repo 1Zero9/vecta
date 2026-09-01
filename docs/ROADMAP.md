@@ -90,6 +90,8 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Add distinct empty-catalogue, empty-saved-list, and no-filter-match states with accessible recovery actions.
 - [x] Mark tracked roles, explain duplicate tracking, and cover the find-to-pipeline journey in Chromium.
 - [x] Normalize common skill aliases, match explicit compound alternatives, prevent short-term substring collisions, and weight required skills above preferred skills.
+- [x] Let candidates correct false-positive matches, include missed requirements, undo corrections, and persist those choices per role.
+- [x] Add a repeatable product demo guide with a seven-minute walkthrough, short version, reset path, fallback paths, and honest prototype boundaries.
 - [ ] Add polished empty states to the remaining workspaces, anonymized real-world résumé fixtures, and broader end-to-end coverage.
 
 ### Scope
@@ -218,14 +220,13 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Immediate next sprint
 
-1. Add user correction controls for mistaken skill matches and explicit exclusions.
-2. Expand and version the skill taxonomy using observed job and profile language.
-3. Extend end-to-end coverage to profile onboarding, fit review, and pipeline-stage changes.
-4. Create shared interface primitives and finish empty, error, loading, focus, and responsive states.
-5. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-6. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
-7. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
-8. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
+1. Expand and version the skill taxonomy using observed job and profile language.
+2. Extend end-to-end coverage to profile onboarding, fit review, correction controls, and pipeline-stage changes.
+3. Create shared interface primitives and finish empty, error, loading, focus, and responsive states.
+4. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
+5. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
+6. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
+7. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
 
 ### Dependencies and decisions
 

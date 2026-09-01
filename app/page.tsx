@@ -233,6 +233,26 @@ export default function Home() {
     showToast("Profile and vector match weights updated.");
   };
 
+  const handleUpdateSkillMatchOverride = (
+    jobId: string,
+    requirement: string,
+    priority: "required" | "preferred",
+    decision: "include" | "exclude" | null,
+  ) => {
+    const existing = profile.skill_match_overrides ?? [];
+    const sameRequirement = (candidate: (typeof existing)[number]) =>
+      candidate.job_id === jobId
+      && candidate.priority === priority
+      && candidate.requirement.trim().toLocaleLowerCase() === requirement.trim().toLocaleLowerCase();
+    const skill_match_overrides = decision
+      ? [...existing.filter((candidate) => !sameRequirement(candidate)), { job_id: jobId, requirement, priority, decision }]
+      : existing.filter((candidate) => !sameRequirement(candidate));
+    const updatedProfile = { ...profile, skill_match_overrides };
+    setProfile(updatedProfile);
+    saveStoredProfile(updatedProfile);
+    showToast(decision ? "Vector Match correction saved." : "Vector Match correction removed.");
+  };
+
   const handleDataWiped = () => {
     setCurrentUser(DEFAULT_USER);
     setProfile(DEMO_PERSONAS["alex-ai-sec"].profile);
@@ -422,6 +442,7 @@ export default function Home() {
           setCopilotInitialMode(mode);
         }}
         onOpenProfile={() => setIsProfileDrawerOpen(true)}
+        onUpdateSkillMatchOverride={handleUpdateSkillMatchOverride}
       />
 
       {/* Application Copilot & STAR Interview Prep Modal */}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Job, CandidateProfile } from "@/lib/types";
+import { Job, CandidateProfile, SkillMatchDecision } from "@/lib/types";
 import { evaluateVectorFit } from "@/lib/fitEngine";
 import { 
   X, 
@@ -21,6 +21,12 @@ interface FitEvaluatorModalProps {
   onClose: () => void;
   onOpenCopilot: (job: Job, mode: "tailor" | "interview") => void;
   onOpenProfile: () => void;
+  onUpdateSkillMatchOverride: (
+    jobId: string,
+    requirement: string,
+    priority: "required" | "preferred",
+    decision: SkillMatchDecision | null,
+  ) => void;
 }
 
 export function FitEvaluatorModal({
@@ -30,6 +36,7 @@ export function FitEvaluatorModal({
   onClose,
   onOpenCopilot,
   onOpenProfile,
+  onUpdateSkillMatchOverride,
 }: FitEvaluatorModalProps) {
   if (!isOpen || !job) return null;
 
@@ -161,7 +168,7 @@ export function FitEvaluatorModal({
           <section className="space-y-3" aria-labelledby="fit-skills-heading">
             <div>
               <h4 id="fit-skills-heading" className="text-sm font-semibold text-slate-900">Required and preferred skill coverage</h4>
-              <p className="mt-0.5 text-[11px] leading-4 text-slate-500">Required skills contribute 75% of skills alignment; preferred skills contribute 25%. Recognised aliases are shown with their source.</p>
+              <p className="mt-0.5 text-[11px] leading-4 text-slate-500">Required skills contribute 75% of skills alignment; preferred skills contribute 25%. Recognised aliases are shown with their source, and you can correct the result.</p>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {[
@@ -198,11 +205,19 @@ export function FitEvaluatorModal({
                         {group.matched.length > 0 ? group.matched.map((skill) => {
                           const detail = fit.skill_matches.find((match) => match.priority === group.priority && match.requirement === skill);
                           return (
-                            <span key={skill} className="rounded-lg border border-emerald-200 bg-white px-2 py-1 text-[10px] font-medium text-emerald-800">
+                            <span key={skill} className="rounded-lg border border-emerald-200 bg-white px-2 py-1.5 text-[10px] font-medium text-emerald-800">
                               <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3" />{skill}</span>
                               {detail?.matchedBy && detail.matchedBy !== skill && (
-                                <span className="mt-0.5 block text-[9px] font-normal text-emerald-700/75">via {detail.matchedBy === "Résumé text" ? "résumé" : detail.matchedBy}</span>
+                                <span className="mt-0.5 block text-[9px] font-normal text-emerald-700/75">{detail.matchedBy === "User correction" ? "Included by you" : `via ${detail.matchedBy === "Résumé text" ? "résumé" : detail.matchedBy}`}</span>
                               )}
+                              <button
+                                type="button"
+                                onClick={() => onUpdateSkillMatchOverride(job.id, skill, group.priority, detail?.userDecision ? null : "exclude")}
+                                className="mt-1.5 block rounded-md bg-slate-50 px-1.5 py-1 text-[9px] font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                                aria-label={`${detail?.userDecision ? "Undo correction for" : "Exclude"} ${skill}`}
+                              >
+                                {detail?.userDecision ? "Undo correction" : "Not a match"}
+                              </button>
                             </span>
                           );
                         }) : <span className="text-[10px] italic text-slate-500">No matches yet.</span>}
@@ -213,7 +228,23 @@ export function FitEvaluatorModal({
                       <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-700">Gaps · {group.missing.length}</p>
                       <div className="mt-1.5 flex flex-wrap gap-1.5">
                         {group.missing.length > 0
-                          ? group.missing.map((skill) => <span key={skill} className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-600">{skill}</span>)
+                          ? group.missing.map((skill) => {
+                            const detail = fit.skill_matches.find((match) => match.priority === group.priority && match.requirement === skill);
+                            return (
+                              <span key={skill} className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-[10px] font-medium text-slate-600">
+                                <span className="block">{skill}</span>
+                                {detail?.userDecision === "exclude" && <span className="mt-0.5 block text-[9px] font-normal text-amber-700">Excluded by you</span>}
+                                <button
+                                  type="button"
+                                  onClick={() => onUpdateSkillMatchOverride(job.id, skill, group.priority, detail?.userDecision ? null : "include")}
+                                  className="mt-1.5 block rounded-md bg-blue-50 px-1.5 py-1 text-[9px] font-semibold text-blue-700 hover:bg-blue-100"
+                                  aria-label={`${detail?.userDecision ? "Undo correction for" : "Count as match"} ${skill}`}
+                                >
+                                  {detail?.userDecision ? "Undo correction" : "Count as match"}
+                                </button>
+                              </span>
+                            );
+                          })
                           : <span className="text-[10px] font-medium text-emerald-700">Full coverage.</span>}
                       </div>
                     </div>

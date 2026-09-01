@@ -38,11 +38,13 @@ describe("profile storage", () => {
     const legacy = makeProfile();
     delete legacy.evidence;
     delete legacy.preferred_locations;
+    delete legacy.skill_match_overrides;
     localStorage.setItem("vecta_candidate_profile", JSON.stringify(legacy));
 
     const hydrated = getStoredProfile();
     expect(hydrated.evidence).toEqual([]);
     expect(hydrated.preferred_locations).toEqual([]);
+    expect(hydrated.skill_match_overrides).toEqual([]);
   });
 
   it("includes evidence in export and removes it during erasure", () => {

@@ -1,3 +1,5 @@
+import { SkillMatchDecision, SkillMatchOverride } from "./types";
+
 export type SkillPriority = "required" | "preferred";
 
 export interface SkillRequirementMatch {
@@ -6,6 +8,30 @@ export interface SkillRequirementMatch {
   matched: boolean;
   matchedBy?: string;
   normalizedAs?: string;
+  userDecision?: SkillMatchDecision;
+}
+
+export function applySkillMatchOverrides(
+  matches: SkillRequirementMatch[],
+  overrides: SkillMatchOverride[],
+  jobId: string,
+): SkillRequirementMatch[] {
+  return matches.map((match) => {
+    const override = overrides.find((candidate) =>
+      candidate.job_id === jobId
+      && candidate.priority === match.priority
+      && candidate.requirement.trim().toLocaleLowerCase() === match.requirement.trim().toLocaleLowerCase(),
+    );
+    if (!override) return match;
+
+    return {
+      ...match,
+      matched: override.decision === "include",
+      matchedBy: override.decision === "include" ? "User correction" : undefined,
+      normalizedAs: override.decision === "include" ? match.normalizedAs : undefined,
+      userDecision: override.decision,
+    };
+  });
 }
 
 const SKILL_ALIASES: Record<string, readonly string[]> = {
