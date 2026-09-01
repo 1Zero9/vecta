@@ -52,6 +52,7 @@ flowchart TD
 | Evidence editor | `components/ProfileEvidenceManager.tsx` | Adds, edits, removes, and links evidence to profile claims. |
 | Fit explanation | `components/FitEvaluatorModal.tsx` | Score breakdown, confidence, evidence coverage, gaps, and ATS feedback. |
 | Fit logic | `lib/fitEngine.ts` | Deterministic matching, evidence lookup, confidence, and ATS checks. |
+| Skill normalization | `lib/skillMatching.ts` | Explicit alias registry, compound alternatives, bounded résumé matching, and match provenance. |
 | Job filtering | `lib/jobFiltering.ts` | Pure search, discipline, location, work-mode, and seniority filtering. |
 | Pipeline logic | `lib/pipeline.ts` | Converts a selected job into a new saved-stage application. |
 | Résumé parsing | `lib/resumeExtraction.ts` | Local PDF/DOCX extraction and deterministic skill/certification suggestions. |
@@ -79,7 +80,10 @@ The displayed fit estimate remains:
 overall = skills × 0.50 + seniority × 0.25 + domain × 0.25
 ```
 
-- Skills compare required and preferred job skills with structured profile skills and résumé text.
+- Skills compare required and preferred job skills with structured profile skills and bounded résumé terms.
+- Within skills alignment, required skills contribute 75% and preferred skills contribute 25%. When a role supplies only one category, that category carries the full skills weight.
+- A curated alias registry normalizes common equivalents such as AWS/Amazon Web Services, K8s/Kubernetes, and Threat Modeling/Threat Modelling. Compound requirements such as `Python / Go` match either explicit alternative.
+- Match provenance records the profile term or résumé source used for each match. Short terms do not use loose substring matching, preventing collisions such as Go/Google Cloud.
 - Seniority compares years of experience with the role tier.
 - Domain gives full credit for a direct discipline match and partial credit for defined adjacent disciplines.
 - Evidence does not increase the match percentage. It produces a separate coverage measure for matched claims.
@@ -100,14 +104,14 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Résumé files are limited to 10 MB.
 - Older saved profiles are hydrated with empty `preferred_locations` and `evidence` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- Vitest covers 28 domain, persistence, parser-boundary, and component scenarios across ten test files.
+- Vitest covers 35 domain, persistence, parser-boundary, matching, and component scenarios across twelve test files.
 - Playwright covers the first full browser journey from role search through pipeline persistence and duplicate tracking feedback.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
 
 ## Next engineering priorities
 
-1. Replace loose skill substring matching with normalized aliases and separate required/preferred weighting.
-2. Add correction controls for mistaken matches and exclusions.
+1. Add correction controls for mistaken matches and exclusions.
+2. Expand the alias registry from observed job/profile language and record taxonomy versioning.
 3. Extend browser coverage to onboarding, fit review, and pipeline-stage changes.
 4. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
 5. Add a Sites-compatible deployment build or choose another production hosting target.

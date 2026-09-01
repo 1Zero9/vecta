@@ -15,6 +15,7 @@ The current local and production Next.js builds pass. Publishing through the con
 - Parse PDF and DOCX résumés in the browser, review extracted text, and explicitly accept suggested updates.
 - Link employment, project, and certification evidence to individual profile claims.
 - Compare a profile with a role using deterministic skills, seniority, and domain scoring.
+- Match common skill aliases and score required requirements more heavily than preferred ones.
 - See evidence coverage, unsupported claims, confidence limitations, and insufficient-information states.
 - Save roles and manage applications through a local pipeline.
 - Export or erase locally stored candidate data.
@@ -80,6 +81,7 @@ components/ResumeUploadReview     Local résumé extraction review
 components/ProfileEvidenceManager Claim-to-evidence editor
 components/FitEvaluatorModal      Fit, confidence, evidence, and ATS explanation
 lib/fitEngine.ts                  Deterministic fit and confidence calculations
+lib/skillMatching.ts              Alias normalization and boundary-safe requirement matching
 lib/jobFiltering.ts               Search and filter rules for the role catalogue
 lib/pipeline.ts                   Safe, testable job-to-pipeline insertion
 lib/resumeExtraction.ts           Browser PDF/DOCX extraction and suggestions

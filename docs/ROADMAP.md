@@ -31,7 +31,7 @@ Before presenting these features as production-ready, the product still needs re
 
 | Priority | Workstream | Current state | What remains |
 | ---: | --- | --- | --- |
-| 1 | Fit and profile reliability | Active | Normalized skill aliases, required/preferred weighting, match-correction controls, real-world résumé fixtures, and broader browser coverage. |
+| 1 | Fit and profile reliability | Active | Match-correction controls, taxonomy expansion/versioning, real-world résumé fixtures, and broader browser coverage. |
 | 2 | UI and delivery hardening | Active | Shared interface primitives, remaining empty/error/loading states, accessibility and responsive checks, repository lint cleanup, and a Sites-compatible deployment output. |
 | 3 | Accounts, user management, and admin operations | Not started | Authentication, self-service account management, role-based authorization, server-owned records, an auditable admin workbench, cross-device recovery, and complete export/erasure. |
 | 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
@@ -89,13 +89,14 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Add component tests for onboarding validation and the résumé upload, review, correction, selection, apply, and failure flow.
 - [x] Add distinct empty-catalogue, empty-saved-list, and no-filter-match states with accessible recovery actions.
 - [x] Mark tracked roles, explain duplicate tracking, and cover the find-to-pipeline journey in Chromium.
+- [x] Normalize common skill aliases, match explicit compound alternatives, prevent short-term substring collisions, and weight required skills above preferred skills.
 - [ ] Add polished empty states to the remaining workspaces, anonymized real-world résumé fixtures, and broader end-to-end coverage.
 
 ### Scope
 
 - Refine structured profile onboarding using observed user behaviour and completion data.
 - Support PDF and DOCX résumé upload with explicit review before extracted data is saved.
-- Replace loose substring matching with normalized skills, aliases, required/preferred weighting, and evidence references.
+- Expand the normalized alias registry, keep required/preferred weighting explainable, and connect user corrections to evidence references.
 - Explain every fit score and allow users to correct mistaken matches.
 - Separate résumé quality checks from role-fit scoring.
 - Add confidence and “insufficient information” states instead of manufacturing precision.
@@ -217,8 +218,8 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Immediate next sprint
 
-1. Replace loose skill matching with normalized aliases and separate required/preferred weighting.
-2. Add user correction controls for mistaken skill matches and exclusions.
+1. Add user correction controls for mistaken skill matches and explicit exclusions.
+2. Expand and version the skill taxonomy using observed job and profile language.
 3. Extend end-to-end coverage to profile onboarding, fit review, and pipeline-stage changes.
 4. Create shared interface primitives and finish empty, error, loading, focus, and responsive states.
 5. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.

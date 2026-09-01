@@ -17,6 +17,7 @@ export default defineConfig({
         "lib/pipeline.ts",
         "lib/profileCompletion.ts",
         "lib/resumeExtraction.ts",
+        "lib/skillMatching.ts",
         "lib/storage.ts",
       ],
     },

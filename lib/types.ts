@@ -166,10 +166,23 @@ export interface CandidateProfile {
 export interface VectorMatchResult {
   overall_score: number; // 0 - 100
   skills_score: number;
+  required_skills_score: number;
+  preferred_skills_score: number;
   seniority_score: number;
   domain_score: number;
   matching_skills: string[];
   missing_skills: string[];
+  matching_required_skills: string[];
+  missing_required_skills: string[];
+  matching_preferred_skills: string[];
+  missing_preferred_skills: string[];
+  skill_matches: Array<{
+    requirement: string;
+    priority: "required" | "preferred";
+    matched: boolean;
+    matchedBy?: string;
+    normalizedAs?: string;
+  }>;
   matching_certs: string[];
   missing_certs: string[];
   evidence_matches: Array<{ claim: string; evidence: ProfileEvidence[] }>;

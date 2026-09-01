@@ -1,32 +1,32 @@
 import { CandidateProfile, Job, VectorMatchResult } from "./types";
+import { matchSkillRequirement, skillsOverlap } from "./skillMatching";
 
 function claimsOverlap(first: string, second: string): boolean {
   const normalizedFirst = first.toLowerCase().trim();
   const normalizedSecond = second.toLowerCase().trim();
-  return normalizedFirst.includes(normalizedSecond) || normalizedSecond.includes(normalizedFirst);
+  return skillsOverlap(first, second)
+    || normalizedFirst.includes(normalizedSecond)
+    || normalizedSecond.includes(normalizedFirst);
 }
 
 export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMatchResult {
-  const profileSkillsLower = profile.skills.map((s) => s.toLowerCase().trim());
   const profileCertsLower = profile.certifications.map((c) => c.toLowerCase().trim());
   const resumeTextLower = (profile.resume_text || "").toLowerCase();
 
-  // Combine job required & preferred skills
   const allJobSkills = [...job.req_skills, ...job.preferred_skills];
-  const matchingSkills: string[] = [];
-  const missingSkills: string[] = [];
-
-  allJobSkills.forEach((skill) => {
-    const sLower = skill.toLowerCase();
-    const isDirectMatch = profileSkillsLower.some((profileSkill) => claimsOverlap(profileSkill, sLower));
-    const isInResume = resumeTextLower.includes(sLower);
-
-    if (isDirectMatch || isInResume) {
-      matchingSkills.push(skill);
-    } else {
-      missingSkills.push(skill);
-    }
-  });
+  const requiredSkillMatches = job.req_skills.map((skill) =>
+    matchSkillRequirement(skill, profile.skills, profile.resume_text, "required"),
+  );
+  const preferredSkillMatches = job.preferred_skills.map((skill) =>
+    matchSkillRequirement(skill, profile.skills, profile.resume_text, "preferred"),
+  );
+  const skillMatches = [...requiredSkillMatches, ...preferredSkillMatches];
+  const matchingRequiredSkills = requiredSkillMatches.filter((match) => match.matched).map((match) => match.requirement);
+  const missingRequiredSkills = requiredSkillMatches.filter((match) => !match.matched).map((match) => match.requirement);
+  const matchingPreferredSkills = preferredSkillMatches.filter((match) => match.matched).map((match) => match.requirement);
+  const missingPreferredSkills = preferredSkillMatches.filter((match) => !match.matched).map((match) => match.requirement);
+  const matchingSkills = [...matchingRequiredSkills, ...matchingPreferredSkills];
+  const missingSkills = [...missingRequiredSkills, ...missingPreferredSkills];
 
   // Certifications match
   const jobCerts = job.certifications || [];
@@ -45,9 +45,17 @@ export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMa
     }
   });
 
-  // Skills match score (weighted 50%)
-  const totalSkillsCount = allJobSkills.length || 1;
-  const skillsScore = Math.min(100, Math.round((matchingSkills.length / totalSkillsCount) * 100));
+  const requiredSkillsScore = job.req_skills.length > 0
+    ? Math.round((matchingRequiredSkills.length / job.req_skills.length) * 100)
+    : 0;
+  const preferredSkillsScore = job.preferred_skills.length > 0
+    ? Math.round((matchingPreferredSkills.length / job.preferred_skills.length) * 100)
+    : 0;
+  const skillsScore = job.req_skills.length === 0
+    ? preferredSkillsScore
+    : job.preferred_skills.length === 0
+      ? requiredSkillsScore
+      : Math.round(requiredSkillsScore * 0.75 + preferredSkillsScore * 0.25);
 
   // Domain alignment score (weighted 25%)
   let domainScore = 60;
@@ -189,10 +197,17 @@ export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMa
   return {
     overall_score: Math.min(100, overallScore),
     skills_score: skillsScore,
+    required_skills_score: requiredSkillsScore,
+    preferred_skills_score: preferredSkillsScore,
     seniority_score: seniorityScore,
     domain_score: domainScore,
     matching_skills: matchingSkills,
     missing_skills: missingSkills,
+    matching_required_skills: matchingRequiredSkills,
+    missing_required_skills: missingRequiredSkills,
+    matching_preferred_skills: matchingPreferredSkills,
+    missing_preferred_skills: missingPreferredSkills,
+    skill_matches: skillMatches,
     matching_certs: matchingCerts,
     missing_certs: missingCerts,
     evidence_matches: evidenceMatches,

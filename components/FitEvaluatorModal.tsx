@@ -88,7 +88,7 @@ export function FitEvaluatorModal({
               <div className="text-2xl font-bold font-mono text-sky-700 mt-1">
                 {fit.skills_score}%
               </div>
-              <div className="text-[10px] text-slate-500 mt-0.5">50% Weight</div>
+              <div className="text-[10px] text-slate-500 mt-0.5">50% overall weight</div>
             </div>
 
             {/* Seniority Match */}
@@ -158,53 +158,70 @@ export function FitEvaluatorModal({
           </section>
 
           {/* Skills Breakdown */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-            {/* Matching Skills */}
-            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 space-y-2">
-              <div className="flex items-center gap-1.5 font-bold text-emerald-700 text-xs uppercase tracking-wider">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Matching Skills ({fit.matching_skills.length})</span>
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {fit.matching_skills.length > 0 ? (
-                  fit.matching_skills.map((s, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-0.5 rounded-lg bg-white text-emerald-700 font-medium text-xs border border-emerald-200"
-                    >
-                      {s}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-slate-500 text-xs italic">No exact skill matches identified.</span>
-                )}
-              </div>
+          <section className="space-y-3" aria-labelledby="fit-skills-heading">
+            <div>
+              <h4 id="fit-skills-heading" className="text-sm font-semibold text-slate-900">Required and preferred skill coverage</h4>
+              <p className="mt-0.5 text-[11px] leading-4 text-slate-500">Required skills contribute 75% of skills alignment; preferred skills contribute 25%. Recognised aliases are shown with their source.</p>
             </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {[
+                {
+                  title: "Required skills",
+                  weight: "75% of skills alignment",
+                  score: fit.required_skills_score,
+                  matched: fit.matching_required_skills,
+                  missing: fit.missing_required_skills,
+                  priority: "required" as const,
+                },
+                {
+                  title: "Preferred skills",
+                  weight: "25% of skills alignment",
+                  score: fit.preferred_skills_score,
+                  matched: fit.matching_preferred_skills,
+                  missing: fit.missing_preferred_skills,
+                  priority: "preferred" as const,
+                },
+              ].map((group) => (
+                <article key={group.priority} className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h5 className="text-xs font-semibold text-slate-800">{group.title}</h5>
+                      <p className="mt-0.5 text-[10px] text-slate-500">{group.weight}</p>
+                    </div>
+                    <span className="rounded-lg bg-white px-2 py-1 font-mono text-xs font-semibold text-slate-700 ring-1 ring-slate-200">{group.score}%</span>
+                  </div>
 
-            {/* Missing Skills */}
-            <div className="p-4 rounded-2xl bg-slate-50/50 border border-slate-200/70 space-y-2">
-              <div className="flex items-center gap-1.5 font-bold text-slate-400 text-xs uppercase tracking-wider">
-                <AlertCircle className="w-4 h-4 text-amber-700" />
-                <span>Skill Gaps ({fit.missing_skills.length})</span>
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {fit.missing_skills.length > 0 ? (
-                  fit.missing_skills.map((s, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-0.5 rounded-lg bg-white text-slate-600 font-medium text-xs border border-slate-200"
-                    >
-                      {s}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-emerald-700 text-xs font-semibold">Full skill coverage achieved!</span>
-                )}
-              </div>
+                  <div className="mt-3 space-y-2.5">
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-emerald-700">Matched · {group.matched.length}</p>
+                      <div className="mt-1.5 flex flex-wrap gap-1.5">
+                        {group.matched.length > 0 ? group.matched.map((skill) => {
+                          const detail = fit.skill_matches.find((match) => match.priority === group.priority && match.requirement === skill);
+                          return (
+                            <span key={skill} className="rounded-lg border border-emerald-200 bg-white px-2 py-1 text-[10px] font-medium text-emerald-800">
+                              <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3" />{skill}</span>
+                              {detail?.matchedBy && detail.matchedBy !== skill && (
+                                <span className="mt-0.5 block text-[9px] font-normal text-emerald-700/75">via {detail.matchedBy === "Résumé text" ? "résumé" : detail.matchedBy}</span>
+                              )}
+                            </span>
+                          );
+                        }) : <span className="text-[10px] italic text-slate-500">No matches yet.</span>}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-700">Gaps · {group.missing.length}</p>
+                      <div className="mt-1.5 flex flex-wrap gap-1.5">
+                        {group.missing.length > 0
+                          ? group.missing.map((skill) => <span key={skill} className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-600">{skill}</span>)
+                          : <span className="text-[10px] font-medium text-emerald-700">Full coverage.</span>}
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
-
-          </div>
+          </section>
 
           {/* Evidence Coverage */}
           <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5" aria-labelledby="fit-evidence-heading">

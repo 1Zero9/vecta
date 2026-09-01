@@ -72,6 +72,8 @@ The fit estimate combines:
 - **Seniority alignment — 25%**
 - **Domain alignment — 25%**
 
+Within skills alignment, required skills contribute 75% and preferred skills contribute 25%. If a role provides only one category, that category carries the full skills weight. Vecta recognizes a curated set of explicit aliases, such as AWS/Amazon Web Services and K8s/Kubernetes, and shows which profile term or résumé source produced a match.
+
 The audit also shows:
 
 - Matching and missing skills.
@@ -121,7 +123,7 @@ These controls cover the current local prototype state. They should not be prese
 - No OCR for scanned résumés.
 - No verified live job-ingestion service.
 - No external AI drafting service.
-- Fit matching still uses straightforward text comparison rather than a normalized skills taxonomy.
+- Skill matching uses an initial curated alias registry rather than a complete industry taxonomy. User correction and exclusion controls are not yet available.
 - Market and company records are curated demonstration data.
 - Core scoring, profile-completion, storage, filtering, and pipeline rules have automated unit coverage. Onboarding, résumé review, job empty states, and pipeline actions have component coverage, and the first role-search-to-pipeline browser journey is automated. Broader end-to-end workflow coverage is still being built.
 

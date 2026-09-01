@@ -57,4 +57,43 @@ describe("evaluateVectorFit", () => {
     expect(rustGuidance?.talking_point).not.toContain("actively applied");
     expect(rustGuidance?.talking_point).not.toContain("real-world scenarios");
   });
+
+  it("matches aliases while keeping required and preferred scores separate", () => {
+    const fit = evaluateVectorFit(makeProfile({
+      skills: ["AWS Security", "K8s", "Threat Modeling", "Go"],
+      resume_text: "",
+    }), makeJob({
+      req_skills: ["Amazon Web Services", "Kubernetes", "Threat Modelling", "Google Cloud Platform"],
+      preferred_skills: ["Python / Go"],
+      certifications: [],
+    }));
+
+    expect(fit.matching_required_skills).toEqual([
+      "Amazon Web Services",
+      "Kubernetes",
+      "Threat Modelling",
+    ]);
+    expect(fit.missing_required_skills).toEqual(["Google Cloud Platform"]);
+    expect(fit.matching_preferred_skills).toEqual(["Python / Go"]);
+    expect(fit.required_skills_score).toBe(75);
+    expect(fit.preferred_skills_score).toBe(100);
+    expect(fit.skills_score).toBe(81);
+  });
+
+  it("gives required skills most of the skills-alignment weight", () => {
+    const requiredOnly = evaluateVectorFit(makeProfile({ skills: ["AWS", "Kubernetes"], resume_text: "" }), makeJob({
+      req_skills: ["AWS", "Kubernetes"],
+      preferred_skills: ["Rust", "Go"],
+      certifications: [],
+    }));
+    const preferredOnly = evaluateVectorFit(makeProfile({ skills: ["Rust", "Go"], resume_text: "" }), makeJob({
+      req_skills: ["AWS", "Kubernetes"],
+      preferred_skills: ["Rust", "Go"],
+      certifications: [],
+    }));
+
+    expect(requiredOnly.skills_score).toBe(75);
+    expect(preferredOnly.skills_score).toBe(25);
+    expect(requiredOnly.overall_score).toBeGreaterThan(preferredOnly.overall_score);
+  });
 });

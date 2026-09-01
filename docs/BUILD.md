@@ -60,6 +60,7 @@ npx eslint --quiet \
   lib/resumeExtraction.ts \
   lib/profileCompletion.ts \
   lib/fitEngine.ts \
+  lib/skillMatching.ts \
   lib/types.ts
 ```
 
@@ -67,9 +68,9 @@ npx eslint --quiet \
 
 - Production build: passing.
 - Candidate Profile v1 focused lint: passing.
-- Automated unit and component suite: 28 tests across 10 files, passing.
+- Automated unit and component suite: 35 tests across 12 files, passing.
 - Playwright candidate journey: 1 Chromium end-to-end test, passing.
-- Current V8 coverage: 77.77% statements, 63.13% branches, 86.53% functions, and 83.14% lines across the selected domain modules.
+- Current V8 coverage: 80.76% statements, 65.21% branches, 90.27% functions, and 85.41% lines across the selected domain modules. Skill normalization has 100% statement, branch, function, and line coverage.
 - Repository-wide `npm run lint`: currently reports legacy errors and warnings in older screens. It is not yet a passing quality gate.
 - Onboarding validation, résumé upload/review, job empty states, and pipeline actions have component interaction coverage. The first find-to-pipeline browser journey is covered; broader end-to-end coverage remains roadmap work.
 
