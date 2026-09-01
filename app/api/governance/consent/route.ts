@@ -6,9 +6,19 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { userId, gdprConsent, aiActConsent, analyticsConsent } = body;
 
+    let validUserId: string | null = null;
+    if (userId) {
+      const userExists = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+      if (userExists) {
+        validUserId = userId;
+      }
+    }
+
     const log = await prisma.consentLog.create({
       data: {
-        userId: userId || null,
+        userId: validUserId,
         gdprConsent: gdprConsent ?? true,
         aiActConsent: aiActConsent ?? true,
         analyticsConsent: analyticsConsent ?? false,
