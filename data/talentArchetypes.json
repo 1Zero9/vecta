@@ -1,0 +1,78 @@
+[
+  {
+    "id": "arch-ai-lead",
+    "title": "Generative AI Technical Lead",
+    "domain": "AI",
+    "typical_seniority": "Lead / Staff",
+    "key_deliverables": [
+      "Architect and scale multi-agent reasoning systems using LangGraph or custom execution loops.",
+      "Deploy low-latency LLM inference pipelines with vLLM / TensorRT-LLM and speculative decoding.",
+      "Formulate evaluation datasets (Evals) to quantitatively track model hallucination and task accuracy."
+    ],
+    "standard_skills": ["Python", "PyTorch", "LangChain/LangGraph", "vLLM", "RAG Systems", "Vector DBs", "Kubernetes"],
+    "key_certifications": ["AWS Certified ML Specialty", "NVIDIA DLI GenAI Certification"],
+    "interview_question_samples": [
+      "How do you design a stateful multi-agent system where agents verify each other's outputs before taking real-world actions?",
+      "Walk me through your optimization strategy when inference latency for a 70B parameter model spikes from 80ms to 450ms.",
+      "How do you align RAG semantic chunking strategies with vector distance metrics to minimize hallucination?"
+    ],
+    "average_salary_range": "£125k – £165k"
+  },
+  {
+    "id": "arch-sec-cloud",
+    "title": "Cloud Security & DevSecOps Lead",
+    "domain": "Security",
+    "typical_seniority": "Senior",
+    "key_deliverables": [
+      "Embed automated security gating (SAST/DAST/SCA) in GitHub Actions / GitLab CI pipelines.",
+      "Design zero-trust IAM policies and least-privilege role boundaries across multi-account AWS/Azure.",
+      "Conduct continuous cloud security posture management (CSPM) and lead threat containment workflows."
+    ],
+    "standard_skills": ["AWS Security", "Terraform", "Wiz / Orca", "SIEM (Splunk)", "CI/CD Security", "Python", "eBPF"],
+    "key_certifications": ["CISSP", "AWS Certified Security - Specialty", "GIAC GCIH"],
+    "interview_question_samples": [
+      "Describe how you detect and neutralize an IAM privilege escalation attack occurring within an AWS ECS/EKS cluster.",
+      "How do you enforce infrastructure-as-code guardrails across 40 different engineering teams without blocking deployment velocity?",
+      "Walk me through your post-incident analysis for an exposed S3 bucket or compromised API key."
+    ],
+    "average_salary_range": "£95k – £130k"
+  },
+  {
+    "id": "arch-gov-ai",
+    "title": "AI Governance & Algorithmic Ethics Director",
+    "domain": "Governance",
+    "typical_seniority": "Director / VP / C-Level",
+    "key_deliverables": [
+      "Establish enterprise compliance roadmap for EU AI Act high-risk systems and ISO/IEC 42001.",
+      "Implement model risk management, algorithmic bias testing, and third-party AI vendor audits.",
+      "Interface with board risk committees, external regulators, and legal counsel on algorithmic safety."
+    ],
+    "standard_skills": ["EU AI Act", "ISO 42001", "NIST AI RMF", "Model Cards", "Risk Assessment", "Stakeholder Governance"],
+    "key_certifications": ["IAPP AIGP (AI Governance Professional)", "CISM", "CIPP/E"],
+    "interview_question_samples": [
+      "How do you operationalize the EU AI Act technical documentation requirements for a high-risk production AI workflow?",
+      "Describe a situation where you had to pause an AI product launch due to ethical or bias concerns. How did you manage executive pushback?",
+      "How do you establish continuous monitoring for model drift from a compliance and risk perspective?"
+    ],
+    "average_salary_range": "£135k – £180k"
+  },
+  {
+    "id": "arch-it-platform",
+    "title": "Principal Platform & Cloud Architect",
+    "domain": "IT",
+    "typical_seniority": "Lead / Staff",
+    "key_deliverables": [
+      "Architect resilient multi-region Kubernetes platform clusters handling mission-critical enterprise workloads.",
+      "Define GitOps delivery workflows and self-service developer platform portals (Backstage / ArgoCD).",
+      "Establish observability architectures (OpenTelemetry, Prometheus, Datadog) and incident SLIs/SLOs."
+    ],
+    "standard_skills": ["Kubernetes", "Terraform", "Multi-Cloud (AWS/Azure)", "ArgoCD", "Go", "OpenTelemetry", "FinOps"],
+    "key_certifications": ["AWS Solutions Architect Professional", "Azure Solutions Architect Expert", "CKA"],
+    "interview_question_samples": [
+      "How do you design a zero-downtime database migration and traffic cutover across two separate cloud regions?",
+      "Walk through your strategy for platform engineering self-service that reduces developer onboarding time by 80%.",
+      "How do you architect a Kubernetes disaster recovery plan with an RTO under 5 minutes and RPO under 30 seconds?"
+    ],
+    "average_salary_range": "£120k – £160k"
+  }
+]
