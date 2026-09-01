@@ -45,7 +45,7 @@ export function Header({
                 <span className="text-lg font-bold tracking-[-0.03em] text-slate-900 sm:hidden">Vecta</span>
                 <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700">Preview</span>
               </span>
-              <span className="hidden text-xs text-slate-500 md:block">Find. Apply. Advance.</span>
+              <span className="hidden text-xs text-slate-500 md:block">Your career, carried forward.</span>
             </span>
           </button>
 

@@ -2,6 +2,8 @@
 
 Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data and stores candidate information primarily on the current device.
 
+The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. In Vecta, your experience, evidence, and ambitions come together to carry your career forward with clarity.
+
 ## 1. Explore roles
 
 Open **Direct Jobs** to browse roles in AI and machine learning, cybersecurity, governance and GRC, and cloud/IT.
@@ -119,6 +121,6 @@ These controls cover the current local prototype state. They should not be prese
 - No external AI drafting service.
 - Fit matching still uses straightforward text comparison rather than a normalized skills taxonomy.
 - Market and company records are curated demonstration data.
-- Core scoring, profile-completion, storage, filtering, and pipeline rules have automated unit coverage. Onboarding validation and résumé review also have component coverage; full browser and end-to-end workflow coverage is still being built.
+- Core scoring, profile-completion, storage, filtering, and pipeline rules have automated unit coverage. Onboarding, résumé review, job empty states, and pipeline actions have component coverage, and the first role-search-to-pipeline browser journey is automated. Broader end-to-end workflow coverage is still being built.
 
 For implementation status and planned work, see [ROADMAP.md](ROADMAP.md).

@@ -4,6 +4,8 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
+The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
+
 The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. Candidate state is primarily device-local until authentication and durable ownership are implemented.
 
 ## Runtime and build
@@ -96,13 +98,14 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Résumé files are limited to 10 MB.
 - Older saved profiles are hydrated with empty `preferred_locations` and `evidence` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- Vitest covers 24 domain, persistence, parser-boundary, and component scenarios across nine test files.
+- Vitest covers 28 domain, persistence, parser-boundary, and component scenarios across ten test files.
+- Playwright covers the first full browser journey from role search through pipeline persistence and duplicate tracking feedback.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
 
 ## Next engineering priorities
 
-1. Extend component and browser-level coverage to empty states and save-to-pipeline feedback.
-2. Validate extraction against anonymized real-world PDF/DOCX samples; synthetic fixtures now cover section-heavy DOCX, multi-page PDF, and image-only PDF behavior.
-3. Replace loose skill substring matching with normalized aliases and required/preferred weighting.
+1. Validate extraction against anonymized real-world PDF/DOCX samples; synthetic fixtures now cover section-heavy DOCX, multi-page PDF, and image-only PDF behavior.
+2. Replace loose skill substring matching with normalized aliases and required/preferred weighting.
+3. Extend browser coverage to onboarding, fit review, and pipeline-stage changes.
 4. Add correction controls for mistaken matches.
 5. Decide the production authentication and owned-data model before expanding persistence.

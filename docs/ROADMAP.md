@@ -68,7 +68,9 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Add unit coverage for completion, résumé analysis guardrails, evidence coverage, confidence, fit scoring, storage, job filtering, and pipeline insertion.
 - [x] Exercise DOCX, multi-page PDF, and image-only PDF extraction boundaries with synthetic parser fixtures.
 - [x] Add component tests for onboarding validation and the résumé upload, review, correction, selection, apply, and failure flow.
-- [ ] Add polished empty states, broader component integration, anonymized real-world résumé fixtures, and end-to-end coverage.
+- [x] Add distinct empty-catalogue, empty-saved-list, and no-filter-match states with accessible recovery actions.
+- [x] Mark tracked roles, explain duplicate tracking, and cover the find-to-pipeline journey in Chromium.
+- [ ] Add polished empty states to the remaining workspaces, anonymized real-world résumé fixtures, and broader end-to-end coverage.
 
 ### Scope
 
@@ -169,7 +171,7 @@ Before presenting these features as production-ready, the product still needs re
 ## Immediate next sprint
 
 1. Validate résumé extraction against anonymized real-world PDF and DOCX samples to complement the synthetic parser fixtures.
-2. Extend component interaction coverage to job filtering, empty results, and save-to-pipeline feedback, then add the first end-to-end candidate journey.
+2. Extend end-to-end coverage to profile onboarding, fit review, and pipeline-stage changes.
 3. Replace loose skill matching with normalized aliases and required/preferred weighting.
 4. Correct product language around curated jobs, deterministic drafting, database sync, and compliance.
 5. Create shared interface primitives and remove duplicated control styles.

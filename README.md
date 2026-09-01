@@ -2,6 +2,8 @@
 
 Vecta is a light-only recruitment workspace for specialist candidates in AI, cybersecurity, governance, and cloud/IT. It combines a curated role catalogue, a local-first candidate profile, explainable fit estimates, résumé review, evidence linking, and an application pipeline.
 
+The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. For the product, it means bringing experience, evidence, and ambition together to carry a career forward with clarity.
+
 This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. Authentication, durable multi-device ownership, and verified job ingestion remain roadmap work.
 
 ## Current capabilities
@@ -60,11 +62,12 @@ The main candidate workflow still works through local browser storage if databas
 ```bash
 npm test
 npm run test:coverage
+npm run test:e2e
 npm run build
 npm run lint
 ```
 
-`npm test` runs the automated unit suite. `npm run build` performs production compilation and TypeScript checking. See [docs/BUILD.md](docs/BUILD.md) for coverage details, the focused quality gate, and the current repository-wide lint baseline.
+`npm test` runs the unit and component suite. `npm run test:e2e` runs the first Chromium candidate journey against a production server. `npm run build` performs production compilation and TypeScript checking. See [docs/BUILD.md](docs/BUILD.md) for coverage details, the focused quality gate, and the current repository-wide lint baseline.
 
 ## Key project areas
 

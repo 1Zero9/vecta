@@ -11,7 +11,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: "Vecta | Find. Apply. Advance.",
-  description: "Career intelligence to find specialist roles, understand your fit, and move every application forward.",
+  description: "Vecta brings your experience, evidence, and ambitions together—carrying your career forward with clarity.",
   keywords: [
     "IT Jobs",
     "AI Jobs",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title: "Vecta | Find. Apply. Advance.",
-    description: "Career intelligence for your next move.",
+    description: "Your career, carried forward with clarity.",
     siteName: "Vecta",
     images: [
       {
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Vecta | Find. Apply. Advance.",
-    description: "Career intelligence for your next move.",
+    description: "Your career, carried forward with clarity.",
     images: ["/og.png"],
   },
   appleWebApp: {

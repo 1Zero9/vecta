@@ -34,6 +34,7 @@ interface JobBoardProps {
   jobs: Job[];
   profile: CandidateProfile;
   savedJobIds: string[];
+  trackedJobIds: string[];
   onToggleSaveJob: (jobId: string) => void;
   onOpenFitEvaluator: (job: Job) => void;
   onOpenCopilot: (job: Job, mode: "tailor" | "interview") => void;
@@ -46,6 +47,7 @@ export function JobBoard({
   jobs,
   profile,
   savedJobIds,
+  trackedJobIds,
   onToggleSaveJob,
   onOpenFitEvaluator,
   onOpenCopilot,
@@ -66,6 +68,32 @@ export function JobBoard({
     savedJobIds,
     query: searchQuery,
   });
+
+  const resetFilters = () => {
+    setSearchQuery("");
+    setActiveDomain("ALL");
+    setSelectedSeniority("ALL");
+    setSelectedWorkMode("ALL");
+    setShowSavedOnly(false);
+  };
+
+  const emptyState = jobs.length === 0
+    ? {
+        title: "No vacancies available yet",
+        description: "The curated role catalogue is empty. Check back after the next data refresh.",
+        action: null,
+      }
+    : showSavedOnly && savedJobIds.length === 0
+      ? {
+          title: "No saved roles yet",
+          description: "Save promising roles as you browse, then return here to compare them in one place.",
+          action: "Show all roles",
+        }
+      : {
+          title: "No roles match these filters",
+          description: "Try a broader search, another discipline, or fewer location and seniority constraints.",
+          action: "Reset filters",
+        };
 
   const getDomainBadge = (domain: DomainType) => {
     switch (domain) {
@@ -91,6 +119,7 @@ export function JobBoard({
           <Search className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
           <input
             type="text"
+            aria-label="Search roles"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by job title, company, skill (e.g. PyTorch, eBPF, ISO 42001, Terraform, CISSP)..."
@@ -167,6 +196,7 @@ export function JobBoard({
           <div className="flex flex-wrap items-center gap-2.5">
             {/* Seniority */}
             <select
+              aria-label="Filter by seniority"
               value={selectedSeniority}
               onChange={(e) => setSelectedSeniority(e.target.value)}
               className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer"
@@ -181,6 +211,7 @@ export function JobBoard({
 
             {/* Work Mode */}
             <select
+              aria-label="Filter by work mode"
               value={selectedWorkMode}
               onChange={(e) => setSelectedWorkMode(e.target.value)}
               className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer"
@@ -212,29 +243,26 @@ export function JobBoard({
       {/* Jobs Results List */}
       <div className="space-y-4">
         {filteredJobs.length === 0 ? (
-          <div className="text-center py-20 bg-white/40 rounded-3xl border border-dashed border-slate-200 p-8">
-            <HelpCircle className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-slate-700">No matching vacancies found</h3>
+          <div role="status" className="text-center py-20 bg-white/40 rounded-3xl border border-dashed border-slate-200 p-8">
+            <HelpCircle className="w-12 h-12 text-slate-500 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-slate-700">{emptyState.title}</h3>
             <p className="text-sm text-slate-400 mt-1 max-w-md mx-auto">
-              Try broadening your search keywords or switching between IT, AI, Governance, and Security domains.
+              {emptyState.description}
             </p>
-            <button
-              onClick={() => {
-                setSearchQuery("");
-                setActiveDomain("ALL");
-                setSelectedSeniority("ALL");
-                setSelectedWorkMode("ALL");
-                setShowSavedOnly(false);
-              }}
-              className="mt-4 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-xs font-bold transition-all shadow-sm"
-            >
-              Reset All Filters
-            </button>
+            {emptyState.action && (
+              <button
+                onClick={resetFilters}
+                className="mt-4 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+              >
+                {emptyState.action}
+              </button>
+            )}
           </div>
         ) : (
           filteredJobs.map((job) => {
             const fit = evaluateVectorFit(profile, job);
             const isSaved = savedJobIds.includes(job.id);
+            const isTracked = trackedJobIds.includes(job.id);
 
             return (
               <div
@@ -389,11 +417,12 @@ export function JobBoard({
                       {/* Track in Pipeline */}
                       <button
                         onClick={() => onTrackInPipeline(job)}
-                        className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-900 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-                        title="Add to Kanban Career Pipeline"
+                        className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm ${isTracked ? "border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100" : "bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-700 hover:text-slate-900"}`}
+                        title={isTracked ? "View in career pipeline" : "Add to career pipeline"}
+                        aria-label={isTracked ? `View ${job.title} in pipeline` : `Track ${job.title} in pipeline`}
                       >
                         <BookmarkCheck className="w-3.5 h-3.5 text-indigo-700" />
-                        <span>Track</span>
+                        <span>{isTracked ? "Tracked" : "Track"}</span>
                       </button>
 
                       {/* Direct Apply ATS Button */}

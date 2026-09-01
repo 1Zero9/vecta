@@ -181,6 +181,8 @@ export default function Home() {
       setPipeline(result.pipeline);
       saveStoredPipeline(result.pipeline);
       showToast(`Added "${job.title}" to career pipeline.`);
+    } else {
+      showToast(`"${job.title}" is already in your career pipeline.`);
     }
     setActiveTab("pipeline");
   };
@@ -253,7 +255,7 @@ export default function Home() {
       
       {/* Toast Notification */}
       {notification && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4 duration-200">
+        <div role="status" aria-live="polite" className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4 duration-200">
           <div className="px-4 py-2.5 rounded-xl bg-white border border-emerald-200 text-emerald-800 text-xs font-semibold shadow-lg flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
             <span>{notification}</span>
@@ -307,6 +309,7 @@ export default function Home() {
             jobs={jobs}
             profile={profile}
             savedJobIds={savedJobIds}
+            trackedJobIds={pipeline.map((application) => application.job_id)}
             onToggleSaveJob={handleToggleSaveJob}
             onOpenFitEvaluator={(job) => setSelectedJobForAudit(job)}
             onOpenCopilot={(job, mode) => {
@@ -354,11 +357,12 @@ export default function Home() {
       <footer className="border-t border-slate-200 bg-white/70 py-8 px-4 sm:px-6 lg:px-8 mt-12">
         <div className="max-w-[1700px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex max-w-2xl flex-wrap items-center gap-2">
             <Image src="/vecta-mark.png" alt="" width={24} height={24} className="h-6 w-6 object-contain" />
-            <span className="font-bold text-slate-900">Vecta · Career intelligence</span>
-            <span>•</span>
-            <span className="text-slate-400">Latin: vehere ("to carry / convey / transport")</span>
+            <span>
+              <span className="block font-bold text-slate-900">Vecta · your career, carried forward with clarity.</span>
+              <span className="mt-0.5 block text-slate-400">Inspired by the Latin <em>vecta</em> — “carried forward” or “conveyed”.</span>
+            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-4 text-[11px] font-mono">

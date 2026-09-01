@@ -40,10 +40,11 @@ Use the exact local URL printed by Next.js. The port can change when the default
 ```bash
 npm test
 npm run test:coverage
+npm run test:e2e
 npm run build
 ```
 
-`npm test` runs the fast unit suite once. `npm run test:watch` keeps it running during development, and `npm run test:coverage` produces an HTML report in `coverage/`. A successful production build completes compilation, TypeScript checking, page-data collection, and static-page generation.
+`npm test` runs the fast unit and component suite once. `npm run test:watch` keeps it running during development, and `npm run test:coverage` produces an HTML report in `coverage/`. `npm run test:e2e` starts the built application on port 3100 and runs the Chromium candidate journey; install its browser once with `npx playwright install chromium`. A successful production build completes compilation, TypeScript checking, page-data collection, and static-page generation.
 
 For focused validation of Candidate Profile v1:
 
@@ -66,10 +67,11 @@ npx eslint --quiet \
 
 - Production build: passing.
 - Candidate Profile v1 focused lint: passing.
-- Automated unit and component suite: 24 tests across 9 files, passing.
-- Current V8 coverage: 78.42% statements, 67% branches, 89.79% functions, and 84.12% lines across the selected domain modules.
+- Automated unit and component suite: 28 tests across 10 files, passing.
+- Playwright candidate journey: 1 Chromium end-to-end test, passing.
+- Current V8 coverage: 77.77% statements, 63.13% branches, 86.53% functions, and 83.14% lines across the selected domain modules.
 - Repository-wide `npm run lint`: currently reports legacy errors and warnings in older screens. It is not yet a passing quality gate.
-- Onboarding validation and résumé upload/review have component interaction coverage. Broader browser integration and end-to-end coverage remain roadmap work.
+- Onboarding validation, résumé upload/review, job empty states, and pipeline actions have component interaction coverage. The first find-to-pipeline browser journey is covered; broader end-to-end coverage remains roadmap work.
 
 ## Common failures
 
@@ -88,6 +90,7 @@ npx eslint --quiet \
 2. Run `npx prisma generate`.
 3. Run `npm test` and `npm run test:coverage`.
 4. Run `npm run build`.
-5. Run the focused lint command above.
-6. Confirm the root route returns a successful response.
-7. Review roadmap and user-facing language for feature-status changes.
+5. Run `npm run test:e2e`.
+6. Run the focused lint command above.
+7. Confirm the root route returns a successful response.
+8. Review roadmap and user-facing language for feature-status changes.
