@@ -125,7 +125,7 @@ export function RadarTable({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search companies by name, tech stack, compliance framework, or leadership..."
-              className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 text-sm sm:text-base transition-all"
+              className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm sm:text-base transition-all"
             />
           </div>
 
@@ -203,7 +203,7 @@ export function RadarTable({
             <select
               value={selectedScale}
               onChange={(e) => setSelectedScale(e.target.value)}
-              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="ALL">All Scale Tiers</option>
               <option value="Startup">Startup (1-20)</option>
@@ -215,7 +215,7 @@ export function RadarTable({
             <select
               value={selectedFunding}
               onChange={(e) => setSelectedFunding(e.target.value)}
-              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="ALL">All Ownership Types</option>
               <option value="VC-backed">VC-backed</option>
@@ -301,7 +301,7 @@ export function RadarTable({
 
                         {/* Company Name & Tagline */}
                         <td className="py-4 px-5">
-                          <div className="font-extrabold text-slate-900 text-base group-hover:text-emerald-700 transition-colors flex items-center gap-2">
+                          <div className="font-extrabold text-slate-900 text-base group-hover:text-blue-700 transition-colors flex items-center gap-2">
                             <span>{company.name}</span>
                             {company.featured && (
                               <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-700 text-[10px] font-mono uppercase font-bold border border-emerald-500/30">

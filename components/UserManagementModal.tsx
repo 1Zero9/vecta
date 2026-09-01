@@ -87,7 +87,7 @@ export function UserManagementModal({
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#245e49] flex items-center justify-center text-white font-black shadow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-[#2563EB] flex items-center justify-center text-white font-black shadow-sm">
               <UserCheck className="w-5 h-5" />
             </div>
             <div>
@@ -111,7 +111,7 @@ export function UserManagementModal({
         {/* Active Account Overview Card */}
         <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-[#245e49] text-white font-black text-lg flex items-center justify-center shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-[#2563EB] text-white font-black text-lg flex items-center justify-center shadow-sm">
               {currentUser.avatar}
             </div>
             <div>
@@ -292,7 +292,7 @@ export function UserManagementModal({
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-[#245e49] text-white rounded-xl font-bold"
+                className="px-4 py-2 bg-[#2563EB] text-white rounded-xl font-bold"
               >
                 Save & Switch Account
               </button>

@@ -96,7 +96,7 @@ export function ProfileDrawer({
         {/* Drawer Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#245e49] text-white font-black flex items-center justify-center shadow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-[#2563EB] text-white font-black flex items-center justify-center shadow-sm">
               <UserCheck className="w-5 h-5" />
             </div>
             <div>
@@ -288,7 +288,7 @@ export function ProfileDrawer({
               value={formData.resume_text}
               onChange={(e) => setFormData({ ...formData, resume_text: e.target.value })}
               placeholder="Paste your CV text, project highlights, or key deliverables here..."
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-600 font-mono text-xs focus:outline-none focus:border-emerald-500 leading-relaxed"
+              className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-600 font-mono text-xs focus:outline-none focus:border-blue-500 leading-relaxed"
             />
           </div>
 
@@ -300,7 +300,7 @@ export function ProfileDrawer({
 
             <button
               type="submit"
-              className="px-5 py-2.5 bg-[#245e49] hover:bg-[#1d4d3c] text-white font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all"
+              className="px-5 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all"
             >
               {savedSuccess ? (
                 <>

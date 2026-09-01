@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Briefcase, Compass, Users, Kanban, Search, Scale, ChevronDown } from "lucide-react";
 import { UserAccount } from "@/lib/types";
 
@@ -33,17 +34,18 @@ export function Header({
   totalLiveJobs,
 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-[#f7f8f5]/92 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-[#F8FAFC]/92 backdrop-blur-xl">
       <div className="mx-auto max-w-[1700px] px-4 sm:px-6 lg:px-8">
         <div className="flex h-[72px] items-center justify-between gap-4">
           <button onClick={() => setActiveTab("jobs")} className="flex items-center gap-3 text-left" aria-label="Go to jobs">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#245e49] text-lg font-bold text-white shadow-sm">V</span>
+            <Image src="/vecta-mark.png" alt="" width={40} height={40} className="h-9 w-9 object-contain sm:hidden" priority />
+            <Image src="/logo.png" alt="Vecta" width={120} height={40} className="hidden h-9 w-auto object-contain sm:block" priority />
             <span>
               <span className="flex items-center gap-2">
-                <span className="text-lg font-bold tracking-[-0.03em] text-slate-900">Vecta</span>
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">Preview</span>
+                <span className="text-lg font-bold tracking-[-0.03em] text-slate-900 sm:hidden">Vecta</span>
+                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700">Preview</span>
               </span>
-              <span className="hidden text-xs text-slate-500 sm:block">Career intelligence, without the noise</span>
+              <span className="hidden text-xs text-slate-500 md:block">Find. Apply. Advance.</span>
             </span>
           </button>
 
@@ -53,7 +55,7 @@ export function Header({
                 key={id}
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors ${
-                  activeTab === id ? "bg-[#e8f0eb] text-[#245e49]" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  activeTab === id ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -83,7 +85,7 @@ export function Header({
               className="flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 pr-3 text-sm shadow-sm transition-colors hover:border-slate-300"
               title="Switch profile"
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#dbe9e0] text-xs font-bold text-[#245e49]">{currentUser.avatar}</span>
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-xs font-bold text-blue-700">{currentUser.avatar}</span>
               <span className="hidden max-w-32 truncate font-medium text-slate-800 sm:block">{currentUser.name}</span>
               <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
             </button>
@@ -95,7 +97,7 @@ export function Header({
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold ${activeTab === id ? "bg-[#245e49] text-white" : "text-slate-600 hover:bg-white"}`}
+              className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold ${activeTab === id ? "bg-[#2563EB] text-white" : "text-slate-600 hover:bg-white"}`}
             >
               {label}{id === "jobs" ? ` ${totalLiveJobs}` : ""}
             </button>

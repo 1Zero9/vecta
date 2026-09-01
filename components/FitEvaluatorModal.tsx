@@ -42,7 +42,7 @@ export function FitEvaluatorModal({
         {/* Modal Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#245e49] flex items-center justify-center text-white font-black shadow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-[#2563EB] flex items-center justify-center text-white font-black shadow-sm">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
@@ -237,7 +237,7 @@ export function FitEvaluatorModal({
                 onClose();
                 onOpenCopilot(job, "tailor");
               }}
-              className="px-5 py-2.5 bg-[#245e49] text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition-all hover:bg-[#1d4d3c]"
+              className="px-5 py-2.5 bg-[#2563EB] text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition-all hover:bg-[#1D4ED8]"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>Generate Tailored Application</span>

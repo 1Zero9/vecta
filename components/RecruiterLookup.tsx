@@ -136,7 +136,7 @@ export function RecruiterLookup({
           {filteredBenchmarks.map((b) => (
             <div
               key={b.id}
-              className="glass-panel rounded-3xl p-5 sm:p-6 border border-slate-200 space-y-4 hover:border-emerald-500/40 transition-all shadow-lg"
+              className="glass-panel rounded-3xl p-5 sm:p-6 border border-slate-200 space-y-4 hover:border-blue-500/40 transition-all shadow-lg"
             >
               <div className="flex items-start justify-between gap-2">
                 <div>

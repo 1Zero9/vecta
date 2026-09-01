@@ -1,20 +1,17 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Vecta | Recruitment Intelligence & Career Radar (IT · AI · Governance · Security)",
-  description: "Direct ATS job search, company ecosystem radar, AI vector match scoring, STAR interview preparation, and career pipeline navigator for IT, AI, Governance, and Security.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  title: "Vecta | Find. Apply. Advance.",
+  description: "Career intelligence to find specialist roles, understand your fit, and move every application forward.",
   keywords: [
     "IT Jobs",
     "AI Jobs",
@@ -27,9 +24,37 @@ export const metadata: Metadata = {
     "STAR Interview Prep",
     "Vecta"
   ],
-  icons: {
-    icon: "/favicon.ico",
+  applicationName: "Vecta",
+  openGraph: {
+    type: "website",
+    title: "Vecta | Find. Apply. Advance.",
+    description: "Career intelligence for your next move.",
+    siteName: "Vecta",
+    images: [
+      {
+        url: "/og.png",
+        width: 1729,
+        height: 910,
+        alt: "Vecta — Find. Apply. Advance. Career intelligence for your next move.",
+      },
+    ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vecta | Find. Apply. Advance.",
+    description: "Career intelligence for your next move.",
+    images: ["/og.png"],
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Vecta",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#2563EB",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -40,7 +65,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

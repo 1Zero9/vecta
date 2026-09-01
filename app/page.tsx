@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { Header } from "@/components/Header";
 import { MetricCards } from "@/components/MetricCards";
 import { JobBoard } from "@/components/JobBoard";
@@ -361,9 +362,7 @@ export default function Home() {
         <div className="max-w-[1700px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           
           <div className="flex flex-wrap items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center justify-center font-bold font-mono text-xs">
-              V
-            </div>
+            <Image src="/vecta-mark.png" alt="" width={24} height={24} className="h-6 w-6 object-contain" />
             <span className="font-bold text-slate-900">Vecta · Career intelligence</span>
             <span>•</span>
             <span className="text-slate-400">Latin: vehere ("to carry / convey / transport")</span>

@@ -114,7 +114,7 @@ export function JobBoard({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by job title, company, skill (e.g. PyTorch, eBPF, ISO 42001, Terraform, CISSP)..."
-            className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm sm:text-base transition-all"
+            className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm sm:text-base transition-all"
           />
           {searchQuery && (
             <button
@@ -135,7 +135,7 @@ export function JobBoard({
               onClick={() => setActiveDomain("ALL")}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "ALL"
-                  ? "bg-[#245e49] text-white"
+                  ? "bg-[#2563EB] text-white"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
@@ -145,7 +145,7 @@ export function JobBoard({
               onClick={() => setActiveDomain("AI")}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "AI"
-                  ? "bg-[#245e49] text-white"
+                  ? "bg-[#2563EB] text-white"
                   : "bg-sky-50 text-sky-700 hover:bg-sky-100"
               }`}
             >
@@ -155,7 +155,7 @@ export function JobBoard({
               onClick={() => setActiveDomain("Security")}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "Security"
-                  ? "bg-[#245e49] text-white"
+                  ? "bg-[#2563EB] text-white"
                   : "bg-rose-50 text-rose-700 hover:bg-rose-100"
               }`}
             >
@@ -165,7 +165,7 @@ export function JobBoard({
               onClick={() => setActiveDomain("Governance")}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "Governance"
-                  ? "bg-[#245e49] text-white"
+                  ? "bg-[#2563EB] text-white"
                   : "bg-amber-50 text-amber-700 hover:bg-amber-100"
               }`}
             >
@@ -175,7 +175,7 @@ export function JobBoard({
               onClick={() => setActiveDomain("IT")}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "IT"
-                  ? "bg-[#245e49] text-white"
+                  ? "bg-[#2563EB] text-white"
                   : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
               }`}
             >
@@ -189,7 +189,7 @@ export function JobBoard({
             <select
               value={selectedSeniority}
               onChange={(e) => setSelectedSeniority(e.target.value)}
-              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="ALL">All Seniorities</option>
               <option value="Junior">Junior / Associate</option>
@@ -203,7 +203,7 @@ export function JobBoard({
             <select
               value={selectedWorkMode}
               onChange={(e) => setSelectedWorkMode(e.target.value)}
-              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="ALL">All Work Modes</option>
               <option value="Remote">Remote</option>
@@ -246,7 +246,7 @@ export function JobBoard({
                 setSelectedWorkMode("ALL");
                 setShowSavedOnly(false);
               }}
-              className="mt-4 px-4 py-2 bg-[#245e49] hover:bg-[#1d4d3c] text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+              className="mt-4 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-xs font-bold transition-all shadow-sm"
             >
               Reset All Filters
             </button>
@@ -259,7 +259,7 @@ export function JobBoard({
             return (
               <div
                 key={job.id}
-                className="glass-panel rounded-2xl p-5 sm:p-6 border border-slate-200 hover:border-emerald-300 transition-all group relative overflow-hidden"
+                className="glass-panel rounded-2xl p-5 sm:p-6 border border-slate-200 hover:border-blue-300 transition-all group relative overflow-hidden"
               >
                 {/* Glow accent for high vector match (>80%) */}
                 {fit.overall_score >= 80 && (
@@ -287,7 +287,7 @@ export function JobBoard({
 
                     {/* Job Title & Company */}
                     <div>
-                      <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 group-hover:text-emerald-800 transition-colors">
+                      <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 group-hover:text-blue-700 transition-colors">
                         {job.title}
                       </h2>
                       <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-400 mt-1 font-medium">
@@ -345,14 +345,14 @@ export function JobBoard({
                     {/* Vector Fit Meter */}
                     <div
                       onClick={() => onOpenFitEvaluator(job)}
-                      className="cursor-pointer select-none px-4 py-2.5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500/50 transition-all flex items-center gap-3 group/score"
+                      className="cursor-pointer select-none px-4 py-2.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-500/50 transition-all flex items-center gap-3 group/score"
                       title="Click to view Vector Fit breakdown and ATS parseability"
                     >
                       <div className="text-right">
                         <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                           Vector Match
                         </div>
-                        <div className="text-xs text-slate-500 group-hover/score:text-emerald-700">
+                        <div className="text-xs text-slate-500 group-hover/score:text-blue-700">
                           {fit.matching_skills.length} matching skills
                         </div>
                       </div>
@@ -419,7 +419,7 @@ export function JobBoard({
                         href={job.apply_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 rounded-xl bg-[#245e49] hover:bg-[#1d4d3c] text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all group/btn"
+                        className="px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all group/btn"
                       >
                         <span>Apply Direct</span>
                         <ExternalLink className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />

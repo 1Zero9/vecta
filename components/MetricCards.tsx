@@ -53,10 +53,10 @@ export function MetricCards({
             </button>
           </div>
           <h1 className="max-w-3xl text-2xl font-semibold tracking-[-0.035em] text-slate-900 sm:text-3xl">
-            Find work that fits where you’re heading.
+            <span className="text-blue-600">Find. Apply. Advance.</span>
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-            Compare specialist roles, understand your fit, and keep every application moving in one calm workspace.
+            Compare specialist roles, understand your fit, and keep every application moving in one calm workspace built for your next move.
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export function MetricCards({
             <button key={metric.label} onClick={() => setActiveTab(metric.tab)} className="group min-w-20 rounded-lg px-4 py-2 text-left hover:bg-white">
               <span className="block text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">{metric.label}</span>
               <span className="mt-0.5 flex items-center gap-1 text-xl font-semibold text-slate-900">
-                {metric.value}<ArrowUpRight className="h-3.5 w-3.5 text-slate-600 group-hover:text-emerald-700" />
+                {metric.value}<ArrowUpRight className="h-3.5 w-3.5 text-slate-600 group-hover:text-blue-700" />
               </span>
             </button>
           ))}
@@ -80,7 +80,7 @@ export function MetricCards({
         <span className="mr-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500">Explore</span>
         <button
           onClick={() => setDomainFilter("ALL")}
-          className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${activeDomainFilter === "ALL" ? "border-[#245e49] bg-[#245e49] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"}`}
+          className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${activeDomainFilter === "ALL" ? "border-[#2563EB] bg-[#2563EB] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"}`}
         >
           All roles · {totalJobs}
         </button>
@@ -88,7 +88,7 @@ export function MetricCards({
           <button
             key={id}
             onClick={() => setDomainFilter(id)}
-            className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold ${activeDomainFilter === id ? "border-[#245e49] bg-[#245e49] text-white" : tone}`}
+            className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold ${activeDomainFilter === id ? "border-[#2563EB] bg-[#2563EB] text-white" : tone}`}
           >
             <Icon className="h-3.5 w-3.5" />
             {label} · {count}

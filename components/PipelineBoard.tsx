@@ -129,7 +129,7 @@ export function PipelineBoard({
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#245e49] hover:bg-[#1d4d3c] text-white font-bold text-xs shadow-sm transition-all"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs shadow-sm transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>Add Application</span>
@@ -167,7 +167,7 @@ export function PipelineBoard({
                   items.map((app) => (
                     <div
                       key={app.id}
-                      className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500/40 transition-all space-y-2.5 shadow-md group relative"
+                      className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-500/40 transition-all space-y-2.5 shadow-md group relative"
                     >
                       <div className="flex items-start justify-between gap-1">
                         <span className="text-[10px] font-mono font-bold uppercase text-sky-700">
@@ -206,7 +206,7 @@ export function PipelineBoard({
                             value={tempNotes}
                             onChange={(e) => setTempNotes(e.target.value)}
                             rows={2}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs text-slate-700 focus:outline-none focus:border-emerald-500"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs text-slate-700 focus:outline-none focus:border-blue-500"
                             placeholder="Add interview notes, dates, or feedback..."
                           />
                           <div className="flex justify-end gap-1">
@@ -379,7 +379,7 @@ export function PipelineBoard({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#245e49] hover:bg-[#1d4d3c] text-white rounded-xl font-bold"
+                  className="px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl font-bold"
                 >
                   Add to Board
                 </button>
