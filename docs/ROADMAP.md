@@ -31,7 +31,7 @@ Before presenting these features as production-ready, the product still needs re
 
 | Priority | Workstream | Current state | What remains |
 | ---: | --- | --- | --- |
-| 1 | Fit and profile reliability | Active | Real-world résumé fixtures, broader browser coverage, and ongoing measured taxonomy maintenance. |
+| 1 | Fit and profile reliability | Active | Real-world résumé fixtures and ongoing measured taxonomy maintenance. |
 | 2 | UI and delivery hardening | Active | Shared interface primitives, remaining empty/error/loading states, accessibility and responsive checks, repository lint cleanup, and a Sites-compatible deployment output. |
 | 3 | Accounts, user management, and admin operations | Not started | Authentication, self-service account management, role-based authorization, server-owned records, an auditable admin workbench, cross-device recovery, and complete export/erasure. |
 | 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
@@ -94,6 +94,7 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Add a repeatable product demo guide with a seven-minute walkthrough, short version, reset path, fallback paths, and honest prototype boundaries.
 - [x] Establish Vecta v0.2.0, taxonomy v1.1.0, and export schema v1; expose versions in-product, documentation, and data exports.
 - [x] Expand the versioned taxonomy with observed identity, observability, vector-database, application-security, governance, resilience, and device-management language.
+- [x] Cover complete onboarding, fit review and reversible corrections, role-to-pipeline tracking, and persisted pipeline-stage changes in Chromium.
 - [ ] Add polished empty states to the remaining workspaces, anonymized real-world résumé fixtures, and broader end-to-end coverage.
 
 ### Scope
@@ -222,12 +223,11 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Immediate next sprint
 
-1. Extend end-to-end coverage to profile onboarding, fit review, correction controls, and pipeline-stage changes.
-2. Create shared interface primitives and finish empty, error, loading, focus, and responsive states.
-3. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-4. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
-5. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
-6. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
+1. Create shared interface primitives and finish empty, error, loading, focus, and responsive states.
+2. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
+3. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
+4. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
+5. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
 
 ### Dependencies and decisions
 

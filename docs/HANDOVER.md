@@ -4,7 +4,7 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
-Current identifiers are Vecta **v0.2.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
+Current identifiers are Vecta **v0.3.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
 
 The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
 
@@ -112,12 +112,12 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
 - Vitest covers 40 domain, persistence, parser-boundary, matching, versioning, and component scenarios across twelve test files.
-- Playwright covers the first full browser journey from role search through pipeline persistence and duplicate tracking feedback.
+- Four Playwright journeys cover role search and tracking, complete onboarding persistence, fit review with reversible corrections, and persisted pipeline-stage movement.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
 
 ## Next engineering priorities
 
-1. Extend browser coverage to onboarding, fit review, correction controls, and pipeline-stage changes.
+1. Introduce shared interface primitives and finish remaining empty, error, loading, focus, and responsive states.
 2. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
 3. Add a Sites-compatible deployment build or choose another production hosting target.
 4. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.
