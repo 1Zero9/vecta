@@ -11,6 +11,7 @@ import { PipelineBoard } from "@/components/PipelineBoard";
 import { FitEvaluatorModal } from "@/components/FitEvaluatorModal";
 import { CopilotModal } from "@/components/CopilotModal";
 import { ProfileDrawer } from "@/components/ProfileDrawer";
+import { ProfileOnboardingModal } from "@/components/ProfileOnboardingModal";
 import { CommandPalette } from "@/components/CommandPalette";
 import { UserManagementModal } from "@/components/UserManagementModal";
 import { GovernanceModal } from "@/components/GovernanceModal";
@@ -50,6 +51,7 @@ import {
   DEMO_PERSONAS,
   DEFAULT_USER
 } from "@/lib/storage";
+import { getProfileCompletion } from "@/lib/profileCompletion";
 
 export default function Home() {
   // Navigation & View State
@@ -75,6 +77,7 @@ export default function Home() {
   const [selectedJobForCopilot, setSelectedJobForCopilot] = useState<Job | null>(null);
   const [copilotInitialMode, setCopilotInitialMode] = useState<"tailor" | "interview">("tailor");
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
+  const [isProfileOnboardingOpen, setIsProfileOnboardingOpen] = useState(false);
   const [isCmdPaletteOpen, setIsCmdPaletteOpen] = useState(false);
   const [isUserManagementOpen, setIsUserManagementOpen] = useState(false);
   const [isGovernanceModalOpen, setIsGovernanceModalOpen] = useState(false);
@@ -256,6 +259,7 @@ export default function Home() {
   const secJobsCount = jobs.filter((j) => j.domain === "Security").length;
   const govJobsCount = jobs.filter((j) => j.domain === "Governance").length;
   const itJobsCount = jobs.filter((j) => j.domain === "IT").length;
+  const profileCompletion = getProfileCompletion(profile);
 
   return (
     <div className="min-h-screen flex flex-col text-slate-900">
@@ -306,6 +310,8 @@ export default function Home() {
             else setActiveTab(tab);
           }}
           openGovernance={() => setIsGovernanceModalOpen(true)}
+          openProfileOnboarding={() => setIsProfileOnboardingOpen(true)}
+          profileCompletion={profileCompletion.score}
         />
 
         {/* View Content */}
@@ -442,6 +448,18 @@ export default function Home() {
         onClose={() => setIsProfileDrawerOpen(false)}
         onSaveProfile={handleSaveProfile}
       />
+
+      {/* Guided Candidate Profile Setup */}
+      {isProfileOnboardingOpen && (
+        <ProfileOnboardingModal
+          profile={profile}
+          onClose={() => setIsProfileOnboardingOpen(false)}
+          onSave={(newProfile) => {
+            handleSaveProfile(newProfile);
+            showToast("Profile saved. Your role matches have been recalculated.");
+          }}
+        />
+      )}
 
       {/* Global Command Palette (⌘K) */}
       <CommandPalette

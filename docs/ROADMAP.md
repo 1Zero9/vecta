@@ -54,9 +54,20 @@ Before presenting these features as production-ready, the product still needs re
 
 **Goal:** Turn fit scoring into an understandable decision aid based on real candidate information.
 
+**Status:** Active milestone — Candidate Profile v1.
+
+### Candidate Profile v1
+
+- [x] Add a guided four-step onboarding flow for career direction, experience, location, salary, work mode, skills, certifications, and résumé evidence.
+- [x] Calculate profile completeness and expose onboarding from the main jobs workspace.
+- [x] Persist onboarding changes through the existing local-first profile store and immediately recalculate role matches.
+- [ ] Add PDF and DOCX résumé upload with a review step before extracted information is accepted.
+- [ ] Let users connect individual profile claims to employment, project, or certification evidence.
+- [ ] Add profile-level validation, empty states, and tests for incomplete profiles.
+
 ### Scope
 
-- Add structured profile onboarding with goals, location, salary expectations, work mode, skills, and experience.
+- Refine structured profile onboarding using observed user behaviour and completion data.
 - Support PDF and DOCX résumé upload with explicit review before extracted data is saved.
 - Replace loose substring matching with normalized skills, aliases, required/preferred weighting, and evidence references.
 - Explain every fit score and allow users to correct mistaken matches.
@@ -152,11 +163,11 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Immediate next sprint
 
-1. Finish the light-theme consistency pass across secondary tabs and modals.
-2. Create shared interface primitives and remove duplicated control styles.
-3. Correct product language around curated jobs, deterministic drafting, database sync, and compliance.
-4. Add a guided candidate-profile completion flow.
-5. Write tests for fit scoring, storage, job filtering, and the critical save-to-pipeline journey.
+1. Validate and refine the new candidate-profile onboarding flow.
+2. Add PDF and DOCX résumé upload with reviewed extraction.
+3. Write tests for profile completion, fit scoring, storage, job filtering, and the critical save-to-pipeline journey.
+4. Correct product language around curated jobs, deterministic drafting, database sync, and compliance.
+5. Create shared interface primitives and remove duplicated control styles.
 6. Define the production data model and authentication decision before adding more surface features.
 
 ## Product principles

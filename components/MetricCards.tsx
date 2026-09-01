@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sparkles, ShieldCheck, CheckCircle2, Cpu, Scale, ArrowUpRight } from "lucide-react";
+import { Sparkles, ShieldCheck, CheckCircle2, Cpu, Scale, ArrowUpRight, UserRound } from "lucide-react";
 import { DomainType } from "@/lib/types";
 
 interface MetricCardsProps {
@@ -16,6 +16,8 @@ interface MetricCardsProps {
   setDomainFilter: (domain: DomainType | "ALL") => void;
   setActiveTab: (tab: "jobs" | "radar" | "recruiter" | "pipeline" | "governance") => void;
   openGovernance: () => void;
+  openProfileOnboarding: () => void;
+  profileCompletion: number;
 }
 
 export function MetricCards({
@@ -30,6 +32,8 @@ export function MetricCards({
   setDomainFilter,
   setActiveTab,
   openGovernance,
+  openProfileOnboarding,
+  profileCompletion,
 }: MetricCardsProps) {
   const domains = [
     { id: "AI", label: "AI & ML", count: aiJobsCount, icon: Sparkles, tone: "text-sky-700 bg-sky-50 border-sky-200" },
@@ -58,6 +62,14 @@ export function MetricCards({
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
             Compare specialist roles, understand your fit, and keep every application moving in one calm workspace built for your next move.
           </p>
+          <button
+            onClick={openProfileOnboarding}
+            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700"
+          >
+            <UserRound className="h-4 w-4" />
+            {profileCompletion < 100 ? `Complete your profile · ${profileCompletion}%` : "Review your profile"}
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </button>
         </div>
 
         <div className="grid grid-cols-3 divide-x divide-slate-200 rounded-xl border border-slate-200 bg-[#fafbf9] p-1">

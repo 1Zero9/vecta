@@ -146,6 +146,7 @@ export interface CandidateProfile {
   certifications: string[];
   target_salary_min?: number;
   preferred_work_mode: WorkMode | "Any";
+  preferred_locations?: string[];
   resume_text: string;
 }
 
