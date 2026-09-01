@@ -104,6 +104,8 @@ Open **Pipeline** to manage applications across Saved, Drafting, Applied, Screen
 
 Use the profile control in the header to switch between the included demonstration personas or create a custom local profile. Switching personas recalculates role comparisons.
 
+This control is a prototype persona switcher, not a production account-management system. Authentication, session and device management, account recovery, and administrator support tools remain roadmap work.
+
 ## 8. Export or erase your data
 
 The Governance area provides local-data controls:

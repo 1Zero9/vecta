@@ -4,7 +4,7 @@ Vecta is a light-only recruitment workspace for specialist candidates in AI, cyb
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. For the product, it means bringing experience, evidence, and ambition together to carry a career forward with clarity.
 
-This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. Authentication, durable multi-device ownership, and verified job ingestion remain roadmap work.
+This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. Production authentication, self-service user management, an auditable admin workbench, durable multi-device ownership, and verified job ingestion remain roadmap work.
 
 The current local and production Next.js builds pass. Publishing through the configured Sites project remains blocked until the application emits a supported worker bundle; this is tracked explicitly in the roadmap.
 

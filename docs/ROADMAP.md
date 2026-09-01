@@ -25,7 +25,7 @@ The prototype already provides:
 - Template-based application and interview preparation.
 - Local data export and erasure controls, plus optional Prisma synchronization.
 
-Before presenting these features as production-ready, the product still needs real authentication, durable data ownership, verified job ingestion, and clearer AI/compliance language.
+Before presenting these features as production-ready, the product still needs real authentication, self-service user management, an auditable admin workbench, durable data ownership, verified job ingestion, and clearer AI/compliance language.
 
 ## Remaining roadmap at a glance
 
@@ -33,7 +33,7 @@ Before presenting these features as production-ready, the product still needs re
 | ---: | --- | --- | --- |
 | 1 | Fit and profile reliability | Active | Normalized skill aliases, required/preferred weighting, match-correction controls, real-world résumé fixtures, and broader browser coverage. |
 | 2 | UI and delivery hardening | Active | Shared interface primitives, remaining empty/error/loading states, accessibility and responsive checks, repository lint cleanup, and a Sites-compatible deployment output. |
-| 3 | Accounts and durable ownership | Not started | Authentication, authorization, server-owned records, cross-device recovery, and complete export/erasure. |
+| 3 | Accounts, user management, and admin operations | Not started | Authentication, self-service account management, role-based authorization, server-owned records, an auditable admin workbench, cross-device recovery, and complete export/erasure. |
 | 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
 | 5 | Grounded application assistance | Not started | Evidence-grounded generation, user review, version history, and audit records. |
 | 6 | Market and recruiter expansion | Deferred | Sourced market data and a validated recruiter product boundary. |
@@ -106,14 +106,40 @@ Before presenting these features as production-ready, the product still needs re
 - Every score can be traced to profile evidence and job requirements.
 - Fit results remain useful when a résumé is incomplete or a job description is sparse.
 
-## Phase 3 — Real accounts and durable pipeline
+## Phase 3 — Accounts, user management, admin workbench, and durable pipeline
 
-**Goal:** Make Vecta safe to use across sessions and devices.
+**Goal:** Make Vecta safe to use across sessions and devices, while giving users control of their accounts and operators the minimum tools needed to support the service.
 
-### Scope
+**Status:** Not started. The current account modal switches demonstration personas and must not be treated as production user management.
+
+### Identity and access
 
 - Add Auth.js or Supabase Auth with Google, GitHub, and magic-link sign-in.
 - Define candidate, recruiter, auditor, and administrator permissions.
+- Add email verification, session management, recovery, optional MFA, rate limits, and abuse protection.
+- Enforce least-privilege role checks on the server rather than relying on hidden interface controls.
+- Support tenant or organisation membership only after its ownership model is defined.
+
+### User management system
+
+- Provide self-service account settings for identity, contact details, profile preferences, notification preferences, and connected sign-in methods.
+- Let users inspect and revoke active sessions and trusted devices.
+- Support account status, verified contact state, role or workspace membership, and clear recovery paths.
+- Provide complete account export, deletion, and retention-state visibility.
+- Add user-visible security history for sign-ins, sensitive profile changes, exports, and deletion requests.
+
+### Admin system and workbench
+
+- Build a separate admin-only workspace with user search, account status, roles, memberships, verification state, and support history.
+- Allow authorised operators to suspend, restore, or restrict accounts; revoke sessions; resend verification; and initiate approved recovery workflows.
+- Require a reason, audit entry, and elevated confirmation for high-impact actions. Avoid silent impersonation; use time-limited, visible support access only if it is later proven necessary.
+- Add role and permission management with protection against removing the final administrator or escalating beyond the operator’s own authority.
+- Provide operational queues for user reports, deletion/export requests, consent issues, stale-job reports, ingestion failures, and data-quality review.
+- Expose service-health summaries and job-ingestion status without leaking private candidate data.
+- Record immutable audit events for administrator access, searches, exports, role changes, suspensions, recovery actions, and data operations.
+
+### Durable candidate data and pipeline
+
 - Move saved jobs, favourites, profiles, applications, notes, and consent records to server-owned storage.
 - Add tenant boundaries and authorization checks to every mutation.
 - Implement genuine account export and deletion across browser and database storage.
@@ -122,8 +148,10 @@ Before presenting these features as production-ready, the product still needs re
 ### Exit criteria
 
 - A user can sign in on another device and recover the same profile and pipeline.
+- A user can manage identity, sessions, preferences, security history, export, and deletion without administrator help.
+- Administrators can perform only documented support and operational actions, with least-privilege authorization and a complete audit trail.
 - Data export and deletion cover every persisted record.
-- Automated authorization tests prevent cross-account access.
+- Automated authorization tests prevent cross-account, cross-tenant, and unauthorised admin access.
 
 ## Phase 4 — Verified opportunity data
 
@@ -182,7 +210,7 @@ Before presenting these features as production-ready, the product still needs re
 | 1 | Finish UI foundation and accessibility | Active hardening | M |
 | 2 | Profile onboarding and résumé ingest | Feature slice complete | L |
 | 3 | Explainable fit engine | Active hardening | L |
-| 4 | Authentication and durable data | Not started | L |
+| 4 | Accounts, user management, admin workbench, and durable data | Not started | XL |
 | 5 | Verified ATS ingestion | Not started | XL |
 | 6 | Grounded application assistance | Not started | L |
 | 7 | Market and recruiter expansion | Deferred | XL |
@@ -196,13 +224,13 @@ Before presenting these features as production-ready, the product still needs re
 5. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
 6. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
 7. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
-8. Define the production data model and authentication decision before adding more surface features.
+8. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
 
 ### Dependencies and decisions
 
 - Real-world parser validation needs anonymized PDF and DOCX samples that may be safely retained as test fixtures.
 - Production deployment needs either a Sites-compatible worker build or an explicit alternative hosting target.
-- Durable persistence should not expand until authentication, ownership, authorization, retention, export, and erasure boundaries are agreed together.
+- Durable persistence should not expand until authentication, ownership, authorization, administrator powers, audit retention, export, and erasure boundaries are agreed together.
 
 ## Product principles
 

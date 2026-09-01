@@ -8,6 +8,8 @@ The product name is inspired by the Latin *vecta* — “carried forward” or �
 
 The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. Candidate state is primarily device-local until authentication and durable ownership are implemented.
 
+`UserManagementModal` is currently a demonstration-persona switcher and local custom-profile form. It is not a production identity, user-management, or administrator system.
+
 ## Runtime and build
 
 - Node.js 22.13 or newer
@@ -109,4 +111,4 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 3. Extend browser coverage to onboarding, fit review, and pipeline-stage changes.
 4. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
 5. Add a Sites-compatible deployment build or choose another production hosting target.
-6. Decide the production authentication and owned-data model before expanding persistence.
+6. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.
