@@ -113,7 +113,7 @@ export function RadarTable({
     <div className="space-y-6">
       
       {/* Search & Filter Toolbar */}
-      <div className="glass-panel rounded-3xl p-4 sm:p-6 shadow-xl border border-white/10 space-y-4">
+      <div className="glass-panel rounded-3xl p-4 sm:p-6 shadow-xl border border-slate-200 space-y-4">
         
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           
@@ -125,24 +125,24 @@ export function RadarTable({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search companies by name, tech stack, compliance framework, or leadership..."
-              className="w-full pl-12 pr-4 py-3.5 bg-slate-900/90 border border-white/10 rounded-2xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 text-sm sm:text-base transition-all"
+              className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 text-sm sm:text-base transition-all"
             />
           </div>
 
           {/* Export CSV Button */}
           <button
             onClick={exportCSV}
-            className="flex items-center gap-2 px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-2xl text-xs sm:text-sm font-semibold border border-white/10 shadow-sm transition-all shrink-0"
+            className="flex items-center gap-2 px-4 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-2xl text-xs sm:text-sm font-semibold border border-slate-200 shadow-sm transition-all shrink-0"
             title="Export directory as CSV"
           >
-            <Download className="w-4 h-4 text-emerald-400" />
+            <Download className="w-4 h-4 text-emerald-700" />
             <span>Export CSV</span>
           </button>
 
         </div>
 
         {/* Filters Row */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-white/5">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-200/70">
           
           {/* Domain Badges */}
           <div className="flex flex-wrap items-center gap-1.5">
@@ -151,7 +151,7 @@ export function RadarTable({
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "ALL"
                   ? "bg-white text-slate-950 shadow-md"
-                  : "bg-slate-800/80 text-slate-400 hover:text-white"
+                  : "bg-slate-100 text-slate-400 hover:text-slate-900"
               }`}
             >
               All Domains
@@ -161,7 +161,7 @@ export function RadarTable({
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "AI"
                   ? "bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20"
-                  : "bg-slate-800/80 text-cyan-400 hover:bg-cyan-950/40"
+                  : "bg-slate-100 text-sky-700 hover:bg-sky-50"
               }`}
             >
               AI Labs
@@ -170,8 +170,8 @@ export function RadarTable({
               onClick={() => setActiveDomain("Security")}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "Security"
-                  ? "bg-rose-500 text-white shadow-md shadow-rose-500/20"
-                  : "bg-slate-800/80 text-rose-400 hover:bg-rose-950/40"
+                  ? "bg-rose-500 text-slate-900 shadow-md shadow-rose-500/20"
+                  : "bg-slate-100 text-rose-700 hover:bg-rose-100"
               }`}
             >
               Cybersecurity
@@ -181,7 +181,7 @@ export function RadarTable({
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "Governance"
                   ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
-                  : "bg-slate-800/80 text-amber-400 hover:bg-amber-950/40"
+                  : "bg-slate-100 text-amber-700 hover:bg-amber-50"
               }`}
             >
               Governance & GRC
@@ -190,8 +190,8 @@ export function RadarTable({
               onClick={() => setActiveDomain("IT")}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeDomain === "IT"
-                  ? "bg-indigo-500 text-white shadow-md shadow-indigo-500/20"
-                  : "bg-slate-800/80 text-indigo-400 hover:bg-indigo-950/40"
+                  ? "bg-indigo-500 text-slate-900 shadow-md shadow-indigo-500/20"
+                  : "bg-slate-100 text-indigo-700 hover:bg-indigo-100"
               }`}
             >
               Enterprise IT
@@ -203,7 +203,7 @@ export function RadarTable({
             <select
               value={selectedScale}
               onChange={(e) => setSelectedScale(e.target.value)}
-              className="bg-slate-900 border border-white/10 text-slate-300 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               <option value="ALL">All Scale Tiers</option>
               <option value="Startup">Startup (1-20)</option>
@@ -215,7 +215,7 @@ export function RadarTable({
             <select
               value={selectedFunding}
               onChange={(e) => setSelectedFunding(e.target.value)}
-              className="bg-slate-900 border border-white/10 text-slate-300 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               <option value="ALL">All Ownership Types</option>
               <option value="VC-backed">VC-backed</option>
@@ -230,7 +230,7 @@ export function RadarTable({
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 showFavouritesOnly
                   ? "bg-amber-500 text-slate-950 font-bold"
-                  : "bg-slate-800/80 text-slate-300 hover:text-white"
+                  : "bg-slate-100 text-slate-600 hover:text-slate-900"
               }`}
             >
               <Star className={`w-3.5 h-3.5 ${showFavouritesOnly ? "fill-slate-950" : ""}`} />
@@ -243,11 +243,11 @@ export function RadarTable({
       </div>
 
       {/* Company Radar Table (Desktop & Tablets) */}
-      <div className="glass-panel rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+      <div className="glass-panel rounded-3xl overflow-hidden border border-slate-200 shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-white/10 bg-slate-950/90 text-slate-400 font-bold uppercase tracking-wider text-xs">
+              <tr className="border-b border-slate-200 bg-white text-slate-400 font-bold uppercase tracking-wider text-xs">
                 <th className="py-4 px-3 w-10 text-center"></th>
                 <th className="py-4 px-3 w-10 text-center">
                   <Star className="w-4 h-4 text-slate-500 mx-auto" />
@@ -261,7 +261,7 @@ export function RadarTable({
                 <th className="py-4 px-5 text-right">Careers Portal</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-slate-200">
+            <tbody className="divide-y divide-slate-200 text-slate-700">
               {filteredCompanies.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="py-16 text-center text-slate-400">
@@ -275,16 +275,16 @@ export function RadarTable({
 
                   return (
                     <React.Fragment key={company.id}>
-                      <tr className="hover:bg-white/[0.03] transition-colors group">
+                      <tr className="hover:bg-slate-50 transition-colors group">
                         
                         {/* Expand Chevron */}
                         <td className="py-4 px-3 text-center">
                           <button
                             onClick={() => toggleExpand(company.id)}
-                            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+                            className="p-1 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all"
                             title="Toggle company deep dive"
                           >
-                            <ChevronRight className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-90 text-emerald-400" : ""}`} />
+                            <ChevronRight className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-90 text-emerald-700" : ""}`} />
                           </button>
                         </td>
 
@@ -292,19 +292,19 @@ export function RadarTable({
                         <td className="py-4 px-3 text-center">
                           <button
                             onClick={() => onToggleFavourite(company.id)}
-                            className="p-1 text-slate-500 hover:text-amber-400 transition-colors"
+                            className="p-1 text-slate-500 hover:text-amber-700 transition-colors"
                             title={isFav ? "Remove favourite" : "Star company"}
                           >
-                            <Star className={`w-4 h-4 ${isFav ? "fill-amber-400 text-amber-400" : ""}`} />
+                            <Star className={`w-4 h-4 ${isFav ? "fill-amber-400 text-amber-700" : ""}`} />
                           </button>
                         </td>
 
                         {/* Company Name & Tagline */}
                         <td className="py-4 px-5">
-                          <div className="font-extrabold text-white text-base group-hover:text-emerald-400 transition-colors flex items-center gap-2">
+                          <div className="font-extrabold text-slate-900 text-base group-hover:text-emerald-700 transition-colors flex items-center gap-2">
                             <span>{company.name}</span>
                             {company.featured && (
-                              <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono uppercase font-bold border border-emerald-500/30">
+                              <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-700 text-[10px] font-mono uppercase font-bold border border-emerald-500/30">
                                 Featured
                               </span>
                             )}
@@ -321,7 +321,7 @@ export function RadarTable({
 
                         {/* Scale Tier */}
                         <td className="py-4 px-4 whitespace-nowrap">
-                          <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-white/5 text-slate-300 text-xs font-medium">
+                          <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200/70 text-slate-600 text-xs font-medium">
                             {company.scale_tier}
                           </span>
                         </td>
@@ -332,13 +332,13 @@ export function RadarTable({
                             {company.compliance_tags.slice(0, 2).map((comp, idx) => (
                               <span
                                 key={idx}
-                                className="px-2 py-0.5 rounded-md bg-emerald-950/50 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono"
+                                className="px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-500/30 text-emerald-700 text-[11px] font-mono"
                               >
                                 {comp}
                               </span>
                             ))}
                             {company.compliance_tags.length > 2 && (
-                              <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px] font-mono">
+                              <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-400 text-[10px] font-mono">
                                 +{company.compliance_tags.length - 2}
                               </span>
                             )}
@@ -346,13 +346,13 @@ export function RadarTable({
                         </td>
 
                         {/* Location */}
-                        <td className="py-4 px-4 whitespace-nowrap text-xs text-slate-300">
+                        <td className="py-4 px-4 whitespace-nowrap text-xs text-slate-600">
                           {company.location.split("/")[0]}
                         </td>
 
                         {/* Open Roles Count */}
                         <td className="py-4 px-4 text-center whitespace-nowrap">
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-mono font-bold text-xs">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 font-mono font-bold text-xs">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                             {company.open_roles_count} live
                           </span>
@@ -364,7 +364,7 @@ export function RadarTable({
                             href={company.careers_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white rounded-xl text-xs font-bold transition-all shadow-sm group/link"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-emerald-700 text-slate-700 hover:text-white rounded-xl text-xs font-bold transition-all shadow-sm group/link"
                           >
                             <span>{company.ats_type}</span>
                             <ExternalLink className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
@@ -375,7 +375,7 @@ export function RadarTable({
 
                       {/* Expandable Company Deep-Dive Drawer */}
                       {isExpanded && (
-                        <tr className="bg-slate-950/60 border-y border-white/5">
+                        <tr className="bg-slate-50 border-y border-slate-200/70">
                           <td colSpan={9} className="p-6 space-y-4">
                             
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -385,7 +385,7 @@ export function RadarTable({
                                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
                                   Company Overview & Engineering Mission
                                 </h4>
-                                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                                   {company.description}
                                 </p>
 
@@ -397,7 +397,7 @@ export function RadarTable({
                                     {company.tech_stack.map((tech, idx) => (
                                       <span
                                         key={idx}
-                                        className="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-200 text-xs font-mono font-medium border border-white/10"
+                                        className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-mono font-medium border border-slate-200"
                                       >
                                         {tech}
                                       </span>
@@ -407,12 +407,12 @@ export function RadarTable({
                               </div>
 
                               {/* Leadership & Compliance Meta */}
-                              <div className="space-y-3 p-4 rounded-2xl bg-slate-900/80 border border-white/10 text-xs">
+                              <div className="space-y-3 p-4 rounded-2xl bg-white border border-slate-200 text-xs">
                                 <div>
                                   <span className="font-bold text-slate-400 uppercase tracking-wider block mb-1">
                                     Technical Leadership
                                   </span>
-                                  <div className="space-y-1 text-slate-200 font-medium">
+                                  <div className="space-y-1 text-slate-700 font-medium">
                                     {company.leadership.map((leader, idx) => (
                                       <div key={idx} className="flex items-center gap-1.5">
                                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
@@ -422,7 +422,7 @@ export function RadarTable({
                                   </div>
                                 </div>
 
-                                <div className="pt-2 border-t border-white/5">
+                                <div className="pt-2 border-t border-slate-200/70">
                                   <span className="font-bold text-slate-400 uppercase tracking-wider block mb-1">
                                     Full Compliance & Governance
                                   </span>
@@ -430,7 +430,7 @@ export function RadarTable({
                                     {company.compliance_tags.map((comp, idx) => (
                                       <span
                                         key={idx}
-                                        className="px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-300 font-mono text-[10px] border border-emerald-500/20"
+                                        className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-mono text-[10px] border border-emerald-500/20"
                                       >
                                         {comp}
                                       </span>
@@ -438,12 +438,12 @@ export function RadarTable({
                                   </div>
                                 </div>
 
-                                <div className="pt-2 border-t border-white/5 flex items-center justify-between">
+                                <div className="pt-2 border-t border-slate-200/70 flex items-center justify-between">
                                   <a
                                     href={company.website}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-cyan-400 hover:underline flex items-center gap-1 font-semibold"
+                                    className="text-sky-700 hover:underline flex items-center gap-1 font-semibold"
                                   >
                                     <Globe className="w-3.5 h-3.5" />
                                     <span>Website</span>
@@ -452,7 +452,7 @@ export function RadarTable({
                                     href={company.careers_url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-emerald-400 hover:underline flex items-center gap-1 font-semibold"
+                                    className="text-emerald-700 hover:underline flex items-center gap-1 font-semibold"
                                   >
                                     <span>Direct ATS Portal</span>
                                     <ExternalLink className="w-3.5 h-3.5" />

@@ -104,19 +104,19 @@ ${starPack
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md transition-all">
-      <div className="bg-slate-900 border border-white/15 rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm transition-all">
+      <div className="bg-white border border-slate-200 rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-slate-950/80">
+        <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 via-emerald-400 to-teal-400 flex items-center justify-center text-slate-950 font-black shadow-md">
+            <div className="w-10 h-10 rounded-2xl bg-[#245e49] flex items-center justify-center text-white font-black shadow-sm">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-white flex items-center gap-2">
+              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
                 <span>Vecta Application Copilot</span>
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-emerald-500/30">
                   AI Drafter
                 </span>
               </h3>
@@ -129,16 +129,16 @@ ${starPack
           <div className="flex items-center gap-2">
             <button
               onClick={handleDownloadMarkdown}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-semibold border border-white/10 transition-all"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-semibold border border-slate-200 transition-all"
               title="Download full application bundle as Markdown"
             >
-              <Download className="w-3.5 h-3.5 text-emerald-400" />
+              <Download className="w-3.5 h-3.5 text-emerald-700" />
               <span>Download .MD</span>
             </button>
 
             <button
               onClick={onClose}
-              className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+              className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -146,13 +146,13 @@ ${starPack
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center px-6 pt-4 border-b border-white/10 bg-slate-950/40 gap-4">
+        <div className="flex items-center px-6 pt-4 border-b border-slate-200 bg-slate-50 gap-4">
           <button
             onClick={() => setMode("tailor")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all border-b-2 ${
               mode === "tailor"
-                ? "border-emerald-400 text-emerald-400"
-                : "border-transparent text-slate-400 hover:text-white"
+                ? "border-emerald-400 text-emerald-700"
+                : "border-transparent text-slate-400 hover:text-slate-900"
             }`}
           >
             <FileText className="w-4 h-4" />
@@ -163,8 +163,8 @@ ${starPack
             onClick={() => setMode("interview")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all border-b-2 ${
               mode === "interview"
-                ? "border-amber-400 text-amber-400"
-                : "border-transparent text-slate-400 hover:text-white"
+                ? "border-amber-400 text-amber-700"
+                : "border-transparent text-slate-400 hover:text-slate-900"
             }`}
           >
             <Zap className="w-4 h-4" />
@@ -181,18 +181,18 @@ ${starPack
               {/* Cover Letter Box */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-300 text-xs uppercase tracking-wider flex items-center gap-1.5">
-                    <FileText className="w-4 h-4 text-emerald-400" />
+                  <span className="font-bold text-slate-600 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                    <FileText className="w-4 h-4 text-emerald-700" />
                     <span>Tailored Cover Letter</span>
                   </span>
                   <button
                     onClick={() => handleCopy(coverLetter, "letter")}
-                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all"
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition-all"
                   >
                     {copiedType === "letter" ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Copied!</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-700" />
+                        <span className="text-emerald-700">Copied!</span>
                       </>
                     ) : (
                       <>
@@ -203,7 +203,7 @@ ${starPack
                   </button>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-slate-950/80 border border-white/10 text-slate-300 leading-relaxed font-mono text-xs sm:text-[13px] whitespace-pre-wrap selection:bg-emerald-500 selection:text-slate-950">
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-600 leading-relaxed font-mono text-xs sm:text-[13px] whitespace-pre-wrap selection:bg-emerald-500 selection:text-slate-950">
                   {coverLetter}
                 </div>
               </div>
@@ -211,18 +211,18 @@ ${starPack
               {/* High-Impact Resume Bullets */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-300 text-xs uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-cyan-400" />
+                  <span className="font-bold text-slate-600 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-sky-700" />
                     <span>Tailored Resume Highlights (Google XYZ Format)</span>
                   </span>
                   <button
                     onClick={() => handleCopy(resumeBullets.join("\n"), "bullets")}
-                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all"
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition-all"
                   >
                     {copiedType === "bullets" ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Copied!</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-700" />
+                        <span className="text-emerald-700">Copied!</span>
                       </>
                     ) : (
                       <>
@@ -237,9 +237,9 @@ ${starPack
                   {resumeBullets.map((bullet, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 rounded-xl bg-slate-950/60 border border-white/5 text-slate-200 leading-relaxed flex items-start gap-2.5"
+                      className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 text-slate-700 leading-relaxed flex items-start gap-2.5"
                     >
-                      <span className="text-cyan-400 font-bold">•</span>
+                      <span className="text-sky-700 font-bold">•</span>
                       <span>{bullet}</span>
                     </div>
                   ))}
@@ -252,7 +252,7 @@ ${starPack
               
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-bold text-white">
+                  <h4 className="text-sm font-bold text-slate-900">
                     Role-Specific Behavioral & Technical Question Rubrics
                   </h4>
                   <p className="text-xs text-slate-400">
@@ -272,12 +272,12 @@ ${starPack
                       "star"
                     )
                   }
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition-all"
                 >
                   {copiedType === "star" ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400">Copied!</span>
+                      <Check className="w-3.5 h-3.5 text-emerald-700" />
+                      <span className="text-emerald-700">Copied!</span>
                     </>
                   ) : (
                     <>
@@ -292,52 +292,52 @@ ${starPack
                 {starPack.map((pack, idx) => (
                   <div
                     key={idx}
-                    className="p-5 rounded-2xl bg-slate-950/80 border border-white/10 space-y-4"
+                    className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <span className="text-amber-400 font-bold text-xs uppercase tracking-wider font-mono">
+                      <span className="text-amber-700 font-bold text-xs uppercase tracking-wider font-mono">
                         Question {idx + 1} // {pack.category}
                       </span>
                     </div>
 
-                    <h5 className="text-sm sm:text-base font-extrabold text-white">
+                    <h5 className="text-sm sm:text-base font-extrabold text-slate-900">
                       "{pack.question}"
                     </h5>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
-                      <div className="p-3 rounded-xl bg-slate-900 border border-white/5 space-y-1">
-                        <span className="font-bold text-cyan-400 uppercase tracking-wider block">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200/70 space-y-1">
+                        <span className="font-bold text-sky-700 uppercase tracking-wider block">
                           [S] Situation
                         </span>
-                        <p className="text-slate-300 leading-relaxed">{pack.situation}</p>
+                        <p className="text-slate-600 leading-relaxed">{pack.situation}</p>
                       </div>
 
-                      <div className="p-3 rounded-xl bg-slate-900 border border-white/5 space-y-1">
-                        <span className="font-bold text-indigo-400 uppercase tracking-wider block">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200/70 space-y-1">
+                        <span className="font-bold text-indigo-700 uppercase tracking-wider block">
                           [T] Task
                         </span>
-                        <p className="text-slate-300 leading-relaxed">{pack.task}</p>
+                        <p className="text-slate-600 leading-relaxed">{pack.task}</p>
                       </div>
 
-                      <div className="p-3 rounded-xl bg-slate-900 border border-white/5 space-y-1">
-                        <span className="font-bold text-emerald-400 uppercase tracking-wider block">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200/70 space-y-1">
+                        <span className="font-bold text-emerald-700 uppercase tracking-wider block">
                           [A] Action Taken
                         </span>
-                        <p className="text-slate-300 leading-relaxed">{pack.action}</p>
+                        <p className="text-slate-600 leading-relaxed">{pack.action}</p>
                       </div>
 
-                      <div className="p-3 rounded-xl bg-slate-900 border border-white/5 space-y-1">
-                        <span className="font-bold text-amber-400 uppercase tracking-wider block">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200/70 space-y-1">
+                        <span className="font-bold text-amber-700 uppercase tracking-wider block">
                           [R] Measurable Result
                         </span>
-                        <p className="text-slate-300 leading-relaxed">{pack.result}</p>
+                        <p className="text-slate-600 leading-relaxed">{pack.result}</p>
                       </div>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-amber-950/30 border border-amber-500/20 text-xs text-amber-300 flex items-start gap-2">
-                      <Zap className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <div className="p-3 rounded-xl bg-amber-50 border border-amber-500/20 text-xs text-amber-700 flex items-start gap-2">
+                      <Zap className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                       <div>
-                        <strong className="text-amber-200">Interview Pro-Tip:</strong> {pack.pro_tip}
+                        <strong className="text-amber-800">Interview Pro-Tip:</strong> {pack.pro_tip}
                       </div>
                     </div>
 
@@ -351,12 +351,12 @@ ${starPack
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 sm:p-6 border-t border-white/10 bg-slate-950/90 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-t border-slate-200 bg-white flex items-center justify-between">
           <a
             href={job.apply_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-bold text-emerald-400 hover:underline flex items-center gap-1.5"
+            className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1.5"
           >
             <span>Proceed to Official {job.company_name} ATS Application</span>
             <CheckCircle2 className="w-4 h-4" />
@@ -364,7 +364,7 @@ ${starPack
 
           <button
             onClick={onClose}
-            className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition-all"
+            className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all"
           >
             Done
           </button>

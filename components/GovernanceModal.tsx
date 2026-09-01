@@ -66,19 +66,19 @@ export function GovernanceModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md transition-all">
-      <div className="bg-slate-900 border border-white/15 rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm transition-all">
+      <div className="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-slate-950/80">
+        <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-emerald-400 flex items-center justify-center text-slate-950 font-black shadow-md">
+            <div className="w-10 h-10 rounded-2xl bg-[#245e49] flex items-center justify-center text-white font-black shadow-sm">
               <Scale className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-white flex items-center gap-2">
+              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
                 <span>Vecta Governance & Compliance Charter</span>
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-emerald-500/30">
                   EU AI Act & GDPR
                 </span>
               </h3>
@@ -90,20 +90,20 @@ export function GovernanceModal({
 
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+            className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center px-6 pt-4 border-b border-white/10 bg-slate-950/40 gap-2 overflow-x-auto">
+        <div className="flex items-center px-6 pt-4 border-b border-slate-200 bg-slate-50 gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveSection("eu-ai")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-1.5 whitespace-nowrap transition-all border-b-2 ${
               activeSection === "eu-ai"
-                ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-slate-400 hover:text-white"
+                ? "border-cyan-400 text-sky-700"
+                : "border-transparent text-slate-400 hover:text-slate-900"
             }`}
           >
             <Sparkles className="w-4 h-4" />
@@ -114,8 +114,8 @@ export function GovernanceModal({
             onClick={() => setActiveSection("gdpr")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-1.5 whitespace-nowrap transition-all border-b-2 ${
               activeSection === "gdpr"
-                ? "border-emerald-400 text-emerald-400"
-                : "border-transparent text-slate-400 hover:text-white"
+                ? "border-emerald-400 text-emerald-700"
+                : "border-transparent text-slate-400 hover:text-slate-900"
             }`}
           >
             <Lock className="w-4 h-4" />
@@ -126,8 +126,8 @@ export function GovernanceModal({
             onClick={() => setActiveSection("iso")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-1.5 whitespace-nowrap transition-all border-b-2 ${
               activeSection === "iso"
-                ? "border-amber-400 text-amber-400"
-                : "border-transparent text-slate-400 hover:text-white"
+                ? "border-amber-400 text-amber-700"
+                : "border-transparent text-slate-400 hover:text-slate-900"
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
@@ -138,8 +138,8 @@ export function GovernanceModal({
             onClick={() => setActiveSection("disclaimers")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-1.5 whitespace-nowrap transition-all border-b-2 ${
               activeSection === "disclaimers"
-                ? "border-rose-400 text-rose-400"
-                : "border-transparent text-slate-400 hover:text-white"
+                ? "border-rose-400 text-rose-700"
+                : "border-transparent text-slate-400 hover:text-slate-900"
             }`}
           >
             <Info className="w-4 h-4" />
@@ -148,25 +148,25 @@ export function GovernanceModal({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs sm:text-sm text-slate-600 leading-relaxed">
           
           {/* 1. EU AI Act Section */}
           {activeSection === "eu-ai" && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-cyan-950/30 border border-cyan-500/30 space-y-2">
-                <div className="flex items-center gap-2 font-bold text-cyan-300 text-sm">
-                  <Sparkles className="w-4 h-4 text-cyan-400" />
+              <div className="p-4 rounded-2xl bg-sky-50 border border-cyan-500/30 space-y-2">
+                <div className="flex items-center gap-2 font-bold text-sky-700 text-sm">
+                  <Sparkles className="w-4 h-4 text-sky-700" />
                   <span>EU AI Act Article 50 & 52 Transparency Statement</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Vecta operates as an intelligent career navigator and drafting assistant. Under the European Union Artificial Intelligence Act (EU AI Act, Regulation (EU) 2024/1689), we disclose our algorithmic models and compliance guardrails.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-white/5 space-y-1">
-                  <h4 className="font-bold text-white text-xs flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-1">
+                  <h4 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                     <span>Human-in-the-Loop Assistive Model (Non-Autonomous)</span>
                   </h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
@@ -174,9 +174,9 @@ export function GovernanceModal({
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-white/5 space-y-1">
-                  <h4 className="font-bold text-white text-xs flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-1">
+                  <h4 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                     <span>No Prohibited or High-Risk Biometric Profiling</span>
                   </h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
@@ -184,9 +184,9 @@ export function GovernanceModal({
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-white/5 space-y-1">
-                  <h4 className="font-bold text-white text-xs flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-1">
+                  <h4 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                     <span>Objective Vector Distance Scoring</span>
                   </h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
@@ -200,12 +200,12 @@ export function GovernanceModal({
           {/* 2. GDPR Privacy Section */}
           {activeSection === "gdpr" && (
             <div className="space-y-5">
-              <div className="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/30 space-y-2">
-                <div className="flex items-center gap-2 font-bold text-emerald-300 text-sm">
-                  <Lock className="w-4 h-4 text-emerald-400" />
+              <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-500/30 space-y-2">
+                <div className="flex items-center gap-2 font-bold text-emerald-700 text-sm">
+                  <Lock className="w-4 h-4 text-emerald-700" />
                   <span>GDPR Compliance & Data Subject Rights (EU / UK GDPR)</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   In compliance with the General Data Protection Regulation (Regulation (EU) 2016/679 and UK Data Protection Act 2018), you have absolute sovereignty over your candidate profile and telemetry data.
                 </p>
               </div>
@@ -215,22 +215,22 @@ export function GovernanceModal({
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
                   Data Minimization & Local-First Architecture
                 </h4>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Your resume text and candidate profile are stored locally in your browser session or securely within your isolated Prisma database account. We do not sell, broker, or monetize your career data to third-party recruiters or advertising networks.
                 </p>
               </div>
 
               {/* Interactive Data Subject Controls */}
-              <div className="p-4 rounded-2xl bg-slate-950/80 border border-white/10 space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600">
                   Interactive Data Rights Controls
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   
                   {/* Article 20: Export Data */}
-                  <div className="p-3.5 rounded-xl bg-slate-900 border border-white/5 space-y-2">
-                    <div className="font-bold text-white text-xs">
+                  <div className="p-3.5 rounded-xl bg-white border border-slate-200/70 space-y-2">
+                    <div className="font-bold text-slate-900 text-xs">
                       Article 20: Right to Data Portability
                     </div>
                     <p className="text-[11px] text-slate-400">
@@ -238,16 +238,16 @@ export function GovernanceModal({
                     </p>
                     <button
                       onClick={handleExportData}
-                      className="w-full px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-white/10"
+                      className="w-full px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-slate-200"
                     >
-                      <Download className="w-3.5 h-3.5 text-emerald-400" />
+                      <Download className="w-3.5 h-3.5 text-emerald-700" />
                       <span>Export All Data (JSON)</span>
                     </button>
                   </div>
 
                   {/* Article 17: Right to Erasure */}
-                  <div className="p-3.5 rounded-xl bg-slate-900 border border-white/5 space-y-2">
-                    <div className="font-bold text-white text-xs text-rose-300">
+                  <div className="p-3.5 rounded-xl bg-white border border-slate-200/70 space-y-2">
+                    <div className="font-bold text-slate-900 text-xs text-rose-700">
                       Article 17: Right to Erasure (Wipe Data)
                     </div>
                     <p className="text-[11px] text-slate-400">
@@ -257,20 +257,20 @@ export function GovernanceModal({
                     {!showWipeConfirm ? (
                       <button
                         onClick={() => setShowWipeConfirm(true)}
-                        className="w-full px-3 py-2 bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-rose-500/30"
+                        className="w-full px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-rose-200"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         <span>Wipe All My Data</span>
                       </button>
                     ) : (
                       <div className="space-y-1.5">
-                        <div className="text-[10px] text-rose-400 font-bold">
+                        <div className="text-[10px] text-rose-700 font-bold">
                           Are you sure? This cannot be undone.
                         </div>
                         <div className="flex gap-1.5">
                           <button
                             onClick={() => setShowWipeConfirm(false)}
-                            className="flex-1 px-2 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-xs"
+                            className="flex-1 px-2 py-1.5 bg-slate-100 text-slate-600 rounded-lg text-xs"
                           >
                             Cancel
                           </button>
@@ -295,26 +295,26 @@ export function GovernanceModal({
           {/* 3. ISO 42001 & AI Risk Section */}
           {activeSection === "iso" && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-2">
-                <div className="flex items-center gap-2 font-bold text-amber-300 text-sm">
-                  <ShieldCheck className="w-4 h-4 text-amber-400" />
+              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-500/30 space-y-2">
+                <div className="flex items-center gap-2 font-bold text-amber-700 text-sm">
+                  <ShieldCheck className="w-4 h-4 text-amber-700" />
                   <span>ISO/IEC 42001 AI Management System (AIMS) Alignment</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Vecta aligns with ISO/IEC 42001 governance controls to ensure continuous risk monitoring, algorithmic accuracy, and prompt safety.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-white/5 space-y-1">
-                  <span className="font-bold text-amber-400 block">Hallucination Mitigation</span>
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-1">
+                  <span className="font-bold text-amber-700 block">Hallucination Mitigation</span>
                   <p className="text-slate-400">
                     Generative prompts are bounded to the exact text extracted from the candidate's input and job specification, preventing fabricated credentials.
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-white/5 space-y-1">
-                  <span className="font-bold text-amber-400 block">Auditability & Model Cards</span>
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-1">
+                  <span className="font-bold text-amber-700 block">Auditability & Model Cards</span>
                   <p className="text-slate-400">
                     Every generation outputs structured STAR and Google XYZ formats that can be cross-verified and version-controlled by the user.
                   </p>
@@ -326,19 +326,19 @@ export function GovernanceModal({
           {/* 4. Legal Disclaimers Section */}
           {activeSection === "disclaimers" && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-slate-950/70 border border-white/10 space-y-3">
-                <div className="flex items-center gap-2 font-bold text-white text-sm">
-                  <Info className="w-4 h-4 text-rose-400" />
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div className="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                  <Info className="w-4 h-4 text-rose-700" />
                   <span>Third-Party ATS & Employer Disclaimers</span>
                 </div>
                 
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   1. <strong>Independent Project</strong>: Vecta is an independent technological lookup tool and is not officially affiliated with, endorsed by, or sponsored by Greenhouse Software, AshbyHQ, Lever, Workable, SmartRecruiters, Pinpoint, or any employers featured in the directory.
                 </p>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   2. <strong>Direct Portal Submission</strong>: Vecta provides deep links to verified public ATS portals. The submission of job applications, background checks, and hiring determinations are solely governed by the respective hiring organization’s terms and privacy policies.
                 </p>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   3. <strong>Compensation Benchmarks</strong>: Salary ranges and percentiles displayed on Vecta are statistical market estimates based on aggregated industry surveys and public postings. They are intended for guidance and negotiation benchmarking only.
                 </p>
               </div>
@@ -348,14 +348,14 @@ export function GovernanceModal({
         </div>
 
         {/* Footer */}
-        <div className="p-4 sm:p-6 border-t border-white/10 bg-slate-950/90 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-t border-slate-200 bg-white flex items-center justify-between">
           <div className="text-[11px] text-slate-500 font-mono">
             Vecta Governance Suite v2.4 • Compliant with EU AI Act & GDPR
           </div>
 
           <button
             onClick={onClose}
-            className="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition-all"
+            className="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all"
           >
             Close
           </button>

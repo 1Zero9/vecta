@@ -147,5 +147,5 @@ Click the **"Governance"** link in the navigation header to open the **Governanc
 Press **`Cmd + K`** (macOS) or **`Ctrl + K`** (Windows/Linux) from anywhere in the application to open the **Global Command Palette**:
 - Type to search jobs by title, company, or required skill (*e.g. "PyTorch", "NIS2", "Kubernetes"*).
 - Type to search companies in the Radar directory.
-- Access instant shortcuts (*Switch to Jobs, Switch to Radar, Switch to Pipeline, Edit Profile, Toggle Theme*).
+- Access instant shortcuts (*Switch to Jobs, Switch to Radar, Switch to Pipeline, Edit Profile*).
 - Press **`ESC`** to dismiss the palette.

@@ -54,7 +54,6 @@ export default function Home() {
   // Navigation & View State
   const [activeTab, setActiveTab] = useState<"jobs" | "radar" | "recruiter" | "pipeline" | "governance">("jobs");
   const [activeDomain, setActiveDomain] = useState<DomainType | "ALL">("ALL");
-  const [isDark, setIsDark] = useState(true);
 
   // Data State
   const [companies] = useState<Company[]>(companiesData as Company[]);
@@ -96,28 +95,7 @@ export default function Home() {
     setSavedJobIds(getStoredSavedJobs());
     setPipeline(getStoredPipeline());
 
-    // Theme setup
-    const savedTheme = localStorage.getItem("vecta_theme");
-    if (savedTheme === "light") {
-      setIsDark(false);
-      document.documentElement.classList.add("light");
-    } else {
-      setIsDark(true);
-      document.documentElement.classList.remove("light");
-    }
   }, []);
-
-  const toggleTheme = () => {
-    const nextDark = !isDark;
-    setIsDark(nextDark);
-    if (nextDark) {
-      document.documentElement.classList.remove("light");
-      localStorage.setItem("vecta_theme", "dark");
-    } else {
-      document.documentElement.classList.add("light");
-      localStorage.setItem("vecta_theme", "light");
-    }
-  };
 
   // Switch demo persona
   const handleSelectPersona = (personaKey: "alex-ai-sec" | "elena-grc" | "marcus-it") => {
@@ -279,13 +257,13 @@ export default function Home() {
   const itJobsCount = jobs.filter((j) => j.domain === "IT").length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0B0F19] text-[#F9FAFB] selection:bg-emerald-500 selection:text-slate-950">
+    <div className="min-h-screen flex flex-col text-slate-900">
       
       {/* Toast Notification */}
       {notification && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4 duration-200">
-          <div className="px-4 py-2.5 rounded-2xl bg-slate-900 border border-emerald-500/40 text-emerald-300 text-xs font-semibold shadow-2xl flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <div className="px-4 py-2.5 rounded-xl bg-white border border-emerald-200 text-emerald-800 text-xs font-semibold shadow-lg flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
             <span>{notification}</span>
           </div>
         </div>
@@ -302,8 +280,6 @@ export default function Home() {
           }
         }}
         currentUser={currentUser}
-        isDark={isDark}
-        toggleTheme={toggleTheme}
         openCmdPalette={() => setIsCmdPaletteOpen(true)}
         openUserManagement={() => setIsUserManagementOpen(true)}
         openGovernance={() => setIsGovernanceModalOpen(true)}
@@ -381,14 +357,14 @@ export default function Home() {
       </main>
 
       {/* Clean Modern Footer */}
-      <footer className="border-t border-white/10 bg-slate-950/80 py-8 px-4 sm:px-6 lg:px-8 transition-colors mt-12">
+      <footer className="border-t border-slate-200 bg-white/70 py-8 px-4 sm:px-6 lg:px-8 mt-12">
         <div className="max-w-[1700px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           
           <div className="flex flex-wrap items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold font-mono text-xs">
+            <div className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center justify-center font-bold font-mono text-xs">
               V
             </div>
-            <span className="font-bold text-white">Vecta // Career Vector Navigator</span>
+            <span className="font-bold text-slate-900">Vecta · Career intelligence</span>
             <span>•</span>
             <span className="text-slate-400">Latin: vehere ("to carry / convey / transport")</span>
           </div>
@@ -396,19 +372,19 @@ export default function Home() {
           <div className="flex flex-wrap items-center gap-4 text-[11px] font-mono">
             <button
               onClick={() => setIsGovernanceModalOpen(true)}
-              className="text-amber-400 hover:underline"
+              className="text-amber-700 hover:underline"
             >
               EU AI Act & GDPR Disclosures
             </button>
             <span>•</span>
             <button
               onClick={() => setIsUserManagementOpen(true)}
-              className="text-cyan-400 hover:underline"
+              className="text-sky-700 hover:underline"
             >
               Active Account: {currentUser.name}
             </button>
             <span>•</span>
-            <span className="text-emerald-400">Prisma Database Integrated</span>
+            <span className="text-emerald-700">Local-first workspace</span>
           </div>
 
         </div>
@@ -481,7 +457,6 @@ export default function Home() {
           else setActiveTab(tab);
         }}
         openProfileDrawer={() => setIsProfileDrawerOpen(true)}
-        toggleTheme={toggleTheme}
       />
 
     </div>

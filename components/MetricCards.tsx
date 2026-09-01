@@ -1,17 +1,7 @@
 "use client";
 
 import React from "react";
-import { 
-  Building2, 
-  Briefcase, 
-  Sparkles, 
-  ShieldCheck, 
-  CheckCircle2, 
-  TrendingUp,
-  Cpu,
-  Layers,
-  Scale
-} from "lucide-react";
+import { Sparkles, ShieldCheck, CheckCircle2, Cpu, Scale, ArrowUpRight } from "lucide-react";
 import { DomainType } from "@/lib/types";
 
 interface MetricCardsProps {
@@ -41,138 +31,70 @@ export function MetricCards({
   setActiveTab,
   openGovernance,
 }: MetricCardsProps) {
+  const domains = [
+    { id: "AI", label: "AI & ML", count: aiJobsCount, icon: Sparkles, tone: "text-sky-700 bg-sky-50 border-sky-200" },
+    { id: "Security", label: "Security", count: secJobsCount, icon: ShieldCheck, tone: "text-rose-700 bg-rose-50 border-rose-200" },
+    { id: "Governance", label: "Governance", count: govJobsCount, icon: CheckCircle2, tone: "text-amber-700 bg-amber-50 border-amber-200" },
+    { id: "IT", label: "IT & Cloud", count: itJobsCount, icon: Cpu, tone: "text-indigo-700 bg-indigo-50 border-indigo-200" },
+  ] as const;
+
   return (
-    <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/10 shadow-lg space-y-4">
-      
-      {/* Top Value Proposition & Live Telemetry Ticker */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
+    <section className="glass-panel overflow-hidden rounded-2xl">
+      <div className="grid gap-6 px-5 py-6 sm:px-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-xs font-mono font-bold uppercase border border-emerald-500/30 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Live Direct ATS Feeds Active
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-800">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+              Curated opportunity workspace
             </span>
-            <button
-              onClick={openGovernance}
-              className="text-slate-400 hover:text-amber-300 text-xs flex items-center gap-1 transition-colors"
-            >
-              <Scale className="w-3.5 h-3.5 text-amber-400" />
-              <span>EU AI Act & GDPR Disclosures</span>
+            <button onClick={openGovernance} className="flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-800">
+              <Scale className="h-3.5 w-3.5" />
+              How Vecta uses your data
             </button>
           </div>
-
-          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-1.5">
-            Recruitment Intelligence & Career Vector Navigator
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-0.5">
-            Curated vacancies and company intelligence across <span className="text-cyan-300 font-semibold">AI & Machine Learning</span>, <span className="text-rose-300 font-semibold">Cybersecurity</span>, <span className="text-amber-300 font-semibold">Governance & GRC</span>, and <span className="text-indigo-300 font-semibold">IT Infrastructure</span>.
+          <h1 className="max-w-3xl text-2xl font-semibold tracking-[-0.035em] text-slate-900 sm:text-3xl">
+            Find work that fits where you’re heading.
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+            Compare specialist roles, understand your fit, and keep every application moving in one calm workspace.
           </p>
         </div>
 
-        {/* Live Counters */}
-        <div className="flex items-center gap-3 sm:gap-4 shrink-0 bg-slate-950/70 p-3 rounded-2xl border border-white/5">
-          <div 
-            onClick={() => setActiveTab("jobs")}
-            className="cursor-pointer text-center px-3 sm:px-4 py-1 hover:bg-slate-900 rounded-xl transition-colors"
-          >
-            <div className="text-[10px] uppercase font-bold text-slate-400">Direct Jobs</div>
-            <div className="text-xl sm:text-2xl font-mono font-black text-emerald-400">{totalJobs}</div>
-          </div>
-
-          <div className="w-px h-8 bg-white/10"></div>
-
-          <div 
-            onClick={() => setActiveTab("radar")}
-            className="cursor-pointer text-center px-3 sm:px-4 py-1 hover:bg-slate-900 rounded-xl transition-colors"
-          >
-            <div className="text-[10px] uppercase font-bold text-slate-400">Ecosystem Hubs</div>
-            <div className="text-xl sm:text-2xl font-mono font-black text-white">{totalCompanies}</div>
-          </div>
-
-          <div className="w-px h-8 bg-white/10"></div>
-
-          <div 
-            onClick={() => setActiveTab("pipeline")}
-            className="cursor-pointer text-center px-3 sm:px-4 py-1 hover:bg-slate-900 rounded-xl transition-colors"
-          >
-            <div className="text-[10px] uppercase font-bold text-slate-400">In Pipeline</div>
-            <div className="text-xl sm:text-2xl font-mono font-black text-indigo-400">{pipelineCount}</div>
-          </div>
+        <div className="grid grid-cols-3 divide-x divide-slate-200 rounded-xl border border-slate-200 bg-[#fafbf9] p-1">
+          {[
+            { label: "Roles", value: totalJobs, tab: "jobs" as const },
+            { label: "Companies", value: totalCompanies, tab: "radar" as const },
+            { label: "Pipeline", value: pipelineCount, tab: "pipeline" as const },
+          ].map((metric) => (
+            <button key={metric.label} onClick={() => setActiveTab(metric.tab)} className="group min-w-20 rounded-lg px-4 py-2 text-left hover:bg-white">
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">{metric.label}</span>
+              <span className="mt-0.5 flex items-center gap-1 text-xl font-semibold text-slate-900">
+                {metric.value}<ArrowUpRight className="h-3.5 w-3.5 text-slate-600 group-hover:text-emerald-700" />
+              </span>
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Domain Vector Quick Selector */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 hidden sm:inline">
-            Focus Vector:
-          </span>
-
+      <div className="flex flex-wrap items-center gap-2 border-t border-slate-200 bg-[#fafbf9] px-5 py-3 sm:px-7">
+        <span className="mr-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500">Explore</span>
+        <button
+          onClick={() => setDomainFilter("ALL")}
+          className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${activeDomainFilter === "ALL" ? "border-[#245e49] bg-[#245e49] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"}`}
+        >
+          All roles · {totalJobs}
+        </button>
+        {domains.map(({ id, label, count, icon: Icon, tone }) => (
           <button
-            onClick={() => setDomainFilter("ALL")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              activeDomainFilter === "ALL"
-                ? "bg-white text-slate-950 shadow-md"
-                : "bg-slate-900 text-slate-400 hover:text-white border border-white/5"
-            }`}
+            key={id}
+            onClick={() => setDomainFilter(id)}
+            className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold ${activeDomainFilter === id ? "border-[#245e49] bg-[#245e49] text-white" : tone}`}
           >
-            All Disciplines ({totalJobs})
+            <Icon className="h-3.5 w-3.5" />
+            {label} · {count}
           </button>
-
-          <button
-            onClick={() => setDomainFilter("AI")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-              activeDomainFilter === "AI"
-                ? "bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20"
-                : "bg-slate-900 text-cyan-400 hover:bg-cyan-950/40 border border-white/5"
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>AI & Machine Learning ({aiJobsCount})</span>
-          </button>
-
-          <button
-            onClick={() => setDomainFilter("Security")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-              activeDomainFilter === "Security"
-                ? "bg-rose-500 text-white shadow-md shadow-rose-500/20"
-                : "bg-slate-900 text-rose-400 hover:bg-rose-950/40 border border-white/5"
-            }`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Cybersecurity ({secJobsCount})</span>
-          </button>
-
-          <button
-            onClick={() => setDomainFilter("Governance")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-              activeDomainFilter === "Governance"
-                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
-                : "bg-slate-900 text-amber-400 hover:bg-amber-950/40 border border-white/5"
-            }`}
-          >
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Governance & GRC ({govJobsCount})</span>
-          </button>
-
-          <button
-            onClick={() => setDomainFilter("IT")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-              activeDomainFilter === "IT"
-                ? "bg-indigo-500 text-white shadow-md shadow-indigo-500/20"
-                : "bg-slate-900 text-indigo-400 hover:bg-indigo-950/40 border border-white/5"
-            }`}
-          >
-            <Cpu className="w-3.5 h-3.5" />
-            <span>IT & Cloud ({itJobsCount})</span>
-          </button>
-        </div>
-
-        <div className="text-[11px] text-slate-400 font-mono hidden md:block">
-          Click any role to audit Vector Fit or generate tailored CV
-        </div>
+        ))}
       </div>
-
-    </div>
+    </section>
   );
 }

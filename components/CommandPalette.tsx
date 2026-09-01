@@ -8,8 +8,6 @@ import {
   Building2, 
   BarChart3, 
   Kanban, 
-  Moon, 
-  Sun, 
   UserCheck, 
   X, 
   ArrowRight,
@@ -26,7 +24,6 @@ interface CommandPaletteProps {
   onSelectJob: (job: Job) => void;
   setActiveTab: (tab: "jobs" | "radar" | "recruiter" | "pipeline" | "governance") => void;
   openProfileDrawer: () => void;
-  toggleTheme: () => void;
 }
 
 export function CommandPalette({
@@ -38,7 +35,6 @@ export function CommandPalette({
   onSelectJob,
   setActiveTab,
   openProfileDrawer,
-  toggleTheme,
 }: CommandPaletteProps) {
   const [query, setQuery] = useState("");
 
@@ -95,23 +91,23 @@ export function CommandPalette({
     : [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-slate-950/80 backdrop-blur-md">
-      <div className="bg-slate-900 border border-white/15 rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-slate-900/30 backdrop-blur-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         
         {/* Input Bar */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/10 bg-slate-950/80">
-          <Search className="w-5 h-5 text-emerald-400 shrink-0" />
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-200 bg-slate-50">
+          <Search className="w-5 h-5 text-emerald-700 shrink-0" />
           <input
             type="text"
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type to search jobs, companies, skills, or quick actions..."
-            className="w-full bg-transparent text-white placeholder-slate-400 focus:outline-none text-sm sm:text-base"
+            className="w-full bg-transparent text-slate-900 placeholder-slate-400 focus:outline-none text-sm sm:text-base"
           />
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg"
+            className="text-slate-400 hover:text-slate-900 p-1 rounded-lg"
           >
             <X className="w-4 h-4" />
           </button>
@@ -132,10 +128,10 @@ export function CommandPalette({
                   setActiveTab("jobs");
                   onClose();
                 }}
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 text-slate-200 cursor-pointer transition-colors"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <Briefcase className="w-4 h-4 text-emerald-400" />
+                  <Briefcase className="w-4 h-4 text-emerald-700" />
                   <span className="font-bold">Browse Direct ATS Jobs (IT, AI, GRC, Security)</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
@@ -146,10 +142,10 @@ export function CommandPalette({
                   setActiveTab("radar");
                   onClose();
                 }}
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 text-slate-200 cursor-pointer transition-colors"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <Building2 className="w-4 h-4 text-cyan-400" />
+                  <Building2 className="w-4 h-4 text-sky-700" />
                   <span className="font-bold">Explore Company Tech Radar & Compliance Hub</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
@@ -160,10 +156,10 @@ export function CommandPalette({
                   setActiveTab("recruiter");
                   onClose();
                 }}
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 text-slate-200 cursor-pointer transition-colors"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <BarChart3 className="w-4 h-4 text-amber-400" />
+                  <BarChart3 className="w-4 h-4 text-amber-700" />
                   <span className="font-bold">View Salary Benchmarks & Talent Archetypes</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
@@ -174,10 +170,10 @@ export function CommandPalette({
                   setActiveTab("pipeline");
                   onClose();
                 }}
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 text-slate-200 cursor-pointer transition-colors"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <Kanban className="w-4 h-4 text-indigo-400" />
+                  <Kanban className="w-4 h-4 text-indigo-700" />
                   <span className="font-bold">Open Career Application Kanban Pipeline</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
@@ -188,28 +184,15 @@ export function CommandPalette({
                   openProfileDrawer();
                   onClose();
                 }}
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 text-slate-200 cursor-pointer transition-colors"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-700 cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <UserCheck className="w-4 h-4 text-emerald-400" />
+                  <UserCheck className="w-4 h-4 text-emerald-700" />
                   <span className="font-bold">Edit Candidate Profile & Vector Match Settings</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
               </div>
 
-              <div
-                onClick={() => {
-                  toggleTheme();
-                  onClose();
-                }}
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 text-slate-200 cursor-pointer transition-colors"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Moon className="w-4 h-4 text-amber-400" />
-                  <span className="font-bold">Toggle Dark / Light Theme</span>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
-              </div>
             </div>
           )}
 
@@ -226,13 +209,13 @@ export function CommandPalette({
                     onSelectJob(j);
                     onClose();
                   }}
-                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800 cursor-pointer transition-colors"
+                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-100 cursor-pointer transition-colors"
                 >
                   <div>
-                    <div className="font-bold text-white text-xs">{j.title}</div>
+                    <div className="font-bold text-slate-900 text-xs">{j.title}</div>
                     <div className="text-[11px] text-slate-400">{j.company_name} // {j.domain}</div>
                   </div>
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">
+                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-700 text-[10px] font-mono font-bold">
                     View
                   </span>
                 </div>
@@ -253,13 +236,13 @@ export function CommandPalette({
                     setActiveTab("radar");
                     onClose();
                   }}
-                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800 cursor-pointer transition-colors"
+                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-100 cursor-pointer transition-colors"
                 >
                   <div>
-                    <div className="font-bold text-white text-xs">{c.name}</div>
+                    <div className="font-bold text-slate-900 text-xs">{c.name}</div>
                     <div className="text-[11px] text-slate-400 truncate max-w-sm">{c.tagline}</div>
                   </div>
-                  <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 text-[10px] font-mono font-bold">
+                  <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-sky-700 text-[10px] font-mono font-bold">
                     {c.domain}
                   </span>
                 </div>
@@ -280,13 +263,13 @@ export function CommandPalette({
                     setActiveTab("recruiter");
                     onClose();
                   }}
-                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800 cursor-pointer transition-colors"
+                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-100 cursor-pointer transition-colors"
                 >
                   <div>
-                    <div className="font-bold text-white text-xs">{b.role_title}</div>
+                    <div className="font-bold text-slate-900 text-xs">{b.role_title}</div>
                     <div className="text-[11px] text-slate-400">Median £{(b.p50 / 1000).toFixed(0)}k // {b.market_trend}</div>
                   </div>
-                  <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[10px] font-mono font-bold">
+                  <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 text-[10px] font-mono font-bold">
                     {b.domain}
                   </span>
                 </div>
@@ -297,7 +280,7 @@ export function CommandPalette({
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-3 border-t border-white/10 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+        <div className="px-5 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-[11px] text-slate-400 font-mono">
           <span>Tip: Press ESC to close</span>
           <span>Vecta Navigation Hub</span>
         </div>

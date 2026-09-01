@@ -48,29 +48,29 @@ export function RecruiterLookup({
     <div className="space-y-8">
       
       {/* Header Banner */}
-      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 relative overflow-hidden">
+      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-200 relative overflow-hidden">
         <div className="max-w-3xl space-y-2 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-mono font-bold uppercase">
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-emerald-500/40 text-xs font-mono font-bold uppercase">
               Recruiter & Market Telemetry
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Compensation Benchmarks & Talent Archetypes
           </h2>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Market compensation percentiles (P25 - P90), demanded skill matrices, and structured interview rubrics specifically verified for <span className="text-cyan-400 font-semibold">AI/ML</span>, <span className="text-rose-400 font-semibold">Cybersecurity</span>, <span className="text-amber-400 font-semibold">Governance & GRC</span>, and <span className="text-indigo-400 font-semibold">IT Infrastructure</span>.
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Market compensation percentiles (P25 - P90), demanded skill matrices, and structured interview rubrics specifically verified for <span className="text-sky-700 font-semibold">AI/ML</span>, <span className="text-rose-700 font-semibold">Cybersecurity</span>, <span className="text-amber-700 font-semibold">Governance & GRC</span>, and <span className="text-indigo-700 font-semibold">IT Infrastructure</span>.
           </p>
         </div>
 
         {/* Domain Filter Pills */}
-        <div className="flex flex-wrap items-center gap-2 pt-4 relative z-10 border-t border-white/5 mt-4">
+        <div className="flex flex-wrap items-center gap-2 pt-4 relative z-10 border-t border-slate-200/70 mt-4">
           <button
             onClick={() => setActiveDomain("ALL")}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeDomain === "ALL"
                 ? "bg-white text-slate-950 shadow-md"
-                : "bg-slate-800 text-slate-400 hover:text-white"
+                : "bg-slate-100 text-slate-400 hover:text-slate-900"
             }`}
           >
             All Disciplines
@@ -80,7 +80,7 @@ export function RecruiterLookup({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeDomain === "AI"
                 ? "bg-cyan-500 text-slate-950 shadow-md"
-                : "bg-slate-800 text-cyan-400"
+                : "bg-slate-100 text-sky-700"
             }`}
           >
             AI & Machine Learning
@@ -89,8 +89,8 @@ export function RecruiterLookup({
             onClick={() => setActiveDomain("Security")}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeDomain === "Security"
-                ? "bg-rose-500 text-white shadow-md"
-                : "bg-slate-800 text-rose-400"
+                ? "bg-rose-500 text-slate-900 shadow-md"
+                : "bg-slate-100 text-rose-700"
             }`}
           >
             Cybersecurity
@@ -100,7 +100,7 @@ export function RecruiterLookup({
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeDomain === "Governance"
                 ? "bg-amber-500 text-slate-950 shadow-md"
-                : "bg-slate-800 text-amber-400"
+                : "bg-slate-100 text-amber-700"
             }`}
           >
             Governance & GRC
@@ -109,8 +109,8 @@ export function RecruiterLookup({
             onClick={() => setActiveDomain("IT")}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               activeDomain === "IT"
-                ? "bg-indigo-500 text-white shadow-md"
-                : "bg-slate-800 text-indigo-400"
+                ? "bg-indigo-500 text-slate-900 shadow-md"
+                : "bg-slate-100 text-indigo-700"
             }`}
           >
             IT & Cloud Architecture
@@ -122,8 +122,8 @@ export function RecruiterLookup({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-emerald-400" />
-            <h3 className="text-lg font-bold text-white">
+            <BarChart3 className="w-5 h-5 text-emerald-700" />
+            <h3 className="text-lg font-bold text-slate-900">
               Compensation Percentiles by Role
             </h3>
           </div>
@@ -136,46 +136,46 @@ export function RecruiterLookup({
           {filteredBenchmarks.map((b) => (
             <div
               key={b.id}
-              className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/10 space-y-4 hover:border-emerald-500/40 transition-all shadow-lg"
+              className="glass-panel rounded-3xl p-5 sm:p-6 border border-slate-200 space-y-4 hover:border-emerald-500/40 transition-all shadow-lg"
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                     {b.domain} // {b.seniority}
                   </span>
-                  <h4 className="text-base sm:text-lg font-black text-white mt-1.5">
+                  <h4 className="text-base sm:text-lg font-black text-slate-900 mt-1.5">
                     {b.role_title}
                   </h4>
                 </div>
 
-                <div className="flex items-center gap-1 text-xs font-mono font-bold px-2 py-1 rounded-lg bg-cyan-950/60 text-cyan-400 border border-cyan-500/30">
+                <div className="flex items-center gap-1 text-xs font-mono font-bold px-2 py-1 rounded-lg bg-sky-50 text-sky-700 border border-cyan-500/30">
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span>{b.market_trend}</span>
                 </div>
               </div>
 
               {/* Percentile visual meter */}
-              <div className="space-y-2 pt-2 bg-slate-950/50 p-4 rounded-2xl border border-white/5">
+              <div className="space-y-2 pt-2 bg-slate-50/50 p-4 rounded-2xl border border-slate-200/70">
                 <div className="grid grid-cols-4 gap-2 text-center text-xs">
                   <div>
                     <div className="text-[10px] text-slate-500 font-bold uppercase">P25</div>
-                    <div className="font-mono font-bold text-slate-300">£{(b.p25 / 1000).toFixed(0)}k</div>
+                    <div className="font-mono font-bold text-slate-600">£{(b.p25 / 1000).toFixed(0)}k</div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-emerald-400 font-bold uppercase">P50 (Median)</div>
-                    <div className="font-mono font-black text-emerald-400">£{(b.p50 / 1000).toFixed(0)}k</div>
+                    <div className="text-[10px] text-emerald-700 font-bold uppercase">P50 (Median)</div>
+                    <div className="font-mono font-black text-emerald-700">£{(b.p50 / 1000).toFixed(0)}k</div>
                   </div>
                   <div>
                     <div className="text-[10px] text-slate-500 font-bold uppercase">P75</div>
-                    <div className="font-mono font-bold text-slate-300">£{(b.p75 / 1000).toFixed(0)}k</div>
+                    <div className="font-mono font-bold text-slate-600">£{(b.p75 / 1000).toFixed(0)}k</div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-cyan-400 font-bold uppercase">P90 (Top)</div>
-                    <div className="font-mono font-black text-cyan-300">£{(b.p90 / 1000).toFixed(0)}k</div>
+                    <div className="text-[10px] text-sky-700 font-bold uppercase">P90 (Top)</div>
+                    <div className="font-mono font-black text-sky-700">£{(b.p90 / 1000).toFixed(0)}k</div>
                   </div>
                 </div>
 
-                <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden flex">
+                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden flex">
                   <div className="h-full bg-slate-700 w-1/4"></div>
                   <div className="h-full bg-emerald-500 w-1/4"></div>
                   <div className="h-full bg-teal-400 w-1/4"></div>
@@ -191,7 +191,7 @@ export function RecruiterLookup({
                     {b.top_demanded_skills.map((skill, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-white/5 font-medium"
+                        className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200/70 font-medium"
                       >
                         {skill}
                       </span>
@@ -205,7 +205,7 @@ export function RecruiterLookup({
                     {b.primary_certifications.map((cert, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono text-[11px]"
+                        className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-700 border border-amber-500/20 font-mono text-[11px]"
                       >
                         {cert}
                       </span>
@@ -220,10 +220,10 @@ export function RecruiterLookup({
       </div>
 
       {/* Section 2: Talent Archetypes & Hiring Rubrics */}
-      <div className="space-y-4 pt-6 border-t border-white/10">
+      <div className="space-y-4 pt-6 border-t border-slate-200">
         <div className="flex items-center gap-2">
-          <Users className="w-5 h-5 text-cyan-400" />
-          <h3 className="text-lg font-bold text-white">
+          <Users className="w-5 h-5 text-sky-700" />
+          <h3 className="text-lg font-bold text-slate-900">
             Talent Archetypes & Interview Rubrics
           </h3>
         </div>
@@ -240,19 +240,19 @@ export function RecruiterLookup({
                   onClick={() => setSelectedArchetype(arch)}
                   className={`p-4 rounded-2xl cursor-pointer transition-all border ${
                     isSelected
-                      ? "bg-slate-900 border-emerald-500 shadow-md ring-1 ring-emerald-500/40"
-                      : "bg-slate-900/60 hover:bg-slate-900 border-white/5"
+                      ? "bg-white border-emerald-500 shadow-md ring-1 ring-emerald-500/40"
+                      : "bg-white hover:bg-white border-slate-200/70"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-mono font-bold uppercase text-slate-400">
                       {arch.domain}
                     </span>
-                    <span className="text-xs font-mono font-bold text-emerald-400">
+                    <span className="text-xs font-mono font-bold text-emerald-700">
                       {arch.average_salary_range}
                     </span>
                   </div>
-                  <h4 className="text-sm font-bold text-white mt-1">
+                  <h4 className="text-sm font-bold text-slate-900 mt-1">
                     {arch.title}
                   </h4>
                 </div>
@@ -262,18 +262,18 @@ export function RecruiterLookup({
 
           {/* Right Column: Deep Archetype Blueprint */}
           {selectedArchetype && (
-            <div className="lg:col-span-2 glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
+            <div className="lg:col-span-2 glass-panel rounded-3xl p-6 sm:p-8 border border-slate-200 space-y-6">
               
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
                 <div>
-                  <span className="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">
+                  <span className="text-xs font-mono text-emerald-700 font-bold uppercase tracking-wider">
                     {selectedArchetype.domain} Archetype
                   </span>
-                  <h3 className="text-xl sm:text-2xl font-black text-white mt-0.5">
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
                     {selectedArchetype.title}
                   </h3>
                 </div>
-                <div className="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-white/10 text-xs font-mono font-bold text-cyan-300">
+                <div className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-mono font-bold text-sky-700">
                   Seniority: {selectedArchetype.typical_seniority}
                 </div>
               </div>
@@ -281,13 +281,13 @@ export function RecruiterLookup({
               {/* Core Deliverables */}
               <div className="space-y-2 text-xs sm:text-sm">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700" />
                   <span>Key Deliverables & Responsibilities</span>
                 </h4>
-                <ul className="space-y-1.5 pl-2 text-slate-300">
+                <ul className="space-y-1.5 pl-2 text-slate-600">
                   {selectedArchetype.key_deliverables.map((deliv, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="text-emerald-400 font-bold">•</span>
+                      <span className="text-emerald-700 font-bold">•</span>
                       <span>{deliv}</span>
                     </li>
                   ))}
@@ -296,7 +296,7 @@ export function RecruiterLookup({
 
               {/* Standard Technical Skills & Certifications */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="space-y-1.5 p-4 rounded-2xl bg-slate-950/60 border border-white/5">
+                <div className="space-y-1.5 p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
                     Core Skills & Frameworks
                   </span>
@@ -304,7 +304,7 @@ export function RecruiterLookup({
                     {selectedArchetype.standard_skills.map((skill, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 rounded-lg bg-slate-800 text-slate-200 text-xs font-mono"
+                        className="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-mono"
                       >
                         {skill}
                       </span>
@@ -312,7 +312,7 @@ export function RecruiterLookup({
                   </div>
                 </div>
 
-                <div className="space-y-1.5 p-4 rounded-2xl bg-slate-950/60 border border-white/5">
+                <div className="space-y-1.5 p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
                     Industry Certifications
                   </span>
@@ -320,7 +320,7 @@ export function RecruiterLookup({
                     {selectedArchetype.key_certifications.map((cert, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 rounded-lg bg-amber-500/10 text-amber-300 text-xs font-mono border border-amber-500/20"
+                        className="px-2 py-1 rounded-lg bg-amber-500/10 text-amber-700 text-xs font-mono border border-amber-500/20"
                       >
                         {cert}
                       </span>
@@ -332,16 +332,16 @@ export function RecruiterLookup({
               {/* Sample Interview Questions */}
               <div className="space-y-3 pt-2">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                  <HelpCircle className="w-4 h-4 text-cyan-400" />
+                  <HelpCircle className="w-4 h-4 text-sky-700" />
                   <span>High-Signal Interview Questions</span>
                 </h4>
                 <div className="space-y-2">
                   {selectedArchetype.interview_question_samples.map((q, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 rounded-xl bg-slate-900 border border-white/5 text-xs sm:text-sm text-slate-200 leading-relaxed font-medium"
+                      className="p-3.5 rounded-xl bg-white border border-slate-200/70 text-xs sm:text-sm text-slate-700 leading-relaxed font-medium"
                     >
-                      <span className="text-cyan-400 font-mono font-bold mr-2">Q{idx + 1}:</span>
+                      <span className="text-sky-700 font-mono font-bold mr-2">Q{idx + 1}:</span>
                       {q}
                     </div>
                   ))}

@@ -89,7 +89,7 @@ vecta/
 ├── app/
 │   ├── layout.tsx             # Root layout, metadata, Geist typography
 │   ├── page.tsx               # Primary dashboard coordinating views & state
-│   ├── globals.css            # Custom Vector HUD tokens, dark/light themes
+│   ├── globals.css            # Professional light-theme design tokens
 │   └── api/
 │       ├── companies/route.ts # Company directory & compliance API
 │       ├── jobs/route.ts      # Filterable ATS job listings API
@@ -98,7 +98,7 @@ vecta/
 │       └── governance/
 │           └── consent/route.ts# GDPR and EU AI Act consent logging endpoint
 ├── components/
-│   ├── Header.tsx             # Brand header, active persona pill, ⌘K trigger
+│   ├── Header.tsx             # Brand header, navigation, persona pill, ⌘K trigger
 │   ├── MetricCards.tsx        # Horizontal telemetry bar with domain vector switches
 │   ├── JobBoard.tsx           # Multi-faceted direct job search & action triggers
 │   ├── RadarTable.tsx         # Company directory table with expandable deep-dives
