@@ -1,15 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { CandidateProfile, DomainType, WorkMode } from "@/lib/types";
+import { CandidateProfile, DomainType } from "@/lib/types";
+import { ProfileEvidenceManager } from "@/components/ProfileEvidenceManager";
 import { 
   X, 
   UserCheck, 
   Save, 
-  Sparkles, 
-  Award, 
-  FileText, 
-  Banknote, 
   CheckCircle2,
   Plus
 } from "lucide-react";
@@ -31,11 +28,6 @@ export function ProfileDrawer({
   const [skillInput, setSkillInput] = useState("");
   const [certInput, setCertInput] = useState("");
   const [savedSuccess, setSavedSuccess] = useState(false);
-
-  // Sync profile when opened
-  React.useEffect(() => {
-    setFormData(profile);
-  }, [profile, isOpen]);
 
   if (!isOpen) return null;
 
@@ -291,6 +283,13 @@ export function ProfileDrawer({
               className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-600 font-mono text-xs focus:outline-none focus:border-blue-500 leading-relaxed"
             />
           </div>
+
+          <ProfileEvidenceManager
+            evidence={formData.evidence ?? []}
+            skills={formData.skills}
+            certifications={formData.certifications}
+            onChange={(evidence) => setFormData({ ...formData, evidence })}
+          />
 
           {/* Submit / Save Button */}
           <div className="pt-4 border-t border-slate-200 flex items-center justify-between">

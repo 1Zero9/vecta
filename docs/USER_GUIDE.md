@@ -1,151 +1,124 @@
-# 📖 Vecta User Guide & Operational Handbook
+# Vecta User Guide
 
-Welcome to the **Vecta Operational Handbook**. Vecta (*Latin: vehere – to carry, convey, transport*) is an intelligent recruitment platform, direct ATS tracker, and career vector navigator specialized in **IT, AI & Machine Learning, Governance & GRC, and Cybersecurity**.
+Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data and stores candidate information primarily on the current device.
 
----
+## 1. Explore roles
 
-## 🎯 Quick Navigation
+Open **Direct Jobs** to browse roles in AI and machine learning, cybersecurity, governance and GRC, and cloud/IT.
 
-- [1. User Management & Persona Selection](#1-user-management--persona-selection)
-- [2. Job Seeker Workflow](#2-job-seeker-workflow)
-  - [A. Exploring Direct ATS Jobs](#a-exploring-direct-ats-jobs)
-  - [B. Vector Fit Match & ATS Parseability Audit](#b-vector-fit-match--ats-parseability-audit)
-  - [C. AI Application Copilot (Cover Letters & Resume Bullets)](#c-ai-application-copilot-cover-letters--resume-bullets)
-  - [D. STAR Interview Preparation](#d-star-interview-preparation)
-  - [E. Managing the Career Application Pipeline](#e-managing-the-career-application-pipeline)
-- [3. Recruiter & Hiring Manager Workflow](#3-recruiter--hiring-manager-workflow)
-  - [A. Salary Benchmarks & Market Growth Trends](#a-salary-benchmarks--market-growth-trends)
-  - [B. Talent Archetypes & Structured Interview Rubrics](#b-talent-archetypes--structured-interview-rubrics)
-  - [C. Company Ecosystem Radar & Directory Export](#c-company-ecosystem-radar--directory-export)
-- [4. Governance, GDPR & Data Subject Rights](#4-governance-gdpr--data-subject-rights)
-- [5. Keyboard Shortcuts (Command Palette)](#5-keyboard-shortcuts-command-palette)
+You can:
 
----
+- Search by title, company, skill, or standard.
+- Filter by discipline, seniority, and work mode.
+- Show only saved roles.
+- Open the employer application link.
+- Save a role or add it to the pipeline.
 
-## 1. User Management & Persona Selection
+The current role catalogue is curated prototype data. A listing should not be treated as recently verified unless its source is checked independently.
 
-Vecta supports both **pre-configured default candidate personas** and **custom user profiles**.
+## 2. Build your candidate profile
 
-### Switching Pre-Configured Personas
-Click on the user badge in the top right corner of the navigation bar (e.g. **Alex Mercer**) to open the **User Management Modal**:
+Select **Complete your profile** from the Jobs workspace to open the four-step guided flow.
 
-| Persona | Primary Domain | Core Focus & Background |
-| :--- | :--- | :--- |
-| **Alex Mercer** | **AI / GenAI** | Senior AI & Security Infrastructure Engineer specializing in PyTorch, LangChain/LangGraph, vLLM, AWS Security, and CISSP. |
-| **Elena Beaumont** | **Governance & GRC** | Director of AI Governance & Regulatory Compliance specializing in the EU AI Act, ISO 42001, NIS2, DORA, and IAPP AIGP certification. |
-| **Marcus Sterling** | **IT & Cloud** | Principal Cloud & Enterprise IT Architect specializing in Kubernetes multi-cluster, Terraform, Microsoft 365, Entra ID, and CKA. |
+### Direction
 
-Selecting any persona immediately recalculates your **Vector Match Scores** across all vacancies in the job board.
+Add your name, current or recent title, primary discipline, and years of experience.
 
-### Creating a Custom Account
-1. Open the **User Management Modal**.
-2. Click **"+ Create Custom Account"**.
-3. Fill in your Full Name, Email Address, and Role.
-4. Click **Save & Switch Account**.
+### Preferences
 
----
+Add preferred locations, work mode, and an optional minimum target salary.
 
-## 2. Job Seeker Workflow
+### Expertise
 
-### A. Exploring Direct ATS Jobs
-- Click the **"Direct Jobs"** tab in the main navigation.
-- Use the **Discipline Selector** (*All Disciplines*, *AI & Machine Learning*, *Cybersecurity*, *Governance & GRC*, *IT & Cloud*) to filter roles.
-- Use the multi-faceted dropdowns to narrow down by **Seniority Level** (*Junior* to *Director/C-Level*) or **Work Mode** (*Remote*, *Hybrid*, *Onsite*).
-- Click **"Apply Direct"** to open the official employer ATS portal (Greenhouse, Ashby, Lever, Workable, SmartRecruiters, Pinpoint) with zero intermediary noise.
+Add specific skills, technologies, practices, standards, and certifications. These structured claims are used by the deterministic fit comparison.
 
----
+### Evidence
 
-### B. Vector Fit Match & ATS Parseability Audit
-Every job card displays a color-coded **Vector Match Score (0–100%)**:
-- **80%–100% (Green)**: High-caliber direct match.
-- **60%–79% (Amber)**: Moderate match with cross-domain synergies.
-- **<60% (Slate)**: Stretch opportunity with skill gaps.
+You can paste career history manually or upload a PDF or DOCX résumé up to 10 MB.
 
-Click on the **Vector Match badge** to open the **Audit Modal**:
-1. **Match Breakdown**: Review alignment across Skills (50%), Seniority Caliber (25%), and Domain Synergy (25%).
-2. **Matching vs. Missing Skills**: See exact skill tags found in your profile versus those required by the job.
-3. **Bridge Talking Points**: Review tailored talking points generated to address any identified gaps during your interview.
-4. **ATS Parseability Score**: Check your resume's keyword health, metric density, and action verb impact.
+Résumé files are read in the browser and are not uploaded by the current implementation. After extraction:
 
----
+1. Review the extracted text.
+2. Deselect any suggested skills or certifications you do not recognise.
+3. Correct the suggested years of experience when necessary.
+4. Select **Apply reviewed details**.
+5. Select **Save profile** to persist the profile on this device.
 
-### C. AI Application Copilot (Cover Letters & Resume Bullets)
-Click **"Tailor CV"** on any job card to open the **Application Copilot**:
-1. **Tailored Cover Letter**: Generates a bespoke cover letter matching your specific accomplishments to the hiring company's mission and compliance standards.
-2. **Google XYZ Resume Highlights**: Formulates bullet points structured as: *"Accomplished [X], as measured by [Y], by doing [Z]"*.
-3. **Actions**:
-   - Click **"Copy Letter"** or **"Copy Bullets"** to copy to your clipboard.
-   - Click **"Download .MD"** to download a full application pack in Markdown format.
+Nothing is accepted or saved automatically. Scanned or image-only PDFs do not contain readable text and require manual paste because OCR is not currently included.
 
----
+## 3. Link claims to evidence
 
-### D. STAR Interview Preparation
-In the Copilot modal, switch to the **"STAR Interview Prep Pack"** tab:
-- **Category Tags**: Technical/Domain, Incident/Crisis, Leadership/Governance, and Problem Solving.
-- **STAR Breakdown**:
-  - **[S] Situation**: Real-world context and initial challenge.
-  - **[T] Task**: Specific objective and measurable constraint.
-  - **[A] Action Taken**: Technical implementation and cross-functional leadership.
-  - **[R] Result**: Quantifiable outcome and long-term impact.
-- **Interviewer Pro-Tips**: Strategic advice on what interviewers look for when scoring the question.
+Use **Evidence links** in onboarding or Candidate Profile settings to connect a claim with something you can discuss or verify.
 
----
+Evidence types are:
 
-### E. Managing the Career Application Pipeline
-Click the **"Career Pipeline"** tab in the main navigation:
-1. **6 Pipeline Stages**:
-   - `Saved / Evaluating`
-   - `Drafting & Tailoring`
-   - `Applied / Submitted`
-   - `Recruiter Screen`
-   - `Technical Interview`
-   - `Offer / Negotiation`
-2. **Stage Progression**: Click the **Arrow Right (`→`)** button on any application card to advance it to the next stage, or **Arrow Left (`←`)** to move it back.
-3. **Interview Notes**: Click directly on the notes section of a card to record interview dates, salary targets, or technical feedback.
-4. **Custom Applications**: Click **"+ Add Application"** to track roles discovered outside Vecta.
-5. **Export**: Click **"Export CSV"** to download a timestamped record of your application history.
+- **Employment** for responsibilities or outcomes from a role.
+- **Project** for a delivery, implementation, or portfolio example.
+- **Certification** for a credential or accreditation.
 
----
+Each evidence record needs a title, a short description, and at least one linked skill or certification. Organisation and period are optional. Records remain editable and removable.
 
-## 3. Recruiter & Hiring Manager Workflow
+Evidence improves explanation and confidence; it does not increase the fit percentage.
 
-### A. Salary Benchmarks & Market Growth Trends
-Click the **"Market Intel"** tab to view compensation data:
-- **Percentile Distributions**: Visual progress bars showing **P25**, **P50 (Median)**, **P75**, and **P90** compensation bands for UK & European tech hubs.
-- **YoY Growth Velocity**: Track annual market compensation changes (e.g. *+15% YoY for GenAI & AI Governance leads*).
-- **Primary Certifications**: Demanded industry credentials (*CISSP, CKA, IAPP AIGP, AWS ML Specialty*).
+## 4. Understand a fit estimate
 
-### B. Talent Archetypes & Structured Interview Rubrics
-- Select any archetype (*Generative AI Technical Lead*, *Cloud Security Lead*, *AI Governance Director*, *Principal Platform Architect*).
-- Review the **Key Deliverables**, **Standard Technical Skills**, and **High-Signal Interview Questions** to streamline hiring briefs and calibration sessions.
+Select a role’s **Vector Match** card to open the audit.
 
-### C. Company Ecosystem Radar & Directory Export
-Click the **"Company Radar"** tab:
-- View technology companies categorized by Scale Tier (*Startup 1-20*, *Scaleup 20-100*, *Mid-Market 100-500*, *Enterprise/FDI 500+*).
-- Check compliance certifications (*EU AI Act Ready*, *ISO 42001*, *ISO 27001*, *NIS2*, *DORA*, *SOC 2 Type II*).
-- Expand any company row to view engineering leadership, full tech stack, and careers portal.
-- Click **"Export CSV"** to export the ecosystem dataset.
+The fit estimate combines:
 
----
+- **Skills alignment — 50%**
+- **Seniority alignment — 25%**
+- **Domain alignment — 25%**
 
-## 4. Governance, GDPR & Data Subject Rights
+The audit also shows:
 
-Click the **"Governance"** link in the navigation header to open the **Governance & Ethics Hub**:
+- Matching and missing skills.
+- Evidence sources behind supported matches.
+- Matches that appear in the profile or résumé but lack linked evidence.
+- Honest talking points for skill gaps.
+- Résumé parseability feedback.
 
-### EU AI Act Article 50 & 52 Transparency
-- **Human-in-the-Loop Assistive Model**: All AI-generated drafts are assistive recommendations and must be verified by the candidate before submission.
-- **Zero Prohibited Practices**: Vecta does not use biometric profiling, emotion detection, or automated candidate disqualifications.
+### Confidence and insufficient information
 
-### GDPR Data Subject Rights (Articles 17 & 20)
-- **Article 17: Right to Erasure (1-Click Data Wipe)**: Click **"Wipe All My Data"** to permanently purge your profile, customized resume text, pipeline records, and local tokens.
-- **Article 20: Right to Data Portability (JSON Export)**: Click **"Export All Data (JSON)"** to download a machine-readable archive of all stored data.
+Confidence is separate from match strength. It reflects how much usable information is available in the profile, résumé, role requirements, and evidence links.
 
----
+- **High confidence** means the estimate has broad supporting information.
+- **Moderate confidence** means the percentage is useful but has visible limitations.
+- **Low confidence** means Vecta hides the precise overall percentage and shows **Insufficient information** instead.
 
-## 5. Keyboard Shortcuts (Command Palette)
+Follow the listed limitations or choose **Complete profile details** to improve the basis of the comparison.
 
-Press **`Cmd + K`** (macOS) or **`Ctrl + K`** (Windows/Linux) from anywhere in the application to open the **Global Command Palette**:
-- Type to search jobs by title, company, or required skill (*e.g. "PyTorch", "NIS2", "Kubernetes"*).
-- Type to search companies in the Radar directory.
-- Access instant shortcuts (*Switch to Jobs, Switch to Radar, Switch to Pipeline, Edit Profile*).
-- Press **`ESC`** to dismiss the palette.
+## 5. Prepare an application
+
+The current application and interview outputs are deterministic templates based on the selected role and profile. They are not generated by an external AI model.
+
+Always review drafts before use. Do not retain a statement that is not supported by your real experience or approved profile evidence.
+
+## 6. Track applications
+
+Open **Pipeline** to manage applications across Saved, Drafting, Applied, Screening, Interviewing, Offer, and Archived stages. Pipeline state is stored on this device in the current prototype.
+
+## 7. Switch demo personas
+
+Use the profile control in the header to switch between the included demonstration personas or create a custom local profile. Switching personas recalculates role comparisons.
+
+## 8. Export or erase your data
+
+The Governance area provides local-data controls:
+
+- **Export** downloads a JSON representation of the current user, profile, résumé text, evidence, pipeline, saved roles, favourites, and consent settings.
+- **Erase** removes those records from browser storage.
+
+These controls cover the current local prototype state. They should not be presented as a complete production data-subject workflow until authentication and server-owned storage are implemented.
+
+## 9. Current limitations
+
+- No production authentication or multi-device profile ownership.
+- No OCR for scanned résumés.
+- No verified live job-ingestion service.
+- No external AI drafting service.
+- Fit matching still uses straightforward text comparison rather than a normalized skills taxonomy.
+- Market and company records are curated demonstration data.
+- Core scoring, profile-completion, storage, filtering, and pipeline rules have automated unit coverage. Onboarding validation and résumé review also have component coverage; full browser and end-to-end workflow coverage is still being built.
+
+For implementation status and planned work, see [ROADMAP.md](ROADMAP.md).

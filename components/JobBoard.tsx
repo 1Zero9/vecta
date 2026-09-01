@@ -9,6 +9,7 @@ import {
   CandidateProfile 
 } from "@/lib/types";
 import { evaluateVectorFit } from "@/lib/fitEngine";
+import { filterJobs } from "@/lib/jobFiltering";
 import { 
   Search, 
   SlidersHorizontal, 
@@ -57,34 +58,13 @@ export function JobBoard({
   const [selectedWorkMode, setSelectedWorkMode] = useState<string>("ALL");
   const [showSavedOnly, setShowSavedOnly] = useState(false);
 
-  // Filter jobs
-  const filteredJobs = jobs.filter((job) => {
-    // Domain
-    if (activeDomain !== "ALL" && job.domain !== activeDomain) return false;
-
-    // Seniority
-    if (selectedSeniority !== "ALL" && !job.seniority.includes(selectedSeniority)) return false;
-
-    // Work Mode
-    if (selectedWorkMode !== "ALL" && job.work_mode !== selectedWorkMode) return false;
-
-    // Saved only
-    if (showSavedOnly && !savedJobIds.includes(job.id)) return false;
-
-    // Search query
-    if (searchQuery.trim() !== "") {
-      const q = searchQuery.toLowerCase();
-      const titleMatch = job.title.toLowerCase().includes(q);
-      const companyMatch = job.company_name.toLowerCase().includes(q);
-      const skillMatch = job.req_skills.some((s) => s.toLowerCase().includes(q));
-      const summaryMatch = job.summary.toLowerCase().includes(q);
-      const standardMatch = job.governance_standards?.some((st) => st.toLowerCase().includes(q));
-      if (!titleMatch && !companyMatch && !skillMatch && !summaryMatch && !standardMatch) {
-        return false;
-      }
-    }
-
-    return true;
+  const filteredJobs = filterJobs(jobs, {
+    activeDomain,
+    seniority: selectedSeniority,
+    workMode: selectedWorkMode as WorkMode | "ALL",
+    savedOnly: showSavedOnly,
+    savedJobIds,
+    query: searchQuery,
   });
 
   const getDomainBadge = (domain: DomainType) => {
@@ -262,7 +242,7 @@ export function JobBoard({
                 className="glass-panel rounded-2xl p-5 sm:p-6 border border-slate-200 hover:border-blue-300 transition-all group relative overflow-hidden"
               >
                 {/* Glow accent for high vector match (>80%) */}
-                {fit.overall_score >= 80 && (
+                {fit.confidence_level !== "Low" && fit.overall_score >= 80 && (
                   <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-2xl rounded-full pointer-events-none"></div>
                 )}
 
@@ -350,21 +330,23 @@ export function JobBoard({
                     >
                       <div className="text-right">
                         <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                          Vector Match
+                          {fit.confidence_level === "Low" ? "Fit estimate" : "Vector Match"}
                         </div>
                         <div className="text-xs text-slate-500 group-hover/score:text-blue-700">
-                          {fit.matching_skills.length} matching skills
+                          {fit.confidence_level === "Low" ? "Profile needs more detail" : `${fit.matching_skills.length} matches · ${fit.confidence_level.toLowerCase()} confidence`}
                         </div>
                       </div>
 
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-mono font-black text-base shadow-md ${
-                        fit.overall_score >= 80 
+                        fit.confidence_level === "Low"
+                          ? "bg-slate-100 text-slate-500 border border-slate-200"
+                          : fit.overall_score >= 80
                           ? "bg-emerald-500/20 text-emerald-700 border border-emerald-500/40"
                           : fit.overall_score >= 60
                             ? "bg-amber-500/20 text-amber-700 border border-amber-500/40"
-                            : "bg-slate-100 text-slate-400 border border-slate-700"
+                            : "bg-slate-100 text-slate-500 border border-slate-200"
                       }`}>
-                        {fit.overall_score}%
+                        {fit.confidence_level === "Low" ? "—" : `${fit.overall_score}%`}
                       </div>
                     </div>
 

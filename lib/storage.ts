@@ -120,7 +120,13 @@ export function getStoredProfile(): CandidateProfile {
   if (typeof window === "undefined") return DEMO_PERSONAS["alex-ai-sec"].profile;
   try {
     const raw = localStorage.getItem(PROFILE_KEY);
-    return raw ? JSON.parse(raw) : DEMO_PERSONAS["alex-ai-sec"].profile;
+    if (!raw) return DEMO_PERSONAS["alex-ai-sec"].profile;
+    const stored = JSON.parse(raw) as CandidateProfile;
+    return {
+      ...stored,
+      preferred_locations: stored.preferred_locations ?? [],
+      evidence: stored.evidence ?? [],
+    };
   } catch (e) {
     return DEMO_PERSONAS["alex-ai-sec"].profile;
   }

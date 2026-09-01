@@ -8,12 +8,10 @@ import {
   Sparkles, 
   CheckCircle2, 
   AlertCircle, 
-  ShieldAlert, 
   Zap, 
   FileText, 
-  Award,
-  ArrowRight,
-  TrendingUp
+  ShieldCheck,
+  CircleDashed,
 } from "lucide-react";
 
 interface FitEvaluatorModalProps {
@@ -22,6 +20,7 @@ interface FitEvaluatorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenCopilot: (job: Job, mode: "tailor" | "interview") => void;
+  onOpenProfile: () => void;
 }
 
 export function FitEvaluatorModal({
@@ -30,6 +29,7 @@ export function FitEvaluatorModal({
   isOpen,
   onClose,
   onOpenCopilot,
+  onOpenProfile,
 }: FitEvaluatorModalProps) {
   if (!isOpen || !job) return null;
 
@@ -50,7 +50,7 @@ export function FitEvaluatorModal({
                 Vector Match & ATS Parseability Audit
               </h3>
               <p className="text-xs text-slate-400 font-medium truncate max-w-md">
-                {job.title} // {job.company_name}
+                {job.title} · {job.company_name}
               </p>
             </div>
           </div>
@@ -72,14 +72,14 @@ export function FitEvaluatorModal({
             {/* Overall Score */}
             <div className="text-center sm:border-r border-slate-200 sm:pr-4 py-2">
               <div className="text-[10px] uppercase font-bold text-slate-400">
-                Overall Vector Fit
+                {fit.confidence_level === "Low" ? "Directional Fit" : "Overall Vector Fit"}
               </div>
               <div className={`text-3xl sm:text-4xl font-black font-mono mt-1 ${
                 fit.overall_score >= 80 ? "text-emerald-700" : fit.overall_score >= 60 ? "text-amber-700" : "text-rose-700"
               }`}>
-                {fit.overall_score}%
+                {fit.confidence_level === "Low" ? "—" : `${fit.overall_score}%`}
               </div>
-              <div className="text-[10px] text-slate-500 mt-0.5">Weighted Readiness</div>
+              <div className="text-[10px] text-slate-500 mt-0.5">{fit.confidence_level === "Low" ? "Insufficient information" : "Weighted readiness"}</div>
             </div>
 
             {/* Skills Match */}
@@ -111,11 +111,57 @@ export function FitEvaluatorModal({
 
           </div>
 
+          <section className={`rounded-2xl border p-4 ${
+            fit.confidence_level === "High"
+              ? "border-emerald-100 bg-emerald-50"
+              : fit.confidence_level === "Moderate"
+                ? "border-blue-100 bg-blue-50"
+                : "border-amber-200 bg-amber-50"
+          }`} aria-labelledby="fit-confidence-heading">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-start gap-2.5">
+                {fit.confidence_level === "Low" ? <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" /> : <ShieldCheck className={`mt-0.5 h-4 w-4 shrink-0 ${fit.confidence_level === "High" ? "text-emerald-700" : "text-blue-700"}`} />}
+                <div>
+                  <h4 id="fit-confidence-heading" className="text-xs font-semibold text-slate-900">
+                    {fit.confidence_level === "Low" ? "Insufficient information for a reliable score" : `${fit.confidence_level} confidence in this estimate`}
+                  </h4>
+                  <p className="mt-0.5 text-[11px] leading-4 text-slate-600">Confidence reflects the amount of usable profile detail, job requirements, and linked evidence—not how strong the match is.</p>
+                </div>
+              </div>
+              <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-slate-600 ring-1 ring-black/5">{fit.confidence_score}/100 confidence</span>
+            </div>
+
+            {(fit.confidence_reasons.length > 0 || fit.confidence_limitations.length > 0) && (
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {fit.confidence_reasons.length > 0 && (
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500">What supports it</p>
+                    <ul className="mt-1.5 space-y-1 text-[10px] leading-4 text-slate-600">
+                      {fit.confidence_reasons.slice(0, 3).map((reason) => <li key={reason} className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0 text-emerald-700" />{reason}</li>)}
+                    </ul>
+                  </div>
+                )}
+                {fit.confidence_limitations.length > 0 && (
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500">Current limitations</p>
+                    <ul className="mt-1.5 space-y-1 text-[10px] leading-4 text-slate-600">
+                      {fit.confidence_limitations.slice(0, 3).map((limitation) => <li key={limitation} className="flex items-start gap-1.5"><CircleDashed className="mt-0.5 h-3 w-3 shrink-0 text-amber-700" />{limitation}</li>)}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {fit.confidence_level === "Low" && (
+              <button type="button" onClick={() => { onClose(); onOpenProfile(); }} className="mt-3 rounded-lg bg-amber-700 px-3 py-2 text-[11px] font-semibold text-white hover:bg-amber-800">Complete profile details</button>
+            )}
+          </section>
+
           {/* Skills Breakdown */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             
             {/* Matching Skills */}
-            <div className="p-4 rounded-2xl bg-emerald-950/20 border border-emerald-500/20 space-y-2">
+            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 space-y-2">
               <div className="flex items-center gap-1.5 font-bold text-emerald-700 text-xs uppercase tracking-wider">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Matching Skills ({fit.matching_skills.length})</span>
@@ -125,7 +171,7 @@ export function FitEvaluatorModal({
                   fit.matching_skills.map((s, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-700 font-medium text-xs border border-emerald-500/30"
+                      className="px-2 py-0.5 rounded-lg bg-white text-emerald-700 font-medium text-xs border border-emerald-200"
                     >
                       {s}
                     </span>
@@ -147,7 +193,7 @@ export function FitEvaluatorModal({
                   fit.missing_skills.map((s, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-400 font-medium text-xs border border-slate-700"
+                      className="px-2 py-0.5 rounded-lg bg-white text-slate-600 font-medium text-xs border border-slate-200"
                     >
                       {s}
                     </span>
@@ -160,7 +206,74 @@ export function FitEvaluatorModal({
 
           </div>
 
-          {/* AI Bridge Answers for Interviewing */}
+          {/* Evidence Coverage */}
+          <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5" aria-labelledby="fit-evidence-heading">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-start gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                  <ShieldCheck className="h-5 w-5" />
+                </span>
+                <div>
+                  <h4 id="fit-evidence-heading" className="text-sm font-semibold text-slate-900">Evidence behind this match</h4>
+                  <p className="mt-0.5 text-xs leading-5 text-slate-500">Linked sources explain which matched claims you can support in an application or interview.</p>
+                </div>
+              </div>
+              <div className="shrink-0 text-left sm:text-right">
+                <p className="text-lg font-semibold text-slate-900">{fit.evidence_coverage_score}%</p>
+                <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-slate-400">Evidence coverage</p>
+              </div>
+            </div>
+
+            <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full rounded-full bg-blue-600 transition-all" style={{ width: `${fit.evidence_coverage_score}%` }} />
+            </div>
+
+            {fit.evidence_matches.length > 0 && (
+              <div className="space-y-2">
+                {fit.evidence_matches.map((match) => (
+                  <article key={match.claim} className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3.5">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800">
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span>{match.claim}</span>
+                    </div>
+                    <div className="mt-2 space-y-1.5">
+                      {match.evidence.map((evidence) => (
+                        <div key={evidence.id} className="rounded-lg bg-white/80 px-3 py-2 ring-1 ring-emerald-100">
+                          <p className="text-[11px] font-semibold text-slate-800">{evidence.title}</p>
+                          <p className="mt-0.5 text-[10px] text-slate-500">{[evidence.type, evidence.organization, evidence.period].filter(Boolean).join(" · ")}</p>
+                          <p className="mt-1 text-[11px] leading-4 text-slate-600">{evidence.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {fit.unsupported_matches.length > 0 && (
+              <div className="rounded-xl border border-amber-200 bg-amber-50 p-3.5">
+                <div className="flex items-start gap-2">
+                  <CircleDashed className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-semibold text-amber-900">Matched, but not yet linked to evidence</p>
+                    <p className="mt-0.5 text-[11px] leading-4 text-amber-800/80">These claims still contribute to fit because they appear in your profile or résumé. Add a source before relying on them in an application.</p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {fit.unsupported_matches.map((claim) => <span key={claim} className="rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-amber-800 ring-1 ring-amber-200">{claim}</span>)}
+                    </div>
+                    <button type="button" onClick={() => { onClose(); onOpenProfile(); }} className="mt-3 rounded-lg bg-amber-700 px-3 py-2 text-[11px] font-semibold text-white hover:bg-amber-800">
+                      Add supporting evidence
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {fit.evidence_matches.length === 0 && fit.unsupported_matches.length === 0 && (
+              <p className="rounded-xl bg-slate-50 px-4 py-3 text-xs text-slate-500">No matching claims are available to evidence for this role yet.</p>
+            )}
+          </section>
+
+          {/* Bridge Answers for Interviewing */}
           {fit.suggested_bridge_answers.length > 0 && (
             <div className="space-y-3 p-4 rounded-2xl bg-slate-50 border border-slate-200">
               <div className="flex items-center gap-2 font-bold text-amber-700 text-xs uppercase tracking-wider">
@@ -174,8 +287,8 @@ export function FitEvaluatorModal({
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                       <span>Addressing: {bridge.gap}</span>
                     </div>
-                    <p className="text-xs text-slate-400 leading-relaxed italic">
-                      "{bridge.talking_point}"
+                    <p className="text-xs text-slate-500 leading-relaxed italic">
+                      “{bridge.talking_point}”
                     </p>
                   </div>
                 ))}

@@ -61,9 +61,14 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Add a guided four-step onboarding flow for career direction, experience, location, salary, work mode, skills, certifications, and résumé evidence.
 - [x] Calculate profile completeness and expose onboarding from the main jobs workspace.
 - [x] Persist onboarding changes through the existing local-first profile store and immediately recalculate role matches.
-- [ ] Add PDF and DOCX résumé upload with a review step before extracted information is accepted.
-- [ ] Let users connect individual profile claims to employment, project, or certification evidence.
-- [ ] Add profile-level validation, empty states, and tests for incomplete profiles.
+- [x] Add local PDF and DOCX résumé upload with a review step before extracted information is accepted.
+- [x] Let users connect individual profile claims to employment, project, or certification evidence.
+- [x] Show linked evidence in fit audits and flag matched claims that still lack support.
+- [x] Add confidence explanations and suppress precise fit percentages when information is insufficient.
+- [x] Add unit coverage for completion, résumé analysis guardrails, evidence coverage, confidence, fit scoring, storage, job filtering, and pipeline insertion.
+- [x] Exercise DOCX, multi-page PDF, and image-only PDF extraction boundaries with synthetic parser fixtures.
+- [x] Add component tests for onboarding validation and the résumé upload, review, correction, selection, apply, and failure flow.
+- [ ] Add polished empty states, broader component integration, anonymized real-world résumé fixtures, and end-to-end coverage.
 
 ### Scope
 
@@ -163,9 +168,9 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Immediate next sprint
 
-1. Validate and refine the new candidate-profile onboarding flow.
-2. Add PDF and DOCX résumé upload with reviewed extraction.
-3. Write tests for profile completion, fit scoring, storage, job filtering, and the critical save-to-pipeline journey.
+1. Validate résumé extraction against anonymized real-world PDF and DOCX samples to complement the synthetic parser fixtures.
+2. Extend component interaction coverage to job filtering, empty results, and save-to-pipeline feedback, then add the first end-to-end candidate journey.
+3. Replace loose skill matching with normalized aliases and required/preferred weighting.
 4. Correct product language around curated jobs, deterministic drafting, database sync, and compliance.
 5. Create shared interface primitives and remove duplicated control styles.
 6. Define the production data model and authentication decision before adding more surface features.

@@ -52,6 +52,7 @@ import {
   DEFAULT_USER
 } from "@/lib/storage";
 import { getProfileCompletion } from "@/lib/profileCompletion";
+import { addJobToPipeline } from "@/lib/pipeline";
 
 export default function Home() {
   // Navigation & View State
@@ -175,24 +176,10 @@ export default function Home() {
   };
 
   const handleTrackInPipeline = (job: Job) => {
-    const existing = pipeline.find((p) => p.job_id === job.id);
-    if (!existing) {
-      const newTrack: ApplicationTrack = {
-        id: `track-${Date.now()}`,
-        job_id: job.id,
-        company_name: job.company_name,
-        job_title: job.title,
-        domain: job.domain,
-        stage: "saved",
-        date_added: new Date().toISOString().slice(0, 10),
-        date_updated: new Date().toISOString().slice(0, 10),
-        apply_url: job.apply_url,
-        salary_target: job.salary_min ? `£${(job.salary_min / 1000).toFixed(0)}k` : undefined,
-        notes: `Added from Direct Jobs feed. Matching skills: ${job.req_skills.slice(0, 3).join(", ")}.`,
-      };
-      const updated = [newTrack, ...pipeline];
-      setPipeline(updated);
-      saveStoredPipeline(updated);
+    const result = addJobToPipeline(pipeline, job);
+    if (result.added) {
+      setPipeline(result.pipeline);
+      saveStoredPipeline(result.pipeline);
       showToast(`Added "${job.title}" to career pipeline.`);
     }
     setActiveTab("pipeline");
@@ -430,6 +417,7 @@ export default function Home() {
           setSelectedJobForCopilot(job);
           setCopilotInitialMode(mode);
         }}
+        onOpenProfile={() => setIsProfileDrawerOpen(true)}
       />
 
       {/* Application Copilot & STAR Interview Prep Modal */}
@@ -443,6 +431,7 @@ export default function Home() {
 
       {/* Profile & Vector Weights Editor Drawer */}
       <ProfileDrawer
+        key={`${currentUser.id}-${isProfileDrawerOpen ? "open" : "closed"}`}
         profile={profile}
         isOpen={isProfileDrawerOpen}
         onClose={() => setIsProfileDrawerOpen(false)}

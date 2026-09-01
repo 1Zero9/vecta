@@ -1,159 +1,99 @@
-# 🧭 Vecta // Recruitment Intelligence & Career Vector Navigator
+# Vecta
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS_4.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
-[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
-[![EU AI Act](https://img.shields.io/badge/EU_AI_Act-Article_50/52_Compliant-059669?style=flat-square)](https://artificialintelligenceact.eu/)
-[![GDPR](https://img.shields.io/badge/GDPR-Article_17/20_Ready-10B981?style=flat-square)](https://gdpr-info.eu/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+Vecta is a light-only recruitment workspace for specialist candidates in AI, cybersecurity, governance, and cloud/IT. It combines a curated role catalogue, a local-first candidate profile, explainable fit estimates, résumé review, evidence linking, and an application pipeline.
 
-> **Etymology**: In Latin, *vecta* is a form of the verb *vehere*, meaning *"to carry, convey, or transport"*. It is the root origin of modern words like *vector* (direction and magnitude) and *vehicle*.
+This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. Authentication, durable multi-device ownership, and verified job ingestion remain roadmap work.
 
-**Vecta** is a high-performance recruitment intelligence platform, direct ATS job search engine, and career vector navigator built with Next.js and Tailwind CSS. It is specifically designed for high-concurrency disciplines: **AI & Machine Learning**, **Cybersecurity**, **Governance (GRC, NIS2 & AI Ethics)**, and **IT Infrastructure**.
+## Current capabilities
 
----
+- Search and filter curated roles across four specialist disciplines.
+- Complete a guided candidate profile with preferences, skills, credentials, and career evidence.
+- Parse PDF and DOCX résumés in the browser, review extracted text, and explicitly accept suggested updates.
+- Link employment, project, and certification evidence to individual profile claims.
+- Compare a profile with a role using deterministic skills, seniority, and domain scoring.
+- See evidence coverage, unsupported claims, confidence limitations, and insufficient-information states.
+- Save roles and manage applications through a local pipeline.
+- Export or erase locally stored candidate data.
 
-## 🌟 Core Feature Matrix
+## Technology
 
-```mermaid
-graph TD
-    UI["Vecta Web App (Next.js 16 + Tailwind)"]
-    Jobs["1. Direct ATS Jobs Feed"]
-    Radar["2. Company Ecosystem Radar"]
-    Match["3. Vector Fit & ATS Evaluator"]
-    Copilot["4. AI Application Copilot & STAR Prep"]
-    Intel["5. Recruiter & Market Compensation"]
-    Pipeline["6. Kanban Career Pipeline"]
-    Gov["7. Governance, GDPR & EU AI Act Suite"]
-    DB["8. Prisma ORM (SQLite / PostgreSQL)"]
+- Next.js 16 App Router, React 19, and TypeScript
+- Tailwind CSS 4 with a professional light-only visual system
+- Prisma 6 with SQLite for optional development synchronization
+- PDF.js and Mammoth for local PDF/DOCX text extraction
+- Browser `localStorage` for the prototype’s device-local profile and pipeline state
+- Vitest, Testing Library, and V8 coverage for deterministic logic and core profile interactions
 
-    UI --> Jobs
-    UI --> Radar
-    UI --> Match
-    UI --> Copilot
-    UI --> Intel
-    UI --> Pipeline
-    UI --> Gov
-    Jobs --> DB
-    Pipeline --> DB
-    Gov --> DB
+## Local setup
+
+### Requirements
+
+- Node.js 22.13 or newer
+- npm 10 or newer
+
+### Install and run
+
+```bash
+npm ci
+npx prisma generate
+npm run dev
 ```
 
-| Module | Purpose & Capabilities |
-| :--- | :--- |
-| **Direct ATS Jobs** | Verified live job feeds tracking **Greenhouse, Ashby, Lever, Workable, SmartRecruiters, Pinpoint** with zero intermediary scrapers. |
-| **Vector Fit Engine** | Real-time candidate-to-job matching score (0–100%) evaluating skills (50%), seniority caliber (25%), and domain synergy (25%). |
-| **Application Copilot** | 1-click tailored cover letter drafter, Google XYZ resume bullet generator (*Accomplished [X] as measured by [Y] by doing [Z]*), and markdown export. |
-| **STAR Interview Prep** | Role-specific situational question pack broken down into **Situation, Task, Action, Result** with interviewer pro-tips and gap-bridge talking points. |
-| **Company Radar** | Ecosystem directory categorizing companies by Scale Tier (*Startup, Scaleup, Mid-Market, Enterprise/FDI*), Tech Stack, and Compliance Badges (*EU AI Act, ISO 42001, ISO 27001, NIS2, DORA, SOC 2*). |
-| **Recruiter Intel** | Compensation percentiles (**P25, P50 Median, P75, P90**) with YoY growth trends and Talent Archetype rubrics. |
-| **Career Pipeline** | 6-stage interactive Kanban board (*Saved, Drafting, Applied, Screening, Interviewing, Offer*) with local persistence and CSV export. |
-| **User Management** | Pre-configured demo personas (**Alex Mercer**, **Elena Beaumont**, **Marcus Sterling**) and custom account creation. |
-| **Governance Suite** | **EU AI Act Article 50/52 Transparency Statement**, **GDPR Article 17 Right to Erasure (1-Click Data Wipe)**, and **GDPR Article 20 Data Portability (JSON Export)**. |
+Open the local URL printed by Next.js. It normally begins at `http://localhost:3000`, but Next.js will choose another port when that port is occupied.
 
----
+The optional Prisma development database uses `DATABASE_URL`. For local SQLite, use:
 
-## 🚀 Quick Start (Local Development)
-
-### 1. Prerequisites
-- **Node.js**: `v20.x` or `v22.x`
-- **npm**: `v10.x` or later (or `pnpm` / `bun`)
-
-### 2. Clone & Install
-```bash
-git clone https://github.com/1Zero9/vecta.git
-cd vecta
-npm install
+```dotenv
+DATABASE_URL="file:./dev.db"
 ```
 
-### 3. Initialize Prisma Database
-By default, Vecta uses local SQLite for zero-friction setup:
+Then initialize it with:
+
 ```bash
-# Push schema to SQLite database (dev.db)
 npx prisma db push
 ```
 
-### 4. Run Development Server
+The main candidate workflow still works through local browser storage if database synchronization is unavailable.
+
+## Build and validation
+
 ```bash
-npm run dev
-```
-Open **[http://localhost:3000](http://localhost:3000)** in your browser.
-
----
-
-## 🛠️ Architecture & Tech Stack
-
-```
-vecta/
-├── app/
-│   ├── layout.tsx             # Root layout, metadata, Geist typography
-│   ├── page.tsx               # Primary dashboard coordinating views & state
-│   ├── globals.css            # Professional light-theme design tokens
-│   └── api/
-│       ├── companies/route.ts # Company directory & compliance API
-│       ├── jobs/route.ts      # Filterable ATS job listings API
-│       ├── benchmarks/route.ts# Salary percentiles & talent archetypes API
-│       ├── user/route.ts      # User profile & session endpoint (Prisma backed)
-│       └── governance/
-│           └── consent/route.ts# GDPR and EU AI Act consent logging endpoint
-├── components/
-│   ├── Header.tsx             # Brand header, navigation, persona pill, ⌘K trigger
-│   ├── MetricCards.tsx        # Horizontal telemetry bar with domain vector switches
-│   ├── JobBoard.tsx           # Multi-faceted direct job search & action triggers
-│   ├── RadarTable.tsx         # Company directory table with expandable deep-dives
-│   ├── RecruiterLookup.tsx    # Compensation percentiles & talent archetypes
-│   ├── PipelineBoard.tsx      # Kanban board for tracked job applications
-│   ├── FitEvaluatorModal.tsx  # Vector match breakdown & ATS parseability audit
-│   ├── CopilotModal.tsx       # AI cover letter & STAR interview question drafter
-│   ├── ProfileDrawer.tsx      # Candidate profile & skills weight editor
-│   ├── UserManagementModal.tsx# Demo persona switcher & custom user management
-│   ├── GovernanceModal.tsx    # EU AI Act disclosures, GDPR data wipe/export
-│   ├── ConsentBanner.tsx      # Interactive GDPR & AI Act consent banner
-│   └── CommandPalette.tsx     # Global ⌘K search overlay
-├── data/                      # Structured ecosystem datasets
-│   ├── companies.json         # Company directory (IT, AI, GRC, Security)
-│   ├── jobs.json              # Direct ATS job vacancies
-│   ├── salaryBenchmarks.json  # Compensation percentiles (P25 - P90)
-│   └── talentArchetypes.json  # Talent archetypes & interview blueprints
-├── lib/
-│   ├── types.ts               # TypeScript interfaces & domain types
-│   ├── prisma.ts              # Singleton Prisma client instance
-│   ├── fitEngine.ts           # Vector matching & ATS parseability algorithms
-│   ├── copilotEngine.ts       # AI cover letter & STAR interview generators
-│   └── storage.ts             # Client-side persistence, GDPR wipe & export tools
-├── prisma/
-│   └── schema.prisma          # Database schema (User, Profile, Application, Consent)
-└── docs/                      # Comprehensive technical documentation
-    ├── USER_GUIDE.md          # End-user handbook for job seekers & recruiters
-    ├── HANDOVER.md            # Technical architecture & maintenance handover
-    └── ROADMAP.md             # Multi-phase feature roadmap
+npm test
+npm run test:coverage
+npm run build
+npm run lint
 ```
 
----
+`npm test` runs the automated unit suite. `npm run build` performs production compilation and TypeScript checking. See [docs/BUILD.md](docs/BUILD.md) for coverage details, the focused quality gate, and the current repository-wide lint baseline.
 
-## 🚢 Deploying to Vercel
+## Key project areas
 
-Vecta is optimized for zero-config deployment on Vercel:
+```text
+app/                              Next.js routes, APIs, metadata, and page orchestration
+components/ProfileOnboardingModal Guided profile flow
+components/ResumeUploadReview     Local résumé extraction review
+components/ProfileEvidenceManager Claim-to-evidence editor
+components/FitEvaluatorModal      Fit, confidence, evidence, and ATS explanation
+lib/fitEngine.ts                  Deterministic fit and confidence calculations
+lib/jobFiltering.ts               Search and filter rules for the role catalogue
+lib/pipeline.ts                   Safe, testable job-to-pipeline insertion
+lib/resumeExtraction.ts           Browser PDF/DOCX extraction and suggestions
+lib/profileCompletion.ts          Profile completeness calculation
+lib/storage.ts                    Device-local persistence, export, and erasure
+data/                              Curated demonstration datasets
+tests/                             Unit coverage for the candidate workflow
+docs/                              Build, user, handover, and roadmap documentation
+```
 
-1. Push your repository to GitHub (`https://github.com/1Zero9/vecta.git`).
-2. Import the project in the [Vercel Dashboard](https://vercel.com/new).
-3. Set the Framework Preset to **Next.js**.
-4. *(Optional)* Add your `DATABASE_URL` environment variable if connecting a PostgreSQL/Supabase/Neon database. If omitted, Vecta automatically operates in resilient local-first client storage mode.
-5. Click **Deploy**.
+## Privacy model
 
----
+Résumé files are parsed in the browser and are not uploaded by the current implementation. Extracted content is only added to the profile after review, and the profile is only persisted after the user saves it. Export and erasure include the stored résumé text and evidence records.
 
-## 📚 Detailed Documentation
+This is a prototype privacy model, not a claim of production compliance. Production use still requires authentication, server-side authorization, retention controls, operational security, and a complete legal review.
 
-- **[User Guide (docs/USER_GUIDE.md)](file:///Users/stephencranfield/Projects/vecta/docs/USER_GUIDE.md)**: Guide for job seekers, recruiters, and compliance officers.
-- **[Technical Handover (docs/HANDOVER.md)](file:///Users/stephencranfield/Projects/vecta/docs/HANDOVER.md)**: System architecture, data flow, API specs, and database management.
-- **[Feature Roadmap (docs/ROADMAP.md)](file:///Users/stephencranfield/Projects/vecta/docs/ROADMAP.md)**: Planned roadmap for Auth/Logins, dynamic CV ingest, semantic pgvector search, and display enhancements.
+## Documentation
 
----
-
-## 📜 License & Compliance
-
-- **License**: MIT Open Source License.
-- **EU AI Act Compliance**: Transparency compliant under Regulation (EU) 2024/1689 (Articles 50 & 52).
-- **GDPR Compliance**: Data subject rights under Regulation (EU) 2016/679 (Articles 17 & 20).
+- [Build and validation](docs/BUILD.md)
+- [User guide](docs/USER_GUIDE.md)
+- [Technical handover](docs/HANDOVER.md)
+- [Product roadmap](docs/ROADMAP.md)

@@ -1,5 +1,11 @@
 import { CandidateProfile, Job, VectorMatchResult } from "./types";
 
+function claimsOverlap(first: string, second: string): boolean {
+  const normalizedFirst = first.toLowerCase().trim();
+  const normalizedSecond = second.toLowerCase().trim();
+  return normalizedFirst.includes(normalizedSecond) || normalizedSecond.includes(normalizedFirst);
+}
+
 export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMatchResult {
   const profileSkillsLower = profile.skills.map((s) => s.toLowerCase().trim());
   const profileCertsLower = profile.certifications.map((c) => c.toLowerCase().trim());
@@ -12,7 +18,7 @@ export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMa
 
   allJobSkills.forEach((skill) => {
     const sLower = skill.toLowerCase();
-    const isDirectMatch = profileSkillsLower.some((ps) => ps.includes(sLower) || sLower.includes(ps));
+    const isDirectMatch = profileSkillsLower.some((profileSkill) => claimsOverlap(profileSkill, sLower));
     const isInResume = resumeTextLower.includes(sLower);
 
     if (isDirectMatch || isInResume) {
@@ -29,7 +35,7 @@ export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMa
 
   jobCerts.forEach((cert) => {
     const cLower = cert.toLowerCase();
-    const isDirectMatch = profileCertsLower.some((pc) => pc.includes(cLower) || cLower.includes(pc));
+    const isDirectMatch = profileCertsLower.some((profileCert) => claimsOverlap(profileCert, cLower));
     const isInResume = resumeTextLower.includes(cLower);
 
     if (isDirectMatch || isInResume) {
@@ -68,11 +74,86 @@ export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMa
   // Overall Weighted Score
   const overallScore = Math.round(skillsScore * 0.5 + domainScore * 0.25 + seniorityScore * 0.25);
 
+  const matchedClaims = Array.from(new Set([...matchingSkills, ...matchingCerts]));
+  const evidenceMatches = matchedClaims.flatMap((claim) => {
+    const linkedEvidence = (profile.evidence ?? []).filter((evidence) =>
+      evidence.claims.some((evidenceClaim) => claimsOverlap(evidenceClaim, claim)),
+    );
+    return linkedEvidence.length > 0 ? [{ claim, evidence: linkedEvidence }] : [];
+  });
+  const evidencedClaimKeys = new Set(evidenceMatches.map((match) => match.claim.toLowerCase()));
+  const unsupportedMatches = matchedClaims.filter((claim) => !evidencedClaimKeys.has(claim.toLowerCase()));
+  const evidenceCoverageScore = matchedClaims.length > 0
+    ? Math.round((evidenceMatches.length / matchedClaims.length) * 100)
+    : 0;
+
+  let confidenceScore = 0;
+  const confidenceReasons: string[] = [];
+  const confidenceLimitations: string[] = [];
+
+  if (profile.skills.length >= 5) {
+    confidenceScore += 25;
+    confidenceReasons.push(`${profile.skills.length} structured profile skills are available.`);
+  } else if (profile.skills.length >= 3) {
+    confidenceScore += 18;
+    confidenceReasons.push(`${profile.skills.length} structured profile skills are available.`);
+  } else {
+    confidenceScore += profile.skills.length * 4;
+    confidenceLimitations.push("Add at least three specific skills to make role comparisons meaningful.");
+  }
+
+  if (profile.resume_text.trim().length >= 300) {
+    confidenceScore += 25;
+    confidenceReasons.push("The résumé contains enough career detail for contextual matching.");
+  } else if (profile.resume_text.trim().length >= 150) {
+    confidenceScore += 18;
+    confidenceReasons.push("The résumé provides useful supporting context.");
+  } else if (profile.resume_text.trim().length > 0) {
+    confidenceScore += 8;
+    confidenceLimitations.push("The résumé evidence is too brief for a strong contextual assessment.");
+  } else {
+    confidenceLimitations.push("No résumé or career-history text is available.");
+  }
+
+  if (allJobSkills.length >= 5) {
+    confidenceScore += 25;
+    confidenceReasons.push(`The role provides ${allJobSkills.length} scorable skill requirements.`);
+  } else if (allJobSkills.length >= 3) {
+    confidenceScore += 18;
+    confidenceReasons.push(`The role provides ${allJobSkills.length} scorable skill requirements.`);
+  } else {
+    confidenceScore += allJobSkills.length * 4;
+    confidenceLimitations.push("The job description contains too few structured requirements for a precise comparison.");
+  }
+
+  if (evidenceCoverageScore >= 60) {
+    confidenceScore += 25;
+    confidenceReasons.push(`${evidenceCoverageScore}% of matched claims have linked evidence.`);
+  } else if (evidenceCoverageScore >= 30) {
+    confidenceScore += 15;
+    confidenceReasons.push(`${evidenceCoverageScore}% of matched claims have linked evidence.`);
+  } else if (evidenceCoverageScore > 0) {
+    confidenceScore += 8;
+    confidenceLimitations.push("Most matching claims are not yet linked to evidence.");
+  } else if (matchedClaims.length > 0) {
+    confidenceLimitations.push("No matching claims are linked to evidence yet.");
+  }
+
+  if ((profile.years_experience ?? 0) <= 0) {
+    confidenceLimitations.push("Years of experience are missing, so seniority alignment is uncertain.");
+  }
+
+  const confidenceLevel: VectorMatchResult["confidence_level"] = confidenceScore >= 75
+    ? "High"
+    : confidenceScore >= 45
+      ? "Moderate"
+      : "Low";
+
   // Generate actionable bridge answers for missing skills
   const suggestedBridgeAnswers = missingSkills.slice(0, 3).map((gap) => {
     return {
       gap,
-      talking_point: `While my core background is strongly rooted in ${profile.skills.slice(0, 2).join(" & ")}, I have actively applied the architectural principles behind ${gap} in real-world scenarios and can rapidly ramp up within the first two weeks.`,
+      talking_point: `My strongest adjacent experience is in ${profile.skills.slice(0, 2).join(" and ") || "related work"}. I would describe the transferable principles honestly, clarify that ${gap} is a development area, and explain how I would close the gap.`,
     };
   });
 
@@ -114,6 +195,13 @@ export function evaluateVectorFit(profile: CandidateProfile, job: Job): VectorMa
     missing_skills: missingSkills,
     matching_certs: matchingCerts,
     missing_certs: missingCerts,
+    evidence_matches: evidenceMatches,
+    unsupported_matches: unsupportedMatches,
+    evidence_coverage_score: evidenceCoverageScore,
+    confidence_level: confidenceLevel,
+    confidence_score: Math.min(100, confidenceScore),
+    confidence_reasons: confidenceReasons,
+    confidence_limitations: confidenceLimitations,
     suggested_bridge_answers: suggestedBridgeAnswers,
     ats_parseability_score: Math.min(100, Math.max(40, atsScore)),
     ats_feedback: atsFeedback,

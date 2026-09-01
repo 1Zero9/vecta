@@ -1,209 +1,108 @@
-# 🛠️ Vecta Technical Handover & Architecture Specification
+# Vecta Technical Handover
 
-This document provides technical handover instructions, system architecture diagrams, data models, algorithm specifications, and operational runbooks for maintaining and extending **Vecta**.
+## Product status
 
----
+Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
-## 1. High-Level System Architecture
+The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. Candidate state is primarily device-local until authentication and durable ownership are implemented.
+
+## Runtime and build
+
+- Node.js 22.13 or newer
+- npm 10 or newer
+- Next.js 16.3.4, React 19.2, TypeScript 5, Tailwind CSS 4
+- Prisma 6.19 with SQLite in development
+- PDF.js 6 and Mammoth 1 for browser-side résumé extraction
+
+Use [BUILD.md](BUILD.md) as the operational build checklist.
+
+## Architecture
 
 ```mermaid
-graph TD
-    subgraph "Client Layer (React 19 & Next.js 16 App Router)"
-        Header["Header & Persona Switcher"]
-        Telemetry["Telemetry & Domain Vector Bar"]
-        Views["Tab Switcher (Jobs | Radar | Market Intel | Pipeline)"]
-        Modals["Modals (Audit | Copilot | User Mgmt | Governance | Cmd+K)"]
-        Storage["Storage Utility (Local-First Fallback)"]
-    end
-
-    subgraph "Serverless Backend Layer (Next.js Edge & Node Runtime)"
-        API_Jobs["/api/jobs (Filter & Search Engine)"]
-        API_Companies["/api/companies (Ecosystem Radar)"]
-        API_Benchmarks["/api/benchmarks (Salary Percentiles)"]
-        API_User["/api/user (Profile & Sync)"]
-        API_Consent["/api/governance/consent (GDPR/AI Act Logs)"]
-    end
-
-    subgraph "Persistence Layer"
-        Prisma["Prisma ORM Client (lib/prisma.ts)"]
-        DB["SQLite (dev.db) / PostgreSQL (DATABASE_URL)"]
-        StaticJSON["Curated Datasets (data/*.json)"]
-    end
-
-    Views --> API_Jobs
-    Views --> API_Companies
-    Views --> API_Benchmarks
-    Modals --> API_User
-    Modals --> API_Consent
-    API_User --> Prisma
-    API_Consent --> Prisma
-    API_Jobs --> StaticJSON
-    API_Companies --> StaticJSON
-    API_Benchmarks --> StaticJSON
-    Prisma --> DB
-    Views --> Storage
+flowchart TD
+    Page[app/page.tsx] --> Jobs[JobBoard]
+    Page --> Onboarding[ProfileOnboardingModal]
+    Page --> Profile[ProfileDrawer]
+    Page --> Fit[FitEvaluatorModal]
+    Page --> Pipeline[PipelineBoard]
+    Onboarding --> Resume[ResumeUploadReview]
+    Onboarding --> Evidence[ProfileEvidenceManager]
+    Profile --> Evidence
+    Resume --> ResumeEngine[lib/resumeExtraction.ts]
+    Fit --> FitEngine[lib/fitEngine.ts]
+    Jobs --> Filters[lib/jobFiltering.ts]
+    Page --> PipelineLogic[lib/pipeline.ts]
+    Page --> Storage[lib/storage.ts]
+    Storage --> Local[(Browser localStorage)]
+    Page -. optional sync .-> UserAPI[/api/user]
+    UserAPI --> Prisma[Prisma / SQLite]
 ```
 
----
+## Important files
 
-## 2. Directory Structure & Key Artifacts
+| Area | File | Responsibility |
+| --- | --- | --- |
+| Application shell | `app/page.tsx` | Owns active views, local state, modals, and persistence callbacks. |
+| Guided profile | `components/ProfileOnboardingModal.tsx` | Four-step candidate onboarding and final save boundary. |
+| Résumé review | `components/ResumeUploadReview.tsx` | File selection, extraction state, suggestions, and explicit apply action. |
+| Evidence editor | `components/ProfileEvidenceManager.tsx` | Adds, edits, removes, and links evidence to profile claims. |
+| Fit explanation | `components/FitEvaluatorModal.tsx` | Score breakdown, confidence, evidence coverage, gaps, and ATS feedback. |
+| Fit logic | `lib/fitEngine.ts` | Deterministic matching, evidence lookup, confidence, and ATS checks. |
+| Job filtering | `lib/jobFiltering.ts` | Pure search, discipline, location, work-mode, and seniority filtering. |
+| Pipeline logic | `lib/pipeline.ts` | Converts a selected job into a new saved-stage application. |
+| Résumé parsing | `lib/resumeExtraction.ts` | Local PDF/DOCX extraction and deterministic skill/certification suggestions. |
+| Profile quality | `lib/profileCompletion.ts` | Weighted completeness and missing profile areas. |
+| Persistence | `lib/storage.ts` | Local save/load, backward-compatible profile hydration, export, and erasure. |
+| Types | `lib/types.ts` | Candidate, evidence, job, application, and result contracts. |
 
-```
-vecta/
-├── app/
-│   ├── layout.tsx                 # Root layout, HTML meta tags, Geist typography
-│   ├── page.tsx                   # Master page orchestrator coordinating view states
-│   ├── globals.css                # Light-theme design tokens, surfaces, and accessibility defaults
-│   └── api/
-│       ├── jobs/route.ts          # ATS job search with multi-faceted filtering
-│       ├── companies/route.ts     # Company ecosystem directory endpoint
-│       ├── benchmarks/route.ts    # Salary percentiles (P25-P90) & talent archetypes
-│       ├── user/route.ts          # User profile synchronization with Prisma
-│       └── governance/
-│           └── consent/route.ts   # GDPR and EU AI Act consent logging
-├── components/
-│   ├── Header.tsx                 # Navigation bar, search, and active persona pill
-│   ├── MetricCards.tsx            # Horizontal telemetry bar with domain vector switches
-│   ├── JobBoard.tsx               # Direct ATS job search with Vector Match meters
-│   ├── RadarTable.tsx             # Company directory table with expandable drawers & CSV export
-│   ├── RecruiterLookup.tsx        # Compensation percentiles & talent archetype blueprints
-│   ├── PipelineBoard.tsx          # Kanban board for job applications
-│   ├── FitEvaluatorModal.tsx      # Vector Match & ATS parseability breakdown
-│   ├── CopilotModal.tsx           # AI cover letter & STAR interview question drafter
-│   ├── ProfileDrawer.tsx          # Candidate profile & skills weight editor
-│   ├── UserManagementModal.tsx    # Demo persona switcher & custom user management
-│   ├── GovernanceModal.tsx        # EU AI Act disclosures, GDPR data wipe/export
-│   ├── ConsentBanner.tsx          # Interactive GDPR & AI Act consent banner
-│   └── CommandPalette.tsx         # Global ⌘K search overlay
-├── data/
-│   ├── companies.json             # Verified company directory dataset
-│   ├── jobs.json                  # Direct ATS job vacancies dataset
-│   ├── salaryBenchmarks.json      # UK & EU compensation percentiles
-│   └── talentArchetypes.json      # Talent archetypes & interview question blueprints
-├── lib/
-│   ├── types.ts                   # Core TypeScript interfaces & domain models
-│   ├── prisma.ts                  # Singleton Prisma client instance
-│   ├── fitEngine.ts               # Vector matching & ATS parseability algorithms
-│   ├── copilotEngine.ts           # AI cover letter & STAR interview generators
-│   └── storage.ts                 # Client-side persistence, GDPR wipe & export tools
-├── prisma/
-│   └── schema.prisma              # Database schema (User, Profile, Application, Consent)
-└── docs/
-    ├── USER_GUIDE.md              # End-user handbook for job seekers & recruiters
-    ├── HANDOVER.md                # This handover document
-    └── ROADMAP.md                 # Multi-phase feature roadmap
+## Candidate data flow
+
+1. The client hydrates the active profile and pipeline from `localStorage`.
+2. Onboarding holds edits in component state until **Save profile**.
+3. PDF and DOCX files are read as `ArrayBuffer` values in the browser.
+4. Extracted text and suggestions remain temporary until **Apply reviewed details**.
+5. Evidence records link a description to selected skill or certification strings.
+6. Saving updates browser storage and immediately recalculates role fit.
+7. JSON export includes the full profile, résumé text, and evidence records; erasure removes them.
+
+The file bytes themselves are not persisted or sent to an API.
+
+## Fit and confidence model
+
+The displayed fit estimate remains:
+
+```text
+overall = skills × 0.50 + seniority × 0.25 + domain × 0.25
 ```
 
----
+- Skills compare required and preferred job skills with structured profile skills and résumé text.
+- Seniority compares years of experience with the role tier.
+- Domain gives full credit for a direct discipline match and partial credit for defined adjacent disciplines.
+- Evidence does not increase the match percentage. It produces a separate coverage measure for matched claims.
+- Confidence is based on structured profile detail, résumé depth, scorable job requirements, and evidence coverage.
+- Low-confidence results suppress the precise overall percentage and show an insufficient-information state.
 
-## 3. Data Models & Prisma Schema
+Gap talking points must describe transferable experience and learning plans honestly. They must never assert direct experience that is absent from the profile.
 
-The Prisma database schema is defined in [prisma/schema.prisma](file:///Users/stephencranfield/Projects/vecta/prisma/schema.prisma):
+## Persistence boundary
 
-```prisma
-model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  name         String
-  role         String        @default("Candidate")
-  avatar       String?
-  isDemo       Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  profile      Profile?
-  applications Application[]
-  savedJobs    SavedJob[]
-  consents     ConsentLog[]
-}
+`CandidateProfile.evidence` is currently part of the browser-stored TypeScript profile. The existing Prisma `Profile` model does not yet persist evidence records or preferred locations. Do not describe the current prototype as multi-device or fully database-backed.
 
-model Profile {
-  id                String   @id @default(cuid())
-  userId            String   @unique
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  currentTitle      String
-  primaryDomain     String   // "AI" | "Security" | "Governance" | "IT"
-  yearsExperience   Int      @default(0)
-  skills            String   // JSON array string
-  certifications    String   // JSON array string
-  targetSalaryMin   Int?
-  preferredWorkMode String   @default("Hybrid")
-  resumeText        String?
-  updatedAt         DateTime @updatedAt
-}
+The Phase 3 data-model work should normalize profile evidence with ownership and authorization checks before production use.
 
-model Application {
-  id           String   @id @default(cuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  jobId        String
-  companyName  String
-  jobTitle     String
-  domain       String
-  stage        String   @default("saved")
-  notes        String?
-  salaryTarget String?
-  applyUrl     String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
+## Operational notes
 
-model ConsentLog {
-  id                String   @id @default(cuid())
-  userId            String?
-  user              User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  gdprConsent       Boolean  @default(true)
-  aiActConsent      Boolean  @default(true)
-  analyticsConsent  Boolean  @default(false)
-  ipAddress         String?
-  consentedAt       DateTime @default(now())
-}
-```
+- Scanned/image-only PDFs are not OCR’d and should show a manual-paste fallback.
+- Résumé files are limited to 10 MB.
+- Older saved profiles are hydrated with empty `preferred_locations` and `evidence` collections.
+- PDF parsing uses a worker bundled by the Next.js build.
+- Vitest covers 24 domain, persistence, parser-boundary, and component scenarios across nine test files.
+- Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
 
----
+## Next engineering priorities
 
-## 4. Algorithmic Specifications
-
-### A. Vector Fit Engine (`lib/fitEngine.ts`)
-The vector match algorithm evaluates candidate readiness across three weighted vectors:
-
-$$\text{Overall Score} = (0.50 \times \text{Skills Score}) + (0.25 \times \text{Seniority Score}) + (0.25 \times \text{Domain Score})$$
-
-1. **Skills Alignment (50%)**: Exact and substring matching against required and preferred skills in the job specification and candidate resume text.
-2. **Seniority Caliber (25%)**: Evaluates candidate experience years against target role tiers (*Junior: 1+ yr, Mid: 3+ yr, Senior: 5+ yr, Lead: 7+ yr, Director: 8+ yr*).
-3. **Domain Synergy (25%)**: Scores 100% for direct domain match, 85% for recognized cross-domain synergies (*AI ↔ Governance, Security ↔ Governance, IT ↔ Security*), and 60% for non-adjacent domains.
-
-### B. ATS Keyword Health Audit
-- **Quantifiable Metric Detection**: Scans resume text for percentages (`%`), financial metrics (`£`, `$`), and scale multipliers (`x`).
-- **High-Impact Action Verbs**: Evaluates the presence of technical action verbs (*architected, engineered, orchestrated, audited, automated, secured, designed*).
-
----
-
-## 5. Deployment & Production Setup
-
-### A. Vercel Deployment
-1. Connect the GitHub repository `https://github.com/1Zero9/vecta.git` to Vercel.
-2. **Environment Variables**:
-   - `DATABASE_URL`: *(Optional)* Connection string for PostgreSQL (e.g. Supabase or Neon). If not set, Vecta uses local SQLite in development and resilient client storage in static environments.
-   - `NODE_ENV`: `production`
-3. Build Command: `npm run build`
-4. Output Directory: `.next`
-
-### B. Database Migrations for PostgreSQL (Production)
-When switching from SQLite to PostgreSQL in production:
-1. Update `provider = "postgresql"` in `prisma/schema.prisma`.
-2. Run migration:
-   ```bash
-   npx prisma migrate dev --name init_postgres
-   ```
-
----
-
-## 6. Maintenance & Troubleshooting Runbook
-
-| Scenario | Diagnosis & Action |
-| :--- | :--- |
-| **Prisma Client Out of Sync** | Run `npx prisma generate` followed by `npx prisma db push`. |
-| **Reset Local Database** | Delete `prisma/dev.db` and run `npx prisma db push` to recreate clean schema. |
-| **Reset Client Data** | Use the **"Wipe All My Data"** button in the Governance Modal or call `wipeAllUserData()` in `lib/storage.ts`. |
-| **Adding New ATS Feed** | Append company entries to `data/companies.json` and job listings to `data/jobs.json`. |
-| **Production Build Failure** | Run `npm run build` locally to inspect TypeScript compilation output. |
+1. Extend component and browser-level coverage to empty states and save-to-pipeline feedback.
+2. Validate extraction against anonymized real-world PDF/DOCX samples; synthetic fixtures now cover section-heavy DOCX, multi-page PDF, and image-only PDF behavior.
+3. Replace loose skill substring matching with normalized aliases and required/preferred weighting.
+4. Add correction controls for mistaken matches.
+5. Decide the production authentication and owned-data model before expanding persistence.

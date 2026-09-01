@@ -137,6 +137,18 @@ export interface ApplicationTrack {
   salary_target?: string;
 }
 
+export type ProfileEvidenceType = "Employment" | "Project" | "Certification";
+
+export interface ProfileEvidence {
+  id: string;
+  type: ProfileEvidenceType;
+  title: string;
+  organization?: string;
+  period?: string;
+  description: string;
+  claims: string[];
+}
+
 export interface CandidateProfile {
   full_name: string;
   current_title: string;
@@ -148,6 +160,7 @@ export interface CandidateProfile {
   preferred_work_mode: WorkMode | "Any";
   preferred_locations?: string[];
   resume_text: string;
+  evidence?: ProfileEvidence[];
 }
 
 export interface VectorMatchResult {
@@ -159,6 +172,13 @@ export interface VectorMatchResult {
   missing_skills: string[];
   matching_certs: string[];
   missing_certs: string[];
+  evidence_matches: Array<{ claim: string; evidence: ProfileEvidence[] }>;
+  unsupported_matches: string[];
+  evidence_coverage_score: number;
+  confidence_level: "High" | "Moderate" | "Low";
+  confidence_score: number;
+  confidence_reasons: string[];
+  confidence_limitations: string[];
   suggested_bridge_answers: { gap: string; talking_point: string }[];
   ats_parseability_score: number;
   ats_feedback: string[];

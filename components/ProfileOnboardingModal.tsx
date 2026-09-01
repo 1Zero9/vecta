@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { CandidateProfile, DomainType, WorkMode } from "@/lib/types";
 import { getProfileCompletion } from "@/lib/profileCompletion";
+import { ResumeUploadReview } from "@/components/ResumeUploadReview";
+import { ProfileEvidenceManager } from "@/components/ProfileEvidenceManager";
 
 interface ProfileOnboardingModalProps {
   profile: CandidateProfile;
@@ -49,6 +51,7 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
   const [formData, setFormData] = useState<CandidateProfile>({
     ...profile,
     preferred_locations: profile.preferred_locations ?? [],
+    evidence: profile.evidence ?? [],
   });
   const [locationsText, setLocationsText] = useState((profile.preferred_locations ?? []).join(", "));
   const [skillsText, setSkillsText] = useState(profile.skills.join(", "));
@@ -253,15 +256,42 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
                 <div>
                   <span className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-600">Step 4 of 4</span>
                   <h3 className="mt-1 text-2xl font-semibold tracking-tight text-slate-900">Add evidence, not just keywords.</h3>
-                  <p className="mt-1 text-sm text-slate-500">Paste a short career summary or résumé text. Vecta uses it locally to support fit explanations and ATS feedback.</p>
+                  <p className="mt-1 text-sm text-slate-500">Upload your résumé, review what Vecta finds, or paste a career summary yourself. Nothing is accepted automatically.</p>
+                </div>
+
+                <ResumeUploadReview
+                  currentSkills={workingProfile.skills}
+                  currentCertifications={workingProfile.certifications}
+                  currentYearsExperience={workingProfile.years_experience}
+                  onApply={({ text, skills, certifications, yearsExperience }) => {
+                    setFormData((current) => ({
+                      ...current,
+                      resume_text: text,
+                      years_experience: yearsExperience,
+                    }));
+                    setSkillsText(skills.join(", "));
+                    setCertificationsText(certifications.join(", "));
+                  }}
+                />
+
+                <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-400">
+                  <span className="h-px flex-1 bg-slate-200" /> Or paste text <span className="h-px flex-1 bg-slate-200" />
                 </div>
                 <label className="block text-xs font-semibold text-slate-700">
                   Career history and achievements
                   <textarea rows={9} value={formData.resume_text} onChange={(event) => setFormData({ ...formData, resume_text: event.target.value })} placeholder="Paste résumé text, key projects, responsibilities, and measurable outcomes…" className={`${inputClass} mt-1.5 resize-none leading-6`} />
                 </label>
+
+                <ProfileEvidenceManager
+                  evidence={formData.evidence ?? []}
+                  skills={workingProfile.skills}
+                  certifications={workingProfile.certifications}
+                  onChange={(evidence) => setFormData((current) => ({ ...current, evidence }))}
+                />
+
                 <div className="flex items-start gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-4 text-xs leading-5 text-slate-600">
                   <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
-                  <p><strong className="text-slate-800">Your evidence remains editable.</strong> File upload and reviewed extraction are the next roadmap item; this step stores only the text you choose to provide.</p>
+                  <p><strong className="text-slate-800">Private by design.</strong> Résumé files are parsed in this browser and are never uploaded. Only the reviewed text and profile details are stored when you save.</p>
                 </div>
               </div>
             )}

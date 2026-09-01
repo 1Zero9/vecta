@@ -17,7 +17,11 @@ export function getProfileCompletion(profile: CandidateProfile): ProfileCompleti
     { label: "salary expectation", weight: 10, complete: (profile.target_salary_min ?? 0) > 0 },
     { label: "at least three skills", weight: 20, complete: profile.skills.length >= 3 },
     { label: "certifications", weight: 5, complete: profile.certifications.length > 0 },
-    { label: "résumé evidence", weight: 15, complete: profile.resume_text.trim().length >= 150 },
+    {
+      label: "profile evidence",
+      weight: 15,
+      complete: profile.resume_text.trim().length >= 150 || (profile.evidence?.length ?? 0) > 0,
+    },
   ];
 
   const score = checks.reduce((total, check) => total + (check.complete ? check.weight : 0), 0);
