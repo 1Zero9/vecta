@@ -2,6 +2,8 @@
 
 This roadmap turns Vecta from a strong interactive prototype into a trustworthy, useful recruitment product. Work is ordered by user value and dependency, rather than speculative dates.
 
+**Last reconciled:** 1 September 2026
+
 ## Product direction
 
 Vecta should help specialist candidates answer three questions with less effort:
@@ -25,24 +27,41 @@ The prototype already provides:
 
 Before presenting these features as production-ready, the product still needs real authentication, durable data ownership, verified job ingestion, and clearer AI/compliance language.
 
+## Remaining roadmap at a glance
+
+| Priority | Workstream | Current state | What remains |
+| ---: | --- | --- | --- |
+| 1 | Fit and profile reliability | Active | Normalized skill aliases, required/preferred weighting, match-correction controls, real-world résumé fixtures, and broader browser coverage. |
+| 2 | UI and delivery hardening | Active | Shared interface primitives, remaining empty/error/loading states, accessibility and responsive checks, repository lint cleanup, and a Sites-compatible deployment output. |
+| 3 | Accounts and durable ownership | Not started | Authentication, authorization, server-owned records, cross-device recovery, and complete export/erasure. |
+| 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
+| 5 | Grounded application assistance | Not started | Evidence-grounded generation, user review, version history, and audit records. |
+| 6 | Market and recruiter expansion | Deferred | Sourced market data and a validated recruiter product boundary. |
+
 ## Phase 1 — UI foundation and product clarity
 
 **Goal:** Make the prototype coherent, credible, accessible, and easy to evaluate.
 
-### In progress
+**Status:** Core visual refresh complete; hardening remains.
 
-- Apply the new professional, relaxed light visual system to every screen.
-- Standardize navigation, cards, controls, modals, typography, and responsive spacing.
-- Remove dark-mode logic and all theme-switching controls.
-- Keep the first viewport focused on role discovery and immediate action.
+### Completed
 
-### Next
+- [x] Apply the professional, relaxed light visual system across the application shell.
+- [x] Remove dark-mode logic and theme-switching controls.
+- [x] Apply the Vecta logo, extracted mark, favicon, PWA icons, metadata, and brand definition.
+- [x] Keep the first viewport focused on role discovery and immediate action.
+- [x] Add useful job empty states, recovery actions, tracked-role state, and save-to-pipeline feedback.
+- [x] Cover the first role-search-to-pipeline journey in Chromium.
+
+### Remaining
 
 - Introduce shared UI primitives for buttons, inputs, badges, panels, dialogs, and empty states.
-- Add skeleton, error, empty, and success states to each primary workflow.
+- Add skeleton, error, empty, and success states to Companies, Market, Pipeline, profile, and governance workflows.
 - Review keyboard access, focus states, semantic headings, contrast, and screen-reader labels.
 - Run mobile, tablet, and desktop usability checks on Jobs, Companies, Market, and Pipeline.
 - Replace overstated labels such as “live feeds” and “AI generated” where the underlying feature is curated or deterministic.
+- Clean up the repository-wide lint baseline.
+- Add a Sites-compatible build output or explicitly select another production hosting target.
 
 ### Exit criteria
 
@@ -54,7 +73,7 @@ Before presenting these features as production-ready, the product still needs re
 
 **Goal:** Turn fit scoring into an understandable decision aid based on real candidate information.
 
-**Status:** Active milestone — Candidate Profile v1.
+**Status:** Active milestone — Candidate Profile v1 feature slice complete; matching and validation hardening remain.
 
 ### Candidate Profile v1
 
@@ -158,24 +177,32 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Delivery sequence
 
-| Order | Workstream | Why now | Relative size |
+| Order | Workstream | Status | Relative size |
 | ---: | --- | --- | :---: |
-| 1 | Finish UI foundation and accessibility | Makes every later feature easier to evaluate | M |
-| 2 | Profile onboarding and résumé ingest | Supplies the evidence required for useful matching | L |
-| 3 | Explainable fit engine | Core product differentiation and trust | L |
-| 4 | Authentication and durable data | Required before real user adoption | L |
-| 5 | Verified ATS ingestion | Converts the demo catalogue into a useful service | XL |
-| 6 | Grounded application assistance | Valuable only after profile evidence is reliable | L |
-| 7 | Market and recruiter expansion | Builds on trusted data and proven candidate demand | XL |
+| 1 | Finish UI foundation and accessibility | Active hardening | M |
+| 2 | Profile onboarding and résumé ingest | Feature slice complete | L |
+| 3 | Explainable fit engine | Active hardening | L |
+| 4 | Authentication and durable data | Not started | L |
+| 5 | Verified ATS ingestion | Not started | XL |
+| 6 | Grounded application assistance | Not started | L |
+| 7 | Market and recruiter expansion | Deferred | XL |
 
 ## Immediate next sprint
 
-1. Validate résumé extraction against anonymized real-world PDF and DOCX samples to complement the synthetic parser fixtures.
-2. Extend end-to-end coverage to profile onboarding, fit review, and pipeline-stage changes.
-3. Replace loose skill matching with normalized aliases and required/preferred weighting.
-4. Correct product language around curated jobs, deterministic drafting, database sync, and compliance.
-5. Create shared interface primitives and remove duplicated control styles.
-6. Define the production data model and authentication decision before adding more surface features.
+1. Replace loose skill matching with normalized aliases and separate required/preferred weighting.
+2. Add user correction controls for mistaken skill matches and exclusions.
+3. Extend end-to-end coverage to profile onboarding, fit review, and pipeline-stage changes.
+4. Create shared interface primitives and finish empty, error, loading, focus, and responsive states.
+5. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
+6. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
+7. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
+8. Define the production data model and authentication decision before adding more surface features.
+
+### Dependencies and decisions
+
+- Real-world parser validation needs anonymized PDF and DOCX samples that may be safely retained as test fixtures.
+- Production deployment needs either a Sites-compatible worker build or an explicit alternative hosting target.
+- Durable persistence should not expand until authentication, ownership, authorization, retention, export, and erasure boundaries are agreed together.
 
 ## Product principles
 

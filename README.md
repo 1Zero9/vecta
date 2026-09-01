@@ -6,6 +6,8 @@ The name is inspired by the Latin *vecta* — “carried forward” or “convey
 
 This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. Authentication, durable multi-device ownership, and verified job ingestion remain roadmap work.
 
+The current local and production Next.js builds pass. Publishing through the configured Sites project remains blocked until the application emits a supported worker bundle; this is tracked explicitly in the roadmap.
+
 ## Current capabilities
 
 - Search and filter curated roles across four specialist disciplines.

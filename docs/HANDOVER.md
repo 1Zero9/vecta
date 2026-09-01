@@ -104,8 +104,9 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 
 ## Next engineering priorities
 
-1. Validate extraction against anonymized real-world PDF/DOCX samples; synthetic fixtures now cover section-heavy DOCX, multi-page PDF, and image-only PDF behavior.
-2. Replace loose skill substring matching with normalized aliases and required/preferred weighting.
+1. Replace loose skill substring matching with normalized aliases and separate required/preferred weighting.
+2. Add correction controls for mistaken matches and exclusions.
 3. Extend browser coverage to onboarding, fit review, and pipeline-stage changes.
-4. Add correction controls for mistaken matches.
-5. Decide the production authentication and owned-data model before expanding persistence.
+4. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
+5. Add a Sites-compatible deployment build or choose another production hosting target.
+6. Decide the production authentication and owned-data model before expanding persistence.

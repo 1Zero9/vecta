@@ -83,6 +83,7 @@ npx eslint --quiet \
 | A scanned PDF extracts no text | This is expected without OCR; use manual paste. |
 | Port 3000 is occupied | Use the alternative URL printed by `npm run dev`. |
 | Stale dependencies in a running dev server | Stop the server, run `npm ci`, and restart it. |
+| Sites deployment reports `Missing dist/server/index.js` | The standard Next.js build is healthy but does not emit the Sites bundle contract. Add a supported worker adapter or select another production host before publishing. |
 
 ## Release checklist
 
