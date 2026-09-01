@@ -35,6 +35,10 @@ body {
 }
 
 button, a, input, select, textarea { outline-color: var(--brand-primary); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
 button, a { -webkit-tap-highlight-color: transparent; }
 
 .glass-panel {

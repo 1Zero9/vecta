@@ -4,7 +4,7 @@ Version identifiers make demos, exports, matching behaviour, and roadmap progres
 
 | Surface | Current | Source | Meaning |
 | --- | --- | --- | --- |
-| Product | `0.3.0` | `package.json` | The complete Vecta application milestone. |
+| Product | `0.4.0` | `package.json` | The complete Vecta application milestone. |
 | Skill taxonomy | `1.1.0` | `lib/skillTaxonomy.ts` | The canonical skill concepts and explicit aliases used by matching. |
 | Export schema | `1` | `lib/version.ts` | The shape of the downloaded user-data bundle. |
 
@@ -22,6 +22,7 @@ Vecta uses semantic versions:
 
 ### Milestone history
 
+- `0.4.0` — Shared interface foundations, clearer primary-workspace empty states, and improved keyboard focus and semantics.
 - `0.3.0` — Reliable core browser journeys for onboarding, fit review and corrections, pipeline tracking, and pipeline-stage persistence.
 - `0.2.0` — Versioned matching taxonomy, traceable exports, and visible product identifiers.
 

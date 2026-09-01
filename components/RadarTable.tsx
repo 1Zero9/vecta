@@ -2,6 +2,9 @@
 
 import React, { useState } from "react";
 import { Company, DomainType, ScaleTier } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Panel } from "@/components/ui/panel";
 import { 
   Building2, 
   ExternalLink, 
@@ -113,7 +116,7 @@ export function RadarTable({
     <div className="space-y-6">
       
       {/* Search & Filter Toolbar */}
-      <div className="glass-panel rounded-3xl p-4 sm:p-6 shadow-xl border border-slate-200 space-y-4">
+      <Panel className="space-y-4 p-4 sm:p-6">
         
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           
@@ -122,6 +125,7 @@ export function RadarTable({
             <Search className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
             <input
               type="text"
+              aria-label="Search companies"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search companies by name, tech stack, compliance framework, or leadership..."
@@ -130,14 +134,14 @@ export function RadarTable({
           </div>
 
           {/* Export CSV Button */}
-          <button
+          <Button
             onClick={exportCSV}
-            className="flex items-center gap-2 px-4 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-2xl text-xs sm:text-sm font-semibold border border-slate-200 shadow-sm transition-all shrink-0"
+            className="shrink-0"
             title="Export directory as CSV"
           >
             <Download className="w-4 h-4 text-emerald-700" />
             <span>Export CSV</span>
-          </button>
+          </Button>
 
         </div>
 
@@ -201,6 +205,7 @@ export function RadarTable({
           {/* Scale & Funding Filters */}
           <div className="flex flex-wrap items-center gap-2.5">
             <select
+              aria-label="Filter companies by scale"
               value={selectedScale}
               onChange={(e) => setSelectedScale(e.target.value)}
               className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer"
@@ -213,6 +218,7 @@ export function RadarTable({
             </select>
 
             <select
+              aria-label="Filter companies by ownership"
               value={selectedFunding}
               onChange={(e) => setSelectedFunding(e.target.value)}
               className="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer"
@@ -240,10 +246,10 @@ export function RadarTable({
 
         </div>
 
-      </div>
+      </Panel>
 
       {/* Company Radar Table (Desktop & Tablets) */}
-      <div className="glass-panel rounded-3xl overflow-hidden border border-slate-200 shadow-2xl">
+      <Panel className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
@@ -264,8 +270,13 @@ export function RadarTable({
             <tbody className="divide-y divide-slate-200 text-slate-700">
               {filteredCompanies.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-16 text-center text-slate-400">
-                    No companies match the current filter selection.
+                  <td colSpan={9} className="p-5">
+                    <EmptyState
+                      compact
+                      icon={<Building2 className="h-5 w-5" />}
+                      title="No companies match these filters"
+                      description="Broaden the search or change the domain, scale, ownership, or starred-company filters."
+                    />
                   </td>
                 </tr>
               ) : (
@@ -473,7 +484,7 @@ export function RadarTable({
             </tbody>
           </table>
         </div>
-      </div>
+      </Panel>
 
     </div>
   );

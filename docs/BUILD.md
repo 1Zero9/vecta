@@ -68,7 +68,7 @@ npx eslint --quiet \
 
 - Production build: passing.
 - Candidate Profile v1 focused lint: passing.
-- Automated unit and component suite: 40 tests across 12 files, passing.
+- Automated unit and component suite: 43 tests across 13 files, passing.
 - Playwright core workflows: 4 Chromium end-to-end tests, passing.
 - Current V8 coverage: 81.08% statements, 67.34% branches, 90.66% functions, and 85.76% lines across the selected domain modules. Skill normalization has 100% statement, branch, function, and line coverage.
 - Repository-wide `npm run lint`: currently reports legacy errors and warnings in older screens. It is not yet a passing quality gate.

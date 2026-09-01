@@ -2,6 +2,9 @@
 
 import React, { useState } from "react";
 import { SalaryBenchmark, TalentArchetype, DomainType } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Panel } from "@/components/ui/panel";
 import { 
   TrendingUp, 
   Banknote, 
@@ -43,17 +46,18 @@ export function RecruiterLookup({
     if (activeDomain !== "ALL" && a.domain !== activeDomain) return false;
     return true;
   });
+  const displayedArchetype = filteredArchetypes.find((item) => item.id === selectedArchetype?.id) ?? filteredArchetypes[0] ?? null;
 
   return (
     <div className="space-y-8">
       
       {/* Header Banner */}
-      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-200 relative overflow-hidden">
+      <Panel className="relative overflow-hidden p-6 sm:p-8">
         <div className="max-w-3xl space-y-2 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-emerald-500/40 text-xs font-mono font-bold uppercase">
+            <Badge className="rounded-full border-emerald-200 bg-emerald-50 font-mono uppercase text-emerald-700">
               Recruiter & Market Telemetry
-            </span>
+            </Badge>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Compensation Benchmarks & Talent Archetypes
@@ -116,7 +120,7 @@ export function RecruiterLookup({
             IT & Cloud Architecture
           </button>
         </div>
-      </div>
+      </Panel>
 
       {/* Section 1: Salary Benchmarks Grid */}
       <div className="space-y-4">
@@ -133,7 +137,14 @@ export function RecruiterLookup({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredBenchmarks.map((b) => (
+          {filteredBenchmarks.length === 0 ? (
+            <EmptyState
+              className="md:col-span-2"
+              icon={<Banknote className="h-5 w-5" />}
+              title="No compensation benchmarks for this discipline"
+              description="Choose another discipline to inspect the current curated market baseline."
+            />
+          ) : filteredBenchmarks.map((b) => (
             <div
               key={b.id}
               className="glass-panel rounded-3xl p-5 sm:p-6 border border-slate-200 space-y-4 hover:border-blue-500/40 transition-all shadow-lg"
@@ -141,7 +152,7 @@ export function RecruiterLookup({
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    {b.domain} // {b.seniority}
+                    {b.domain} · {b.seniority}
                   </span>
                   <h4 className="text-base sm:text-lg font-black text-slate-900 mt-1.5">
                     {b.role_title}
@@ -232,13 +243,22 @@ export function RecruiterLookup({
           
           {/* Left Column: Archetype selector list */}
           <div className="space-y-2">
-            {filteredArchetypes.map((arch) => {
-              const isSelected = selectedArchetype?.id === arch.id;
+            {filteredArchetypes.length === 0 ? (
+              <EmptyState
+                compact
+                icon={<Users className="h-5 w-5" />}
+                title="No talent archetype available"
+                description="Choose another discipline to view its interview rubric."
+              />
+            ) : filteredArchetypes.map((arch) => {
+              const isSelected = displayedArchetype?.id === arch.id;
               return (
-                <div
+                <button
+                  type="button"
                   key={arch.id}
                   onClick={() => setSelectedArchetype(arch)}
-                  className={`p-4 rounded-2xl cursor-pointer transition-all border ${
+                  aria-pressed={isSelected}
+                  className={`w-full p-4 rounded-2xl text-left cursor-pointer transition-all border ${
                     isSelected
                       ? "bg-white border-emerald-500 shadow-md ring-1 ring-emerald-500/40"
                       : "bg-white hover:bg-white border-slate-200/70"
@@ -255,26 +275,26 @@ export function RecruiterLookup({
                   <h4 className="text-sm font-bold text-slate-900 mt-1">
                     {arch.title}
                   </h4>
-                </div>
+                </button>
               );
             })}
           </div>
 
           {/* Right Column: Deep Archetype Blueprint */}
-          {selectedArchetype && (
+          {displayedArchetype && (
             <div className="lg:col-span-2 glass-panel rounded-3xl p-6 sm:p-8 border border-slate-200 space-y-6">
               
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
                 <div>
                   <span className="text-xs font-mono text-emerald-700 font-bold uppercase tracking-wider">
-                    {selectedArchetype.domain} Archetype
+                    {displayedArchetype.domain} Archetype
                   </span>
                   <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
-                    {selectedArchetype.title}
+                    {displayedArchetype.title}
                   </h3>
                 </div>
                 <div className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-mono font-bold text-sky-700">
-                  Seniority: {selectedArchetype.typical_seniority}
+                  Seniority: {displayedArchetype.typical_seniority}
                 </div>
               </div>
 
@@ -285,7 +305,7 @@ export function RecruiterLookup({
                   <span>Key Deliverables & Responsibilities</span>
                 </h4>
                 <ul className="space-y-1.5 pl-2 text-slate-600">
-                  {selectedArchetype.key_deliverables.map((deliv, idx) => (
+                  {displayedArchetype.key_deliverables.map((deliv, idx) => (
                     <li key={idx} className="flex items-start gap-2">
                       <span className="text-emerald-700 font-bold">•</span>
                       <span>{deliv}</span>
@@ -301,7 +321,7 @@ export function RecruiterLookup({
                     Core Skills & Frameworks
                   </span>
                   <div className="flex flex-wrap gap-1">
-                    {selectedArchetype.standard_skills.map((skill, idx) => (
+                    {displayedArchetype.standard_skills.map((skill, idx) => (
                       <span
                         key={idx}
                         className="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-mono"
@@ -317,7 +337,7 @@ export function RecruiterLookup({
                     Industry Certifications
                   </span>
                   <div className="flex flex-wrap gap-1">
-                    {selectedArchetype.key_certifications.map((cert, idx) => (
+                    {displayedArchetype.key_certifications.map((cert, idx) => (
                       <span
                         key={idx}
                         className="px-2 py-1 rounded-lg bg-amber-500/10 text-amber-700 text-xs font-mono border border-amber-500/20"
@@ -336,7 +356,7 @@ export function RecruiterLookup({
                   <span>High-Signal Interview Questions</span>
                 </h4>
                 <div className="space-y-2">
-                  {selectedArchetype.interview_question_samples.map((q, idx) => (
+                  {displayedArchetype.interview_question_samples.map((q, idx) => (
                     <div
                       key={idx}
                       className="p-3.5 rounded-xl bg-white border border-slate-200/70 text-xs sm:text-sm text-slate-700 leading-relaxed font-medium"

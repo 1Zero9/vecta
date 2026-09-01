@@ -2,6 +2,9 @@
 
 import React, { useState } from "react";
 import { ApplicationTrack, ApplicationStage, DomainType } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Panel } from "@/components/ui/panel";
 import { 
   Kanban, 
   Plus, 
@@ -107,7 +110,7 @@ export function PipelineBoard({
     <div className="space-y-6">
       
       {/* Pipeline Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-panel rounded-3xl p-6 border border-slate-200 shadow-lg">
+      <Panel className="flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
             <Kanban className="w-6 h-6 text-emerald-700" />
@@ -119,26 +122,35 @@ export function PipelineBoard({
         </div>
 
         <div className="flex items-center gap-2.5">
-          <button
+          <Button
             onClick={exportPipelineCSV}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition-all"
+            size="sm"
+            disabled={pipeline.length === 0}
           >
             <Download className="w-4 h-4 text-emerald-700" />
             <span>Export CSV</span>
-          </button>
+          </Button>
 
-          <button
+          <Button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs shadow-sm transition-all"
+            size="sm"
+            variant="primary"
           >
             <Plus className="w-4 h-4" />
             <span>Add Application</span>
-          </button>
+          </Button>
         </div>
-      </div>
+      </Panel>
 
       {/* Kanban Board Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 overflow-x-auto pb-4">
+      {pipeline.length === 0 ? (
+        <EmptyState
+          icon={<Kanban className="h-5 w-5" />}
+          title="Your pipeline is ready for its first role"
+          description="Track a role from Jobs or add an application you have already started. Vecta will keep its next stage and notes on this device."
+          action={<Button variant="primary" size="sm" onClick={() => setShowAddModal(true)}><Plus className="h-4 w-4" /> Add application</Button>}
+        />
+      ) : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 overflow-x-auto pb-4">
         {STAGES.map((col) => {
           const items = pipeline.filter((p) => p.stage === col.id);
 
@@ -293,7 +305,7 @@ export function PipelineBoard({
             </div>
           );
         })}
-      </div>
+      </div>}
 
       {/* Add Custom Application Modal */}
       {showAddModal && (

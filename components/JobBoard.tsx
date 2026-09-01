@@ -10,6 +10,10 @@ import {
 } from "@/lib/types";
 import { evaluateVectorFit } from "@/lib/fitEngine";
 import { filterJobs } from "@/lib/jobFiltering";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Panel } from "@/components/ui/panel";
 import { 
   Search, 
   SlidersHorizontal, 
@@ -98,13 +102,13 @@ export function JobBoard({
   const getDomainBadge = (domain: DomainType) => {
     switch (domain) {
       case "AI":
-        return <span className="badge-ai px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5"><Sparkles className="w-3 h-3" /> AI & Machine Learning</span>;
+        return <Badge className="badge-ai"><Sparkles className="w-3 h-3" /> AI & Machine Learning</Badge>;
       case "Security":
-        return <span className="badge-security px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5"><Shield className="w-3 h-3" /> Cybersecurity</span>;
+        return <Badge className="badge-security"><Shield className="w-3 h-3" /> Cybersecurity</Badge>;
       case "Governance":
-        return <span className="badge-governance px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5"><CheckCircle className="w-3 h-3" /> Governance & GRC</span>;
+        return <Badge className="badge-governance"><CheckCircle className="w-3 h-3" /> Governance & GRC</Badge>;
       case "IT":
-        return <span className="badge-it px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5"><Cpu className="w-3 h-3" /> IT Infrastructure</span>;
+        return <Badge className="badge-it"><Cpu className="w-3 h-3" /> IT Infrastructure</Badge>;
     }
   };
 
@@ -112,7 +116,7 @@ export function JobBoard({
     <div className="space-y-6">
       
       {/* Search & Multi-Faceted Filter Toolbar */}
-      <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-slate-200 space-y-4">
+      <Panel className="space-y-4 p-4 sm:p-5">
         
         {/* Top Search Bar */}
         <div className="relative">
@@ -238,26 +242,17 @@ export function JobBoard({
 
         </div>
 
-      </div>
+      </Panel>
 
       {/* Jobs Results List */}
       <div className="space-y-4">
         {filteredJobs.length === 0 ? (
-          <div role="status" className="text-center py-20 bg-white/40 rounded-3xl border border-dashed border-slate-200 p-8">
-            <HelpCircle className="w-12 h-12 text-slate-500 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-slate-700">{emptyState.title}</h3>
-            <p className="text-sm text-slate-400 mt-1 max-w-md mx-auto">
-              {emptyState.description}
-            </p>
-            {emptyState.action && (
-              <button
-                onClick={resetFilters}
-                className="mt-4 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-xs font-bold transition-all shadow-sm"
-              >
-                {emptyState.action}
-              </button>
-            )}
-          </div>
+          <EmptyState
+            icon={<HelpCircle className="h-5 w-5" />}
+            title={emptyState.title}
+            description={emptyState.description}
+            action={emptyState.action ? <Button size="sm" variant="primary" onClick={resetFilters}>{emptyState.action}</Button> : undefined}
+          />
         ) : (
           filteredJobs.map((job) => {
             const fit = evaluateVectorFit(profile, job);
@@ -351,10 +346,12 @@ export function JobBoard({
                   <div className="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end justify-between lg:justify-start gap-4 pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-200">
                     
                     {/* Vector Fit Meter */}
-                    <div
+                    <button
+                      type="button"
                       onClick={() => onOpenFitEvaluator(job)}
-                      className="cursor-pointer select-none px-4 py-2.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-500/50 transition-all flex items-center gap-3 group/score"
+                      className="cursor-pointer select-none px-4 py-2.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-500/50 transition-all flex items-center gap-3 group/score text-left"
                       title="Click to view Vector Fit breakdown and ATS parseability"
+                      aria-label={`Review Vector Match for ${job.title}`}
                     >
                       <div className="text-right">
                         <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
@@ -376,7 +373,7 @@ export function JobBoard({
                       }`}>
                         {fit.confidence_level === "Low" ? "—" : `${fit.overall_score}%`}
                       </div>
-                    </div>
+                    </button>
 
                     {/* Action Buttons Cluster */}
                     <div className="flex flex-wrap items-center gap-2">
