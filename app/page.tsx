@@ -11,6 +11,9 @@ import { FitEvaluatorModal } from "@/components/FitEvaluatorModal";
 import { CopilotModal } from "@/components/CopilotModal";
 import { ProfileDrawer } from "@/components/ProfileDrawer";
 import { CommandPalette } from "@/components/CommandPalette";
+import { UserManagementModal } from "@/components/UserManagementModal";
+import { GovernanceModal } from "@/components/GovernanceModal";
+import { ConsentBanner } from "@/components/ConsentBanner";
 
 import companiesData from "@/data/companies.json";
 import jobsData from "@/data/jobs.json";
@@ -25,23 +28,31 @@ import {
   DomainType, 
   ApplicationTrack, 
   ApplicationStage,
-  CandidateProfile 
+  CandidateProfile,
+  UserAccount,
+  ConsentSettings
 } from "@/lib/types";
 
 import { 
+  getStoredUser,
+  saveStoredUser,
+  getStoredProfile, 
+  saveStoredProfile,
   getStoredFavourites, 
   saveStoredFavourites, 
   getStoredSavedJobs, 
   saveStoredSavedJobs, 
   getStoredPipeline, 
-  saveStoredPipeline, 
-  getStoredProfile, 
-  saveStoredProfile 
+  saveStoredPipeline,
+  getStoredConsent,
+  saveStoredConsent,
+  DEMO_PERSONAS,
+  DEFAULT_USER
 } from "@/lib/storage";
 
 export default function Home() {
   // Navigation & View State
-  const [activeTab, setActiveTab] = useState<"jobs" | "radar" | "recruiter" | "pipeline">("jobs");
+  const [activeTab, setActiveTab] = useState<"jobs" | "radar" | "recruiter" | "pipeline" | "governance">("jobs");
   const [activeDomain, setActiveDomain] = useState<DomainType | "ALL">("ALL");
   const [isDark, setIsDark] = useState(true);
 
@@ -51,25 +62,39 @@ export default function Home() {
   const [benchmarks] = useState<SalaryBenchmark[]>(salaryBenchmarksData as SalaryBenchmark[]);
   const [archetypes] = useState<TalentArchetype[]>(talentArchetypesData as TalentArchetype[]);
 
-  // Persistent User State
-  const [profile, setProfile] = useState<CandidateProfile>(getStoredProfile());
+  // Persistent User & Persona State
+  const [currentUser, setCurrentUser] = useState<UserAccount>(DEFAULT_USER);
+  const [profile, setProfile] = useState<CandidateProfile>(DEMO_PERSONAS["alex-ai-sec"].profile);
+  const [consent, setConsent] = useState<ConsentSettings | null>(null);
   const [favouriteCompanyIds, setFavouriteCompanyIds] = useState<string[]>([]);
   const [savedJobIds, setSavedJobIds] = useState<string[]>([]);
   const [pipeline, setPipeline] = useState<ApplicationTrack[]>([]);
 
-  // Modal / Drawer State
+  // Modals & Drawers
   const [selectedJobForAudit, setSelectedJobForAudit] = useState<Job | null>(null);
   const [selectedJobForCopilot, setSelectedJobForCopilot] = useState<Job | null>(null);
   const [copilotInitialMode, setCopilotInitialMode] = useState<"tailor" | "interview">("tailor");
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
   const [isCmdPaletteOpen, setIsCmdPaletteOpen] = useState(false);
+  const [isUserManagementOpen, setIsUserManagementOpen] = useState(false);
+  const [isGovernanceModalOpen, setIsGovernanceModalOpen] = useState(false);
+
+  // Toast / notification feedback
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   // Hydrate persistent state on client mount
   useEffect(() => {
+    setCurrentUser(getStoredUser());
+    setProfile(getStoredProfile());
+    setConsent(getStoredConsent());
     setFavouriteCompanyIds(getStoredFavourites());
     setSavedJobIds(getStoredSavedJobs());
     setPipeline(getStoredPipeline());
-    setProfile(getStoredProfile());
 
     // Theme setup
     const savedTheme = localStorage.getItem("vecta_theme");
@@ -94,6 +119,63 @@ export default function Home() {
     }
   };
 
+  // Switch demo persona
+  const handleSelectPersona = (personaKey: "alex-ai-sec" | "elena-grc" | "marcus-it") => {
+    const chosen = DEMO_PERSONAS[personaKey];
+    if (chosen) {
+      setCurrentUser(chosen.user);
+      setProfile(chosen.profile);
+      saveStoredUser(chosen.user);
+      saveStoredProfile(chosen.profile);
+      showToast(`Switched active account to ${chosen.user.name} (${chosen.profile.primary_domain})`);
+
+      // Optionally sync to Prisma API in background
+      fetch("/api/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user: chosen.user, profile: chosen.profile }),
+      }).catch((e) => console.warn("Prisma background sync warning:", e));
+    }
+  };
+
+  const handleSaveCustomUser = (newUser: UserAccount, newProfile: CandidateProfile) => {
+    setCurrentUser(newUser);
+    setProfile(newProfile);
+    saveStoredUser(newUser);
+    saveStoredProfile(newProfile);
+    showToast(`Account created & switched to ${newUser.name}`);
+
+    // Sync to Prisma
+    fetch("/api/user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: newUser, profile: newProfile }),
+    }).catch((e) => console.warn("Prisma sync warning:", e));
+  };
+
+  const handleAcceptConsent = () => {
+    const settings: ConsentSettings = {
+      gdprConsent: true,
+      aiActConsent: true,
+      analyticsConsent: false,
+      consentedAt: new Date().toISOString(),
+    };
+    setConsent(settings);
+    saveStoredConsent(settings);
+
+    // Log to Prisma
+    fetch("/api/governance/consent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: currentUser.id,
+        gdprConsent: true,
+        aiActConsent: true,
+        analyticsConsent: false,
+      }),
+    }).catch((e) => console.warn("Consent sync warning:", e));
+  };
+
   const handleToggleFavourite = (companyId: string) => {
     const next = favouriteCompanyIds.includes(companyId)
       ? favouriteCompanyIds.filter((id) => id !== companyId)
@@ -111,7 +193,6 @@ export default function Home() {
   };
 
   const handleTrackInPipeline = (job: Job) => {
-    // Check if already in pipeline
     const existing = pipeline.find((p) => p.job_id === job.id);
     if (!existing) {
       const newTrack: ApplicationTrack = {
@@ -130,6 +211,7 @@ export default function Home() {
       const updated = [newTrack, ...pipeline];
       setPipeline(updated);
       saveStoredPipeline(updated);
+      showToast(`Added "${job.title}" to career pipeline.`);
     }
     setActiveTab("pipeline");
   };
@@ -158,7 +240,7 @@ export default function Home() {
     const newTrack: ApplicationTrack = {
       id: `track-custom-${Date.now()}`,
       job_id: `custom-${Date.now()}`,
-      company_name: app.company_name || "Enterprise Company",
+      company_name: app.company_name || "Enterprise Tech",
       job_title: app.job_title || "Specialist",
       domain: app.domain || "AI",
       stage: app.stage || "saved",
@@ -171,11 +253,23 @@ export default function Home() {
     const updated = [newTrack, ...pipeline];
     setPipeline(updated);
     saveStoredPipeline(updated);
+    showToast(`Added custom application to pipeline.`);
   };
 
   const handleSaveProfile = (newProfile: CandidateProfile) => {
     setProfile(newProfile);
     saveStoredProfile(newProfile);
+    showToast("Profile and vector match weights updated.");
+  };
+
+  const handleDataWiped = () => {
+    setCurrentUser(DEFAULT_USER);
+    setProfile(DEMO_PERSONAS["alex-ai-sec"].profile);
+    setFavouriteCompanyIds([]);
+    setSavedJobIds([]);
+    setPipeline([]);
+    setConsent(null);
+    showToast("All user telemetry, resume text, and pipeline records permanently erased.");
   };
 
   // Counts for metric cards
@@ -187,22 +281,39 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-[#0B0F19] text-[#F9FAFB] selection:bg-emerald-500 selection:text-slate-950">
       
-      {/* Top HUD Header */}
+      {/* Toast Notification */}
+      {notification && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4 duration-200">
+          <div className="px-4 py-2.5 rounded-2xl bg-slate-900 border border-emerald-500/40 text-emerald-300 text-xs font-semibold shadow-2xl flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>{notification}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Top Streamlined Header */}
       <Header
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          if (tab === "governance") {
+            setIsGovernanceModalOpen(true);
+          } else {
+            setActiveTab(tab);
+          }
+        }}
+        currentUser={currentUser}
         isDark={isDark}
         toggleTheme={toggleTheme}
         openCmdPalette={() => setIsCmdPaletteOpen(true)}
-        openProfileDrawer={() => setIsProfileDrawerOpen(true)}
-        candidateName={profile.full_name}
+        openUserManagement={() => setIsUserManagementOpen(true)}
+        openGovernance={() => setIsGovernanceModalOpen(true)}
         totalLiveJobs={jobs.length}
       />
 
       {/* Main Container */}
       <main className="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
         
-        {/* Dynamic Interactive KPI Cards */}
+        {/* Sleek Horizontal Telemetry Bar */}
         <MetricCards
           totalCompanies={companies.length}
           totalJobs={jobs.length}
@@ -213,10 +324,14 @@ export default function Home() {
           pipelineCount={pipeline.length}
           activeDomainFilter={activeDomain}
           setDomainFilter={setActiveDomain}
-          setActiveTab={setActiveTab}
+          setActiveTab={(tab) => {
+            if (tab === "governance") setIsGovernanceModalOpen(true);
+            else setActiveTab(tab);
+          }}
+          openGovernance={() => setIsGovernanceModalOpen(true)}
         />
 
-        {/* View Content Area */}
+        {/* View Content */}
         {activeTab === "jobs" && (
           <JobBoard
             jobs={jobs}
@@ -265,27 +380,66 @@ export default function Home() {
 
       </main>
 
-      {/* Footer */}
+      {/* Clean Modern Footer */}
       <footer className="border-t border-white/10 bg-slate-950/80 py-8 px-4 sm:px-6 lg:px-8 transition-colors mt-12">
-        <div className="max-w-[1700px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <div className="flex items-center gap-2">
+        <div className="max-w-[1700px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          
+          <div className="flex flex-wrap items-center gap-2">
             <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold font-mono text-xs">
               V
             </div>
             <span className="font-bold text-white">Vecta // Career Vector Navigator</span>
             <span>•</span>
-            <span>Latin: vehere ("to convey / carry / transport")</span>
+            <span className="text-slate-400">Latin: vehere ("to carry / convey / transport")</span>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px] font-mono">
-            <span>Specialized in: IT · AI · Governance · Security</span>
+          <div className="flex flex-wrap items-center gap-4 text-[11px] font-mono">
+            <button
+              onClick={() => setIsGovernanceModalOpen(true)}
+              className="text-amber-400 hover:underline"
+            >
+              EU AI Act & GDPR Disclosures
+            </button>
             <span>•</span>
-            <span className="text-emerald-400">Live ATS Connector Engine Active</span>
+            <button
+              onClick={() => setIsUserManagementOpen(true)}
+              className="text-cyan-400 hover:underline"
+            >
+              Active Account: {currentUser.name}
+            </button>
+            <span>•</span>
+            <span className="text-emerald-400">Prisma Database Integrated</span>
           </div>
+
         </div>
       </footer>
 
-      {/* Modals & Drawers */}
+      {/* GDPR & EU AI Act Consent Banner */}
+      {!consent && (
+        <ConsentBanner
+          onAcceptAll={handleAcceptConsent}
+          onOpenGovernance={() => setIsGovernanceModalOpen(true)}
+        />
+      )}
+
+      {/* User Management & Demo Persona Switcher Modal */}
+      <UserManagementModal
+        currentUser={currentUser}
+        isOpen={isUserManagementOpen}
+        onClose={() => setIsUserManagementOpen(false)}
+        onSelectPersona={handleSelectPersona}
+        onSaveCustomUser={handleSaveCustomUser}
+        onOpenGovernance={() => setIsGovernanceModalOpen(true)}
+      />
+
+      {/* Governance, GDPR, EU AI Act & Disclaimers Modal */}
+      <GovernanceModal
+        isOpen={isGovernanceModalOpen}
+        onClose={() => setIsGovernanceModalOpen(false)}
+        onDataWiped={handleDataWiped}
+      />
+
+      {/* Vector Match & ATS Parseability Audit Modal */}
       <FitEvaluatorModal
         job={selectedJobForAudit}
         profile={profile}
@@ -297,6 +451,7 @@ export default function Home() {
         }}
       />
 
+      {/* Application Copilot & STAR Interview Prep Modal */}
       <CopilotModal
         job={selectedJobForCopilot}
         profile={profile}
@@ -305,6 +460,7 @@ export default function Home() {
         initialMode={copilotInitialMode}
       />
 
+      {/* Profile & Vector Weights Editor Drawer */}
       <ProfileDrawer
         profile={profile}
         isOpen={isProfileDrawerOpen}
@@ -312,16 +468,18 @@ export default function Home() {
         onSaveProfile={handleSaveProfile}
       />
 
+      {/* Global Command Palette (⌘K) */}
       <CommandPalette
         isOpen={isCmdPaletteOpen}
         onClose={() => setIsCmdPaletteOpen(false)}
         jobs={jobs}
         companies={companies}
         benchmarks={benchmarks}
-        onSelectJob={(job) => {
-          setSelectedJobForAudit(job);
+        onSelectJob={(job) => setSelectedJobForAudit(job)}
+        setActiveTab={(tab) => {
+          if (tab === "governance") setIsGovernanceModalOpen(true);
+          else setActiveTab(tab);
         }}
-        setActiveTab={setActiveTab}
         openProfileDrawer={() => setIsProfileDrawerOpen(true)}
         toggleTheme={toggleTheme}
       />

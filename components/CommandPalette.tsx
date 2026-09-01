@@ -24,7 +24,7 @@ interface CommandPaletteProps {
   companies: Company[];
   benchmarks: SalaryBenchmark[];
   onSelectJob: (job: Job) => void;
-  setActiveTab: (tab: "jobs" | "radar" | "recruiter" | "pipeline") => void;
+  setActiveTab: (tab: "jobs" | "radar" | "recruiter" | "pipeline" | "governance") => void;
   openProfileDrawer: () => void;
   toggleTheme: () => void;
 }

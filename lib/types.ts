@@ -26,6 +26,24 @@ export type ApplicationStage =
   | "offer" 
   | "archived";
 
+export interface UserAccount {
+  id: string;
+  name: string;
+  email: string;
+  role: "Candidate" | "Recruiter" | "Auditor / GRC Lead";
+  avatar: string;
+  isDemo: boolean;
+  activePersonaId: "alex-ai-sec" | "elena-grc" | "marcus-it" | "custom";
+}
+
+export interface ConsentSettings {
+  gdprConsent: boolean;
+  aiActConsent: boolean;
+  analyticsConsent: boolean;
+  consentedAt?: string;
+  ipPlaceholder?: string;
+}
+
 export interface Company {
   id: string;
   name: string;
