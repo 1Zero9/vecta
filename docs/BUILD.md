@@ -53,7 +53,7 @@ npm run build
 npm run build:sites
 ```
 
-`npm test` runs the fast unit and component suite once. `npm run test:watch` keeps it running during development, and `npm run test:coverage` produces an HTML report in `coverage/`. `npm run test:e2e` starts the built application on port 3100 and runs the Chromium candidate journeys; install its browser once with `npx playwright install chromium`. A successful standard production build completes compilation and TypeScript checking. A successful Sites build emits `dist/server/index.js`, the client assets, and the copied hosting manifest.
+`npm test` runs the fast unit and component suite once. `npm run test:watch` keeps it running during development, and `npm run test:coverage` produces an HTML report in `coverage/`. `npm run test:e2e` starts the built application on port 3100 and runs the Chromium candidate journeys; install its browser once with `npx playwright install chromium`. A successful standard production build completes compilation and TypeScript checking. A successful Sites build emits `dist/server/index.js`, the client assets, and the copied hosting manifest. The Sites build script disables Wrangler's automatic `.env` loading so local values are never copied into the packaged worker artifact.
 
 For focused validation of Candidate Profile v1:
 
@@ -99,6 +99,7 @@ npx eslint --quiet \
 | Stale dependencies in a running dev server | Stop the server, run `npm ci`, and restart it. |
 | Sites build cannot find a Vite native binding | Use the supported Node.js version, reinstall with `npm ci`, and rerun `npm run build:sites`. |
 | Hosted profile or consent sync returns `offline: true` | Expected in v0.10.0: the Sites build excludes native SQLite and uses browser storage as the primary store. |
+| Sites publish says the default `fetch` handler is missing | Confirm `@cloudflare/vite-plugin` is installed and registered for the `rsc` environment, then rebuild and save a new version. Do not retry the unchanged archive. |
 
 ## Release checklist
 

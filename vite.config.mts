@@ -1,13 +1,27 @@
 import { sites } from "@openai/sites-vite-plugin";
+import { cloudflare } from "@cloudflare/vite-plugin";
+import tailwindcss from "@tailwindcss/postcss";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import vinext from "vinext";
 
 export default defineConfig({
-  plugins: [vinext(), sites()],
+  css: {
+    postcss: {
+      plugins: [tailwindcss()],
+    },
+  },
+  plugins: [
+    vinext(),
+    cloudflare({
+      viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
+    }),
+    sites(),
+  ],
   resolve: {
     alias: {
       "@prisma/client": fileURLToPath(new URL("./lib/prismaClient.sites.ts", import.meta.url)),
+      tailwindcss: fileURLToPath(new URL("./node_modules/tailwindcss/index.css", import.meta.url)),
     },
   },
   environments: {

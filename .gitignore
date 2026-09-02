@@ -23,6 +23,7 @@
 /build
 /dist
 /.vinext
+/.wrangler
 
 # misc
 .DS_Store

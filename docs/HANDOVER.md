@@ -17,7 +17,7 @@ The catalogue, market records, and drafting outputs are curated or deterministic
 - Node.js 22.13 or newer
 - npm 10 or newer
 - Next.js 16.3.4, React 19.2, TypeScript 5, Tailwind CSS 4
-- vinext 1 beta, Vite 8, and the Sites plugin for worker-compatible delivery
+- vinext 1 beta, Vite 8, the Cloudflare Vite plugin, and the Sites plugin for worker-compatible delivery
 - Prisma 6.19 with SQLite in development
 - PDF.js 6 and Mammoth 1 for browser-side résumé extraction
 
@@ -71,7 +71,7 @@ flowchart TD
 | Profile quality | `lib/profileCompletion.ts` | Weighted completeness and missing profile areas. |
 | Persistence | `lib/storage.ts` | Local save/load, backward-compatible profile hydration, export, and erasure. |
 | Optional synchronization | `lib/profileSync.ts`, `lib/prismaClient.sites.ts` | Keeps Prisma/SQLite available to standard Next development while replacing it with a worker-safe no-op in the Sites build. |
-| Sites delivery | `vite.config.mts`, `.openai/hosting.json` | Emits the required worker entry and client assets while preserving the local-first persistence boundary. |
+| Sites delivery | `vite.config.mts`, `wrangler.jsonc`, `.openai/hosting.json` | Selects vinext's Worker fetch entry and emits the required worker and client assets while preserving the local-first persistence boundary. |
 | Types | `lib/types.ts` | Candidate, evidence, job, application, and result contracts. |
 
 ## Candidate data flow

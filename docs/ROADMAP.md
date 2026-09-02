@@ -63,7 +63,7 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Replace claims of live or verified data, external AI generation, and regulatory conformity with accurate curated-data, deterministic-feature, and prototype-governance boundaries.
 - [x] Remove invented achievements and metrics from application and STAR templates; use saved evidence or explicit prompts that require user verification.
 - [x] Verify Jobs, Companies, Market, and Pipeline at 360 px, 768 px, and 1440 px without page-level horizontal overflow.
-- [x] Add a Sites-compatible vinext/Vite worker build with an explicit local-first persistence fallback.
+- [x] Add a Sites-compatible vinext/Vite/Cloudflare Worker build with an explicit local-first persistence fallback.
 
 ### Remaining
 
