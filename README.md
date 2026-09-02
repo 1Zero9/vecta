@@ -2,13 +2,13 @@
 
 Vecta is a light-only recruitment workspace for specialist candidates in AI, cybersecurity, governance, and cloud/IT. It combines a curated role catalogue, a local-first candidate profile, explainable fit estimates, résumé review, evidence linking, and an application pipeline.
 
-Current release: **Vecta v0.9.0 Preview** · Skill taxonomy **v1.1.0** · Export schema **v1**.
+Current release: **Vecta v0.10.0 Preview** · Skill taxonomy **v1.1.0** · Export schema **v1**.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. For the product, it means bringing experience, evidence, and ambition together to carry a career forward with clarity.
 
 This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. Production authentication, self-service user management, an auditable admin workbench, durable multi-device ownership, and verified job ingestion remain roadmap work.
 
-The current local and production Next.js builds pass. Publishing through the configured Sites project remains blocked until the application emits a supported worker bundle; this is tracked explicitly in the roadmap.
+The local and production Next.js builds pass. A separate vinext/Vite build emits the worker bundle required by the configured Sites project. Because Sites cannot run the prototype's native SQLite client, that build preserves the documented device-local workflow and returns an explicit offline response from optional synchronization APIs.
 
 ## Current capabilities
 
@@ -28,6 +28,7 @@ The current local and production Next.js builds pass. Publishing through the con
 - Next.js 16 App Router, React 19, and TypeScript
 - Tailwind CSS 4 with a professional light-only visual system
 - Prisma 6 with SQLite for optional development synchronization
+- vinext, Vite, and the Sites plugin for the worker-compatible hosted build
 - PDF.js and Mammoth for local PDF/DOCX text extraction
 - Browser `localStorage` for the prototype’s device-local profile and pipeline state
 - Vitest, Testing Library, and V8 coverage for deterministic logic and core profile interactions
@@ -70,10 +71,11 @@ npm test
 npm run test:coverage
 npm run test:e2e
 npm run build
+npm run build:sites
 npm run lint
 ```
 
-`npm test` runs the unit and component suite. `npm run test:e2e` runs the first Chromium candidate journey against a production server. `npm run build` performs production compilation and TypeScript checking. See [docs/BUILD.md](docs/BUILD.md) for coverage details, the focused quality gate, and the current repository-wide lint baseline.
+`npm test` runs the unit and component suite. `npm run test:e2e` runs the core Chromium candidate journeys against a production server. `npm run build` validates the standard Next.js application; `npm run build:sites` emits the Sites bundle at `dist/server/index.js`. See [docs/BUILD.md](docs/BUILD.md) for the complete release sequence, coverage details, and current lint baseline.
 
 ## Key project areas
 

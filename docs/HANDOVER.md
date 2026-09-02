@@ -4,7 +4,7 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
-Current identifiers are Vecta **v0.9.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
+Current identifiers are Vecta **v0.10.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
 
 The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
 
@@ -17,6 +17,7 @@ The catalogue, market records, and drafting outputs are curated or deterministic
 - Node.js 22.13 or newer
 - npm 10 or newer
 - Next.js 16.3.4, React 19.2, TypeScript 5, Tailwind CSS 4
+- vinext 1 beta, Vite 8, and the Sites plugin for worker-compatible delivery
 - Prisma 6.19 with SQLite in development
 - PDF.js 6 and Mammoth 1 for browser-side résumé extraction
 
@@ -42,7 +43,9 @@ flowchart TD
     Page --> Storage[lib/storage.ts]
     Storage --> Local[(Browser localStorage)]
     Page -. optional sync .-> UserAPI[/api/user]
-    UserAPI --> Prisma[Prisma / SQLite]
+    UserAPI --> Sync[lib/profileSync.ts]
+    Sync --> Prisma[Next: Prisma / SQLite]
+    Sync --> WorkerFallback[Sites: local-first fallback]
 ```
 
 ## Important files
@@ -67,6 +70,8 @@ flowchart TD
 | Résumé parsing | `lib/resumeExtraction.ts` | Local PDF/DOCX extraction and deterministic skill/certification suggestions. |
 | Profile quality | `lib/profileCompletion.ts` | Weighted completeness and missing profile areas. |
 | Persistence | `lib/storage.ts` | Local save/load, backward-compatible profile hydration, export, and erasure. |
+| Optional synchronization | `lib/profileSync.ts`, `lib/prismaClient.sites.ts` | Keeps Prisma/SQLite available to standard Next development while replacing it with a worker-safe no-op in the Sites build. |
+| Sites delivery | `vite.config.mts`, `.openai/hosting.json` | Emits the required worker entry and client assets while preserving the local-first persistence boundary. |
 | Types | `lib/types.ts` | Candidate, evidence, job, application, and result contracts. |
 
 ## Candidate data flow
@@ -115,7 +120,8 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Résumé files are limited to 10 MB.
 - Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- Vitest covers 56 domain, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, and component scenarios across sixteen test files.
+- The Sites build aliases native Prisma to a worker-safe no-op. Optional API writes return `{ success: true, offline: true }`; durable hosted persistence remains Phase 3 work.
+- Vitest covers 57 domain, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, delivery-boundary, and component scenarios across seventeen test files.
 - Four Playwright journeys cover role search and tracking, complete onboarding persistence, fit review with reversible corrections, and persisted pipeline-stage movement with visible confirmation.
 - Jobs, Companies, Market, and Pipeline have been checked at 360 px, 768 px, and 1440 px without document-level horizontal overflow. Search, local profiles, governance, fit review, application preparation, candidate profile, and onboarding now use shared dialogs that lock background scroll, contain Tab focus, close with Escape, and restore the invoking control.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
@@ -123,7 +129,6 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 ## Next engineering priorities
 
 1. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
-2. Add a Sites-compatible deployment build or choose another production hosting target.
-3. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.
-4. Clean up the repository-wide lint baseline and make it a release quality gate.
-5. Extend state-specific handling when real network-backed Companies, Market, profile, and governance workflows are introduced.
+2. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.
+3. Clean up the repository-wide lint baseline and make it a release quality gate.
+4. Extend state-specific handling when real network-backed Companies, Market, profile, and governance workflows are introduced.

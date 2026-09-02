@@ -32,7 +32,7 @@ Before presenting these features as production-ready, the product still needs re
 | Priority | Workstream | Current state | What remains |
 | ---: | --- | --- | --- |
 | 1 | Fit and profile reliability | Active | Real-world résumé fixtures and ongoing measured taxonomy maintenance. |
-| 2 | UI and delivery hardening | Active | Remaining legacy controls, accessibility and responsive checks, repository lint cleanup, and a Sites-compatible deployment output. |
+| 2 | UI and delivery hardening | Active | Remaining legacy controls, accessibility and responsive checks, repository lint cleanup, and hosted-preview operational verification. |
 | 3 | Accounts, user management, and admin operations | Not started | Authentication, self-service account management, role-based authorization, server-owned records, an auditable admin workbench, cross-device recovery, and complete export/erasure. |
 | 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
 | 5 | Grounded application assistance | Not started | Evidence-grounded generation, user review, version history, and audit records. |
@@ -63,6 +63,7 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Replace claims of live or verified data, external AI generation, and regulatory conformity with accurate curated-data, deterministic-feature, and prototype-governance boundaries.
 - [x] Remove invented achievements and metrics from application and STAR templates; use saved evidence or explicit prompts that require user verification.
 - [x] Verify Jobs, Companies, Market, and Pipeline at 360 px, 768 px, and 1440 px without page-level horizontal overflow.
+- [x] Add a Sites-compatible vinext/Vite worker build with an explicit local-first persistence fallback.
 
 ### Remaining
 
@@ -70,7 +71,7 @@ Before presenting these features as production-ready, the product still needs re
 - Continue keyboard, focus, heading, contrast, and screen-reader reviews as server-backed workflows are introduced.
 - Continue interaction-level mobile checks as new server-backed states and workflows are introduced.
 - Clean up the repository-wide lint baseline.
-- Add a Sites-compatible build output or explicitly select another production hosting target.
+- Verify the packaged Sites preview in its hosted runtime and document operational ownership.
 
 ### Exit criteria
 
@@ -233,15 +234,16 @@ Before presenting these features as production-ready, the product still needs re
 ## Immediate next sprint
 
 1. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-2. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
+2. Package and verify the Sites worker in its hosted preview runtime; keep its current device-local data boundary visible.
 3. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
 4. Clean up the repository-wide lint baseline and make it a release quality gate.
 5. Extend state-specific handling when real network-backed Companies, Market, profile, and governance workflows are introduced.
+6. Test the Prisma major-version migration needed to clear the current development-only dependency advisory chain.
 
 ### Dependencies and decisions
 
 - Real-world parser validation needs anonymized PDF and DOCX samples that may be safely retained as test fixtures.
-- Production deployment needs either a Sites-compatible worker build or an explicit alternative hosting target.
+- The hosted preview is local-first by design. Durable server persistence requires a worker-compatible data store plus the Phase 3 identity, ownership, authorization, export, erasure, and audit model.
 - Durable persistence should not expand until authentication, ownership, authorization, administrator powers, audit retention, export, and erasure boundaries are agreed together.
 
 ## Product principles
