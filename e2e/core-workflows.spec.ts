@@ -78,7 +78,7 @@ test("a candidate reviews, corrects, and restores a fit result", async ({ page }
   await page.goto("/");
   await page.getByRole("textbox", { name: "Search roles" }).fill("Principal MLOps");
   await page.locator('[title="Click to view Vector Fit breakdown and ATS parseability"]').click();
-  await expect(page.getByRole("heading", { name: "Vector Match & ATS Parseability Audit" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Vector Match and résumé audit" })).toBeVisible();
   await expect(page.getByText("Taxonomy v1.1.0", { exact: false })).toBeVisible();
 
   await page.getByRole("button", { name: "Exclude Kubernetes" }).click();

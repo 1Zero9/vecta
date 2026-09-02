@@ -4,7 +4,6 @@ import React from "react";
 import { Job, CandidateProfile, SkillMatchDecision } from "@/lib/types";
 import { evaluateVectorFit } from "@/lib/fitEngine";
 import { 
-  X, 
   Sparkles, 
   CheckCircle2, 
   AlertCircle, 
@@ -13,6 +12,8 @@ import {
   ShieldCheck,
   CircleDashed,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DialogShell } from "@/components/ui/dialog-shell";
 
 interface FitEvaluatorModalProps {
   job: Job | null;
@@ -43,32 +44,29 @@ export function FitEvaluatorModal({
   const fit = evaluateVectorFit(profile, job);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm transition-all">
-      <div className="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        
-        {/* Modal Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#2563EB] flex items-center justify-center text-white font-black shadow-sm">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-slate-900">
-                Vector Match & ATS Parseability Audit
-              </h3>
-              <p className="text-xs text-slate-400 font-medium truncate max-w-md">
-                {job.title} · {job.company_name}
-              </p>
-            </div>
+    <DialogShell
+      titleId="fit-audit-title"
+      title="Vector Match and résumé audit"
+      description={`${job.title} · ${job.company_name}`}
+      icon={<Sparkles className="h-5 w-5" />}
+      onClose={onClose}
+      closeLabel="Close fit audit"
+      size="lg"
+      bodyClassName="p-0 sm:p-0"
+      footer={(
+        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Button onClick={onClose}>Close audit</Button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button onClick={() => { onClose(); onOpenCopilot(job, "interview"); }}>
+              <Zap className="h-4 w-4 text-amber-700" /> STAR interview pack
+            </Button>
+            <Button variant="primary" onClick={() => { onClose(); onOpenCopilot(job, "tailor"); }}>
+              <FileText className="h-4 w-4" /> Prepare application draft
+            </Button>
           </div>
-
-          <button
-            onClick={onClose}
-            className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
         </div>
+      )}
+    >
 
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs sm:text-sm">
@@ -372,41 +370,6 @@ export function FitEvaluatorModal({
 
         </div>
 
-        {/* Modal Footer Actions */}
-        <div className="p-4 sm:p-6 border-t border-slate-200 bg-white flex flex-wrap items-center justify-between gap-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-colors"
-          >
-            Close Audit
-          </button>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                onClose();
-                onOpenCopilot(job, "interview");
-              }}
-              className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all"
-            >
-              <Zap className="w-3.5 h-3.5 text-amber-700" />
-              <span>STAR Interview Pack</span>
-            </button>
-
-            <button
-              onClick={() => {
-                onClose();
-                onOpenCopilot(job, "tailor");
-              }}
-              className="px-5 py-2.5 bg-[#2563EB] text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition-all hover:bg-[#1D4ED8]"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Generate Tailored Application</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
+    </DialogShell>
   );
 }

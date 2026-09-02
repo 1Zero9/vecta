@@ -1,70 +1,60 @@
 "use client";
 
 import React, { useState } from "react";
-import { UserAccount, CandidateProfile } from "@/lib/types";
-import { DEMO_PERSONAS } from "@/lib/storage";
-import { 
-  X, 
-  UserCheck, 
-  Sparkles, 
-  ShieldCheck, 
-  Cpu, 
-  CheckCircle2, 
-  Database, 
-  RefreshCw, 
-  LogOut, 
-  UserPlus,
-  Lock,
-  ArrowRight
-} from "lucide-react";
+import { ArrowLeft, Cpu, Lock, ShieldCheck, Sparkles, UserCheck, UserPlus } from "lucide-react";
+import { CandidateProfile, UserAccount } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { DialogShell } from "@/components/ui/dialog-shell";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { StatusNotice } from "@/components/ui/status-notice";
+
+type PersonaKey = "alex-ai-sec" | "elena-grc" | "marcus-it";
+type AccountRole = "Candidate" | "Recruiter" | "Auditor / GRC Lead";
 
 interface UserManagementModalProps {
   currentUser: UserAccount;
   isOpen: boolean;
   onClose: () => void;
-  onSelectPersona: (personaKey: "alex-ai-sec" | "elena-grc" | "marcus-it") => void;
+  onSelectPersona: (personaKey: PersonaKey) => void;
   onSaveCustomUser: (user: UserAccount, profile: CandidateProfile) => void;
   onOpenGovernance: () => void;
 }
 
-export function UserManagementModal({
-  currentUser,
-  isOpen,
-  onClose,
-  onSelectPersona,
-  onSaveCustomUser,
-  onOpenGovernance,
-}: UserManagementModalProps) {
+const personas: Array<{ key: PersonaKey; initials: string; name: string; description: string; icon: typeof Sparkles; accent: string }> = [
+  { key: "alex-ai-sec", initials: "AM", name: "Alex Mercer", description: "Senior AI and security infrastructure engineer", icon: Sparkles, accent: "bg-sky-50 text-sky-700" },
+  { key: "elena-grc", initials: "EB", name: "Elena Beaumont", description: "Director of AI governance and GRC", icon: ShieldCheck, accent: "bg-amber-50 text-amber-700" },
+  { key: "marcus-it", initials: "MS", name: "Marcus Sterling", description: "Principal cloud and enterprise IT architect", icon: Cpu, accent: "bg-indigo-50 text-indigo-700" },
+];
+
+export function UserManagementModal({ currentUser, isOpen, onClose, onSelectPersona, onSaveCustomUser, onOpenGovernance }: UserManagementModalProps) {
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customEmail, setCustomEmail] = useState("");
-  const [customRole, setCustomRole] = useState<"Candidate" | "Recruiter" | "Auditor / GRC Lead">("Candidate");
+  const [customRole, setCustomRole] = useState<AccountRole>("Candidate");
 
   if (!isOpen) return null;
 
-  const handleCustomSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!customName || !customEmail) return;
+  const handleCustomSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const name = customName.trim();
+    const email = customEmail.trim();
+    if (!name || !email) return;
 
-    const initials = customName
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-
-    const newUser: UserAccount = {
+    const initials = name.split(/\s+/).map((part) => part[0]).join("").toUpperCase().slice(0, 2);
+    const user: UserAccount = {
       id: `user-custom-${Date.now()}`,
-      name: customName,
-      email: customEmail,
+      name,
+      email,
       role: customRole,
       avatar: initials || "CU",
       isDemo: false,
       activePersonaId: "custom",
     };
-
-    const newProfile: CandidateProfile = {
-      full_name: customName,
+    const profile: CandidateProfile = {
+      full_name: name,
       current_title: `${customRole} Specialist`,
       primary_domain: "AI",
       years_experience: 5,
@@ -72,256 +62,116 @@ export function UserManagementModal({
       certifications: ["Industry Certified"],
       target_salary_min: 110000,
       preferred_work_mode: "Hybrid",
-      resume_text: `${customName} - ${customRole} Specialist with verified background in high-growth technology systems.`,
+      resume_text: `${name} - ${customRole} Specialist with a background in technology systems.`,
     };
 
-    onSaveCustomUser(newUser, newProfile);
+    onSaveCustomUser(user, profile);
     setIsCreatingCustom(false);
     onClose();
   };
 
+  const selectPersona = (key: PersonaKey) => {
+    onSelectPersona(key);
+    onClose();
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm">
-      <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#2563EB] flex items-center justify-center text-white font-black shadow-sm">
-              <UserCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-slate-900">
-                User Management & Identity
-              </h3>
-              <p className="text-xs text-slate-400">
-                Switch candidate demo personas or manage your persistent account.
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+    <DialogShell
+      titleId="profile-switcher-title"
+      title={isCreatingCustom ? "Create a local profile" : "Profiles on this device"}
+      description={isCreatingCustom ? "Set up a local demonstration profile. This does not create a signed-in account." : "Switch between demonstration profiles or create a local profile for this browser."}
+      icon={isCreatingCustom ? <UserPlus className="h-5 w-5" /> : <UserCheck className="h-5 w-5" />}
+      onClose={onClose}
+      closeLabel="Close profile switcher"
+      size="md"
+      footer={(
+        <div className="flex flex-col-reverse justify-between gap-2 sm:flex-row sm:items-center">
+          <Button variant="ghost" size="sm" onClick={() => { onClose(); onOpenGovernance(); }}>
+            <Lock className="h-4 w-4" /> Privacy and data rights
+          </Button>
+          <Button size="sm" onClick={onClose}>Close</Button>
         </div>
-
-        {/* Active Account Overview Card */}
-        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-[#2563EB] text-white font-black text-lg flex items-center justify-center shadow-sm">
-              {currentUser.avatar}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h4 className="font-extrabold text-slate-900 text-base">
-                  {currentUser.name}
-                </h4>
-                {currentUser.isDemo && (
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 text-[10px] font-mono font-bold border border-emerald-500/30 uppercase">
-                    Verified Default Account
-                  </span>
-                )}
-              </div>
-              <div className="text-xs text-slate-400 mt-0.5">
-                {currentUser.email} • <span className="text-slate-600 font-semibold">{currentUser.role}</span>
-              </div>
-            </div>
+      )}
+    >
+      {isCreatingCustom ? (
+        <form id="local-profile-form" onSubmit={handleCustomSubmit} className="space-y-5">
+          <Button variant="ghost" size="sm" onClick={() => setIsCreatingCustom(false)} className="-ml-2">
+            <ArrowLeft className="h-4 w-4" /> Back to profiles
+          </Button>
+          <StatusNotice tone="info" title="Local prototype profile">
+            Details are stored in this browser. Sign-in, recovery, sessions, and multi-device access are roadmap work.
+          </StatusNotice>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field id="custom-profile-name" label="Full name" required>
+              <Input id="custom-profile-name" required autoFocus value={customName} onChange={(event) => setCustomName(event.target.value)} placeholder="Jordan Smith" />
+            </Field>
+            <Field id="custom-profile-email" label="Email address" required hint="Used only in this local prototype profile.">
+              <Input id="custom-profile-email" type="email" required value={customEmail} onChange={(event) => setCustomEmail(event.target.value)} placeholder="jordan@example.com" />
+            </Field>
           </div>
-
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-500/30 text-emerald-700 text-xs font-mono font-bold">
-            <Database className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Prisma Synced</span>
+          <Field id="custom-profile-role" label="Profile role">
+            <Select id="custom-profile-role" value={customRole} onChange={(event) => setCustomRole(event.target.value as AccountRole)}>
+              <option value="Candidate">Candidate</option>
+              <option value="Recruiter">Recruiter / Talent Lead</option>
+              <option value="Auditor / GRC Lead">Auditor / GRC Lead</option>
+            </Select>
+          </Field>
+          <div className="flex justify-end gap-2 border-t border-slate-200 pt-4">
+            <Button onClick={() => setIsCreatingCustom(false)}>Cancel</Button>
+            <Button type="submit" variant="primary">Save and switch profile</Button>
           </div>
-        </div>
-
-        {/* 1-Click Default Demo Persona Switcher */}
-        {!isCreatingCustom ? (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Switch Pre-Configured Personas
-              </span>
-              <button
-                onClick={() => setIsCreatingCustom(true)}
-                className="text-xs text-emerald-700 hover:underline flex items-center gap-1 font-semibold"
-              >
-                <UserPlus className="w-3.5 h-3.5" />
-                <span>Create Custom Account</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              
-              {/* Persona 1: Alex Mercer (AI/Security) */}
-              <div
-                onClick={() => {
-                  onSelectPersona("alex-ai-sec");
-                  onClose();
-                }}
-                className={`p-4 rounded-2xl cursor-pointer transition-all border ${
-                  currentUser.activePersonaId === "alex-ai-sec"
-                    ? "bg-sky-50 border-cyan-500 shadow-md ring-1 ring-cyan-500/40"
-                    : "bg-slate-50/50 hover:bg-slate-100 border-slate-200/70"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="w-7 h-7 rounded-xl bg-cyan-500/20 text-sky-700 text-xs font-bold flex items-center justify-center">
-                    AM
-                  </span>
-                  <Sparkles className="w-3.5 h-3.5 text-sky-700" />
+        </form>
+      ) : (
+        <div className="space-y-5">
+          <section aria-labelledby="active-profile-heading" className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p id="active-profile-heading" className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Active profile</p>
+            <div className="mt-3 flex min-w-0 items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-600 font-bold text-white">{currentUser.avatar}</span>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="truncate font-semibold text-slate-900">{currentUser.name}</p>
+                  {currentUser.isDemo && <Badge className="border-emerald-200 bg-emerald-50 text-emerald-700">Demo profile</Badge>}
                 </div>
-                <h5 className="font-bold text-slate-900 text-xs">Alex Mercer</h5>
-                <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2">
-                  Senior AI & Security Infrastructure Engineer (LLMOps & eBPF)
-                </p>
+                <p className="truncate text-xs text-slate-500">{currentUser.email} · {currentUser.role}</p>
               </div>
-
-              {/* Persona 2: Elena Beaumont (Governance/GRC) */}
-              <div
-                onClick={() => {
-                  onSelectPersona("elena-grc");
-                  onClose();
-                }}
-                className={`p-4 rounded-2xl cursor-pointer transition-all border ${
-                  currentUser.activePersonaId === "elena-grc"
-                    ? "bg-amber-50 border-amber-500 shadow-md ring-1 ring-amber-500/40"
-                    : "bg-slate-50/50 hover:bg-slate-100 border-slate-200/70"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="w-7 h-7 rounded-xl bg-amber-500/20 text-amber-700 text-xs font-bold flex items-center justify-center">
-                    EB
-                  </span>
-                  <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
-                </div>
-                <h5 className="font-bold text-slate-900 text-xs">Elena Beaumont</h5>
-                <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2">
-                  Director of AI Governance & GRC (EU AI Act & ISO 42001)
-                </p>
-              </div>
-
-              {/* Persona 3: Marcus Sterling (Enterprise IT) */}
-              <div
-                onClick={() => {
-                  onSelectPersona("marcus-it");
-                  onClose();
-                }}
-                className={`p-4 rounded-2xl cursor-pointer transition-all border ${
-                  currentUser.activePersonaId === "marcus-it"
-                    ? "bg-indigo-950/40 border-indigo-500 shadow-md ring-1 ring-indigo-500/40"
-                    : "bg-slate-50/50 hover:bg-slate-100 border-slate-200/70"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="w-7 h-7 rounded-xl bg-indigo-500/20 text-indigo-700 text-xs font-bold flex items-center justify-center">
-                    MS
-                  </span>
-                  <Cpu className="w-3.5 h-3.5 text-indigo-700" />
-                </div>
-                <h5 className="font-bold text-slate-900 text-xs">Marcus Sterling</h5>
-                <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2">
-                  Principal Cloud & Enterprise IT Architect (Kubernetes & Entra)
-                </p>
-              </div>
-
             </div>
-          </div>
-        ) : (
-          /* Create Custom Account Form */
-          <form onSubmit={handleCustomSubmit} className="space-y-4 text-xs p-4 rounded-2xl bg-slate-50 border border-slate-200">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-200">
-              <span className="font-bold text-slate-900 text-sm">Create New Account</span>
-              <button
-                type="button"
-                onClick={() => setIsCreatingCustom(false)}
-                className="text-slate-400 hover:text-slate-900"
-              >
-                Back to Personas
-              </button>
-            </div>
+          </section>
 
-            <div className="grid grid-cols-2 gap-3">
+          <section aria-labelledby="demo-profile-heading">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <label className="block text-slate-400 font-semibold mb-1">Full Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={customName}
-                  onChange={(e) => setCustomName(e.target.value)}
-                  placeholder="e.g. Jordan Smith"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-                />
+                <h3 id="demo-profile-heading" className="text-sm font-semibold text-slate-900">Demonstration profiles</h3>
+                <p className="mt-0.5 text-xs text-slate-500">Each profile changes the skills, evidence, and role-fit examples.</p>
               </div>
-
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Email Address *</label>
-                <input
-                  type="email"
-                  required
-                  value={customEmail}
-                  onChange={(e) => setCustomEmail(e.target.value)}
-                  placeholder="e.g. jordan@techcorp.com"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-                />
-              </div>
+              <Button variant="secondary" size="sm" onClick={() => setIsCreatingCustom(true)}>
+                <UserPlus className="h-4 w-4" /> Create local profile
+              </Button>
             </div>
-
-            <div>
-              <label className="block text-slate-400 font-semibold mb-1">Primary Role</label>
-              <select
-                value={customRole}
-                onChange={(e) => setCustomRole(e.target.value as any)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-              >
-                <option value="Candidate">Candidate (Job Seeker)</option>
-                <option value="Recruiter">Recruiter / Talent Lead</option>
-                <option value="Auditor / GRC Lead">Auditor / GRC Lead</option>
-              </select>
+            <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              {personas.map(({ key, initials, name, description, icon: Icon, accent }) => {
+                const selected = currentUser.activePersonaId === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => selectPersona(key)}
+                    className={`min-h-36 rounded-2xl border p-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ${selected ? "border-blue-400 bg-blue-50 ring-1 ring-blue-200" : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"}`}
+                  >
+                    <span className="flex items-center justify-between">
+                      <span className={`flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold ${accent}`}>{initials}</span>
+                      <Icon className={`h-4 w-4 ${accent.split(" ")[1]}`} aria-hidden="true" />
+                    </span>
+                    <span className="mt-3 block text-xs font-semibold text-slate-900">{name}</span>
+                    <span className="mt-1 block text-[11px] leading-4 text-slate-500">{description}</span>
+                    <span className="sr-only">{selected ? "Current profile" : "Switch to this profile"}</span>
+                  </button>
+                );
+              })}
             </div>
-
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setIsCreatingCustom(false)}
-                className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-[#2563EB] text-white rounded-xl font-bold"
-              >
-                Save & Switch Account
-              </button>
-            </div>
-          </form>
-        )}
-
-        {/* Footer / Privacy & Governance Link */}
-        <div className="pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-400">
-          <button
-            onClick={() => {
-              onClose();
-              onOpenGovernance();
-            }}
-            className="text-sky-700 hover:underline flex items-center gap-1 font-semibold"
-          >
-            <Lock className="w-3.5 h-3.5" />
-            <span>GDPR Data Rights & EU AI Act Disclosure</span>
-          </button>
-
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold"
-          >
-            Close
-          </button>
+          </section>
         </div>
-
-      </div>
-    </div>
+      )}
+    </DialogShell>
   );
 }

@@ -54,7 +54,7 @@ describe("skill matching", () => {
   });
 
   it("publishes independently traceable product and taxonomy versions", () => {
-    expect(APP_VERSION).toBe("0.6.0");
+    expect(APP_VERSION).toBe("0.7.0");
     expect(SKILL_TAXONOMY_VERSION).toBe("1.1.0");
     expect(Object.keys(SKILL_TAXONOMY.aliases).length).toBeGreaterThanOrEqual(30);
   });

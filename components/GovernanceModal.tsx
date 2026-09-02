@@ -6,20 +6,17 @@ import { APP_VERSION, EXPORT_SCHEMA_VERSION } from "@/lib/version";
 import { SKILL_TAXONOMY_VERSION } from "@/lib/skillTaxonomy";
 import confetti from "canvas-confetti";
 import { 
-  X, 
   ShieldCheck, 
   Sparkles, 
   Lock, 
-  FileText, 
   Trash2, 
   Download, 
-  AlertTriangle, 
   CheckCircle2, 
   Info,
   Scale,
-  RefreshCw,
-  ExternalLink
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DialogShell } from "@/components/ui/dialog-shell";
 
 interface GovernanceModalProps {
   isOpen: boolean;
@@ -68,39 +65,29 @@ export function GovernanceModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm transition-all">
-      <div className="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#2563EB] flex items-center justify-center text-white font-black shadow-sm">
-              <Scale className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                <span>Vecta Governance & Compliance Charter</span>
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-emerald-500/30">
-                  EU AI Act & GDPR
-                </span>
-              </h3>
-              <p className="text-xs text-slate-400">
-                Ethical AI disclosures, data subject rights, and regulatory transparency.
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+    <DialogShell
+      titleId="governance-dialog-title"
+      title="Governance and data controls"
+      description="Prototype disclosures, local data rights, and the boundaries of Vecta's current deterministic features."
+      icon={<Scale className="h-5 w-5" />}
+      onClose={onClose}
+      closeLabel="Close governance and data controls"
+      size="lg"
+      bodyClassName="p-0 sm:p-0"
+      footer={(
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-[11px] text-slate-500 font-mono">Vecta v{APP_VERSION} · Taxonomy v{SKILL_TAXONOMY_VERSION} · Export schema v{EXPORT_SCHEMA_VERSION}</div>
+          <Button size="sm" onClick={onClose}>Close</Button>
         </div>
+      )}
+    >
 
         {/* Tab Navigation */}
-        <div className="flex items-center px-6 pt-4 border-b border-slate-200 bg-slate-50 gap-2 overflow-x-auto">
+        <div role="tablist" aria-label="Governance sections" className="flex items-center px-5 pt-4 sm:px-6 border-b border-slate-200 bg-slate-50 gap-4 overflow-x-auto">
           <button
+            type="button"
+            role="tab"
+            aria-selected={activeSection === "eu-ai"}
             onClick={() => setActiveSection("eu-ai")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-1.5 whitespace-nowrap transition-all border-b-2 ${
               activeSection === "eu-ai"
@@ -113,6 +100,9 @@ export function GovernanceModal({
           </button>
 
           <button
+            type="button"
+            role="tab"
+            aria-selected={activeSection === "gdpr"}
             onClick={() => setActiveSection("gdpr")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-1.5 whitespace-nowrap transition-all border-b-2 ${
               activeSection === "gdpr"
@@ -125,6 +115,9 @@ export function GovernanceModal({
           </button>
 
           <button
+            type="button"
+            role="tab"
+            aria-selected={activeSection === "iso"}
             onClick={() => setActiveSection("iso")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-1.5 whitespace-nowrap transition-all border-b-2 ${
               activeSection === "iso"
@@ -137,6 +130,9 @@ export function GovernanceModal({
           </button>
 
           <button
+            type="button"
+            role="tab"
+            aria-selected={activeSection === "disclaimers"}
             onClick={() => setActiveSection("disclaimers")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-1.5 whitespace-nowrap transition-all border-b-2 ${
               activeSection === "disclaimers"
@@ -150,7 +146,7 @@ export function GovernanceModal({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <div className="p-5 sm:p-6 space-y-6 text-xs sm:text-sm text-slate-600 leading-relaxed">
           
           {/* 1. EU AI Act Section */}
           {activeSection === "eu-ai" && (
@@ -349,21 +345,6 @@ export function GovernanceModal({
 
         </div>
 
-        {/* Footer */}
-        <div className="p-4 sm:p-6 border-t border-slate-200 bg-white flex items-center justify-between">
-          <div className="text-[11px] text-slate-500 font-mono">
-            Vecta v{APP_VERSION} · Taxonomy v{SKILL_TAXONOMY_VERSION} · Export schema v{EXPORT_SCHEMA_VERSION}
-          </div>
-
-          <button
-            onClick={onClose}
-            className="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all"
-          >
-            Close
-          </button>
-        </div>
-
-      </div>
-    </div>
+    </DialogShell>
   );
 }

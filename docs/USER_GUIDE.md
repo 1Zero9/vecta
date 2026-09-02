@@ -2,7 +2,7 @@
 
 Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data and stores candidate information primarily on the current device.
 
-The current milestone is **Vecta v0.6.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
+The current milestone is **Vecta v0.7.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. In Vecta, your experience, evidence, and ambitions come together to carry your career forward with clarity.
 
@@ -116,9 +116,11 @@ Vecta confirms stage changes, saved notes, and removals in a short status messag
 
 ## 7. Switch demo personas
 
-Use the profile control in the header to switch between the included demonstration personas or create a custom local profile. Switching personas recalculates role comparisons.
+Use the profile control in the header to switch between the included demonstration profiles or create a custom local profile. Switching profiles recalculates role comparisons. The dialog keeps keyboard focus inside while open, closes with Escape, and returns focus to the profile control.
 
-This control is a prototype persona switcher, not a production account-management system. Authentication, session and device management, account recovery, and administrator support tools remain roadmap work.
+This is a local prototype profile switcher, not a production account-management system. Authentication, session and device management, account recovery, and administrator support tools remain roadmap work.
+
+Press **Cmd+K** on macOS or **Ctrl+K** elsewhere to open global search. Search results and quick navigation are standard keyboard-accessible actions; Tab moves through them and Escape closes the search.
 
 ## 8. Export or erase your data
 

@@ -68,11 +68,12 @@ npx eslint --quiet \
 
 - Production build: passing.
 - Candidate Profile v1 focused lint: passing.
-- Automated unit and component suite: 48 tests across 14 files, passing.
+- Automated unit and component suite: 52 tests across 15 files, passing.
 - Playwright core workflows: 4 Chromium end-to-end tests, passing.
 - Current V8 coverage: 81.08% statements, 67.34% branches, 90.66% functions, and 85.76% lines across the selected domain modules. Skill normalization has 100% statement, branch, function, and line coverage.
 - Repository-wide `npm run lint`: currently reports legacy errors and warnings in older screens. It is not yet a passing quality gate.
-- Onboarding validation, résumé upload/review, job empty states, pipeline actions, shared status notices, loading presentation, and error recovery have component interaction coverage. Browser journeys cover onboarding persistence, fit review and reversible corrections, role-to-pipeline tracking, and pipeline-stage persistence with visible confirmation.
+- Onboarding validation, résumé upload/review, job empty states, pipeline actions, shared status notices, loading presentation, error recovery, dialog focus containment, global-search keyboard access, and local-profile creation have component interaction coverage. Browser journeys cover onboarding persistence, fit review and reversible corrections, role-to-pipeline tracking, and pipeline-stage persistence with visible confirmation.
+- Responsive workspace audit: Jobs, Companies, Market, and Pipeline verified at 360 px, 768 px, and 1440 px with no page-level horizontal overflow.
 
 ## Common failures
 

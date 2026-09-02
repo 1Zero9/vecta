@@ -81,6 +81,24 @@ describe("shared interface foundations", () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
+  it("keeps keyboard focus inside a dialog and restores page scrolling", async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(
+      <DialogShell titleId="focus-dialog" title="Focus test" onClose={vi.fn()} footer={<Button>Last action</Button>}>
+        <Button>First action</Button>
+      </DialogShell>,
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    const lastAction = screen.getByRole("button", { name: "Last action" });
+    closeButton.focus();
+    await user.keyboard("{Shift>}{Tab}{/Shift}");
+    expect(document.activeElement).toBe(lastAction);
+    expect(document.body.style.overflow).toBe("hidden");
+    unmount();
+    expect(document.body.style.overflow).toBe("");
+  });
+
   it("explains missing application fields before adding to the pipeline", async () => {
     const user = userEvent.setup();
     const onAddCustomApplication = vi.fn();

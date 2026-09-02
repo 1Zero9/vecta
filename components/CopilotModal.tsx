@@ -9,19 +9,16 @@ import {
 } from "@/lib/copilotEngine";
 import confetti from "canvas-confetti";
 import { 
-  X, 
   Copy, 
   Check, 
   Download, 
   Sparkles, 
   FileText, 
   Zap, 
-  Award, 
-  BookOpen,
-  Send,
-  Building,
   CheckCircle2
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DialogShell } from "@/components/ui/dialog-shell";
 
 interface CopilotModalProps {
   job: Job | null;
@@ -40,11 +37,6 @@ export function CopilotModal({
 }: CopilotModalProps) {
   const [mode, setMode] = useState<"tailor" | "interview">(initialMode);
   const [copiedType, setCopiedType] = useState<string | null>(null);
-
-  // Sync mode when prop changes
-  React.useEffect(() => {
-    setMode(initialMode);
-  }, [initialMode]);
 
   if (!isOpen || !job) return null;
 
@@ -104,50 +96,34 @@ ${starPack
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm transition-all">
-      <div className="bg-white border border-slate-200 rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#2563EB] flex items-center justify-center text-white font-black shadow-sm">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                <span>Vecta Application Copilot</span>
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-emerald-500/30">
-                  AI Drafter
-                </span>
-              </h3>
-              <p className="text-xs text-slate-400 font-medium truncate max-w-lg">
-                Targeting: {job.title} @ {job.company_name} ({job.domain})
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleDownloadMarkdown}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-semibold border border-slate-200 transition-all"
-              title="Download full application bundle as Markdown"
-            >
-              <Download className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Download .MD</span>
-            </button>
-
-            <button
-              onClick={onClose}
-              className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
+    <DialogShell
+      titleId="application-draft-title"
+      title="Application preparation"
+      description={`${job.title} · ${job.company_name} · ${job.domain}`}
+      icon={<Sparkles className="h-5 w-5" />}
+      onClose={onClose}
+      closeLabel="Close application preparation"
+      size="xl"
+      bodyClassName="p-0 sm:p-0"
+      footer={(
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <a href={job.apply_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:underline">
+            Open the official {job.company_name} application <CheckCircle2 className="h-4 w-4" />
+          </a>
+          <div className="flex gap-2">
+            <Button size="sm" onClick={handleDownloadMarkdown} title="Download full application bundle as Markdown"><Download className="h-4 w-4 text-emerald-700" /> Download .md</Button>
+            <Button size="sm" variant="primary" onClick={onClose}>Done</Button>
           </div>
         </div>
+      )}
+    >
 
         {/* Tab Switcher */}
-        <div className="flex items-center px-6 pt-4 border-b border-slate-200 bg-slate-50 gap-4">
+        <div role="tablist" aria-label="Application preparation views" className="flex items-center overflow-x-auto px-5 pt-4 sm:px-6 border-b border-slate-200 bg-slate-50 gap-4">
           <button
+            type="button"
+            role="tab"
+            aria-selected={mode === "tailor"}
             onClick={() => setMode("tailor")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all border-b-2 ${
               mode === "tailor"
@@ -160,6 +136,9 @@ ${starPack
           </button>
 
           <button
+            type="button"
+            role="tab"
+            aria-selected={mode === "interview"}
             onClick={() => setMode("interview")}
             className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all border-b-2 ${
               mode === "interview"
@@ -296,12 +275,12 @@ ${starPack
                   >
                     <div className="flex items-start justify-between gap-2">
                       <span className="text-amber-700 font-bold text-xs uppercase tracking-wider font-mono">
-                        Question {idx + 1} // {pack.category}
+                        Question {idx + 1} · {pack.category}
                       </span>
                     </div>
 
                     <h5 className="text-sm sm:text-base font-extrabold text-slate-900">
-                      "{pack.question}"
+                      &ldquo;{pack.question}&rdquo;
                     </h5>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
@@ -350,27 +329,6 @@ ${starPack
 
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-4 sm:p-6 border-t border-slate-200 bg-white flex items-center justify-between">
-          <a
-            href={job.apply_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1.5"
-          >
-            <span>Proceed to Official {job.company_name} ATS Application</span>
-            <CheckCircle2 className="w-4 h-4" />
-          </a>
-
-          <button
-            onClick={onClose}
-            className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all"
-          >
-            Done
-          </button>
-        </div>
-
-      </div>
-    </div>
+    </DialogShell>
   );
 }

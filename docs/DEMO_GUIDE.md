@@ -18,11 +18,11 @@ Open the exact local URL printed by Next.js. Before an important session, also r
 
 ### 1. Frame the product — 30 seconds
 
-**Do:** Open Direct Jobs and briefly point to the Vecta definition and focused workspace.
+**Do:** Open Direct Jobs and briefly point to the Vecta definition and focused workspace. Optionally press **Cmd+K** or **Ctrl+K** to demonstrate fast keyboard navigation.
 
 **Say:** “Vecta helps specialist candidates move from scattered career information to a clear, evidence-led decision: which role fits, why it fits, what is missing, and what to do next.”
 
-Point out **Vecta v0.6.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
+Point out **Vecta v0.7.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
 
 ### 2. Establish the candidate context — 60 seconds
 

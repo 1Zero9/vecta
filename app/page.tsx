@@ -482,6 +482,7 @@ export default function Home() {
 
       {/* Application Copilot & STAR Interview Prep Modal */}
       <CopilotModal
+        key={`${selectedJobForCopilot?.id ?? "none"}-${copilotInitialMode}`}
         job={selectedJobForCopilot}
         profile={profile}
         isOpen={!!selectedJobForCopilot}
@@ -513,6 +514,7 @@ export default function Home() {
       {/* Global Command Palette (⌘K) */}
       <CommandPalette
         isOpen={isCmdPaletteOpen}
+        onOpen={() => setIsCmdPaletteOpen(true)}
         onClose={() => setIsCmdPaletteOpen(false)}
         jobs={jobs}
         companies={companies}
