@@ -3,7 +3,12 @@
 import { useMemo, useState } from "react";
 import { BriefcaseBusiness, Check, FileBadge2, FolderKanban, Pencil, Plus, Trash2, X } from "lucide-react";
 import { ProfileEvidence, ProfileEvidenceType } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { StatusNotice } from "@/components/ui/status-notice";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ProfileEvidenceManagerProps {
   evidence: ProfileEvidence[];
@@ -131,9 +136,9 @@ export function ProfileEvidenceManager({ evidence, skills, certifications, onCha
           <p className="mt-0.5 text-xs leading-5 text-slate-500">Connect important claims to work, projects, or credentials you can discuss.</p>
         </div>
         {!isEditing && (
-          <button type="button" onClick={startAdding} className="flex shrink-0 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-blue-700 shadow-sm hover:border-blue-200 hover:bg-blue-50">
+          <Button type="button" onClick={startAdding} size="sm" className="shrink-0 text-blue-700">
             <Plus className="h-3.5 w-3.5" /> Add evidence
-          </button>
+          </Button>
         )}
       </div>
 
@@ -161,8 +166,8 @@ export function ProfileEvidenceManager({ evidence, skills, certifications, onCha
                         </p>
                       </div>
                       <div className="flex shrink-0 items-center gap-1">
-                        <button type="button" onClick={() => startEditing(item)} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-blue-700" aria-label={`Edit ${item.title}`}><Pencil className="h-3.5 w-3.5" /></button>
-                        <button type="button" onClick={() => onChange(evidence.filter((candidate) => candidate.id !== item.id))} className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-700" aria-label={`Remove ${item.title}`}><Trash2 className="h-3.5 w-3.5" /></button>
+                        <Button type="button" onClick={() => startEditing(item)} variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-blue-700" aria-label={`Edit ${item.title}`}><Pencil className="h-3.5 w-3.5" /></Button>
+                        <Button type="button" onClick={() => onChange(evidence.filter((candidate) => candidate.id !== item.id))} variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:bg-rose-50 hover:text-rose-700" aria-label={`Remove ${item.title}`}><Trash2 className="h-3.5 w-3.5" /></Button>
                       </div>
                     </div>
                     <p className="mt-2 text-[11px] leading-5 text-slate-600">{item.description}</p>
@@ -181,36 +186,31 @@ export function ProfileEvidenceManager({ evidence, skills, certifications, onCha
         <div className="space-y-3 rounded-xl border border-blue-200 bg-white p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-slate-900">{editingId ? "Edit evidence" : "Add evidence"}</p>
-            <button type="button" onClick={cancelEditing} className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700" aria-label="Cancel evidence editing"><X className="h-4 w-4" /></button>
+            <Button type="button" onClick={cancelEditing} variant="ghost" size="icon" className="h-8 w-8 text-slate-400" aria-label="Cancel evidence editing"><X className="h-4 w-4" /></Button>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <label className="text-[11px] font-semibold text-slate-600">
-              Evidence type
-              <select value={draft.type} onChange={(event) => setDraft({ ...draft, type: event.target.value as ProfileEvidenceType })} className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+            <Field id="evidence-type" label="Evidence type">
+              <Select id="evidence-type" value={draft.type} onChange={(event) => setDraft({ ...draft, type: event.target.value as ProfileEvidenceType })}>
                 <option value="Employment">Employment</option>
                 <option value="Project">Project</option>
                 <option value="Certification">Certification</option>
-              </select>
-            </label>
-            <label className="text-[11px] font-semibold text-slate-600">
-              Title
-              <input value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} placeholder="e.g. Cloud migration programme" className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
-            </label>
-            <label className="text-[11px] font-semibold text-slate-600">
-              Organisation <span className="font-normal text-slate-400">(optional)</span>
-              <input value={draft.organization} onChange={(event) => setDraft({ ...draft, organization: event.target.value })} placeholder="Company or issuer" className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
-            </label>
-            <label className="text-[11px] font-semibold text-slate-600">
-              Period <span className="font-normal text-slate-400">(optional)</span>
-              <input value={draft.period} onChange={(event) => setDraft({ ...draft, period: event.target.value })} placeholder="2023–2025" className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
-            </label>
+              </Select>
+            </Field>
+            <Field id="evidence-title" label="Title" required>
+              <Input id="evidence-title" value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} placeholder="e.g. Cloud migration programme" />
+            </Field>
+            <Field id="evidence-organisation" label="Organisation (optional)">
+              <Input id="evidence-organisation" value={draft.organization} onChange={(event) => setDraft({ ...draft, organization: event.target.value })} placeholder="Company or issuer" />
+            </Field>
+            <Field id="evidence-period" label="Period (optional)">
+              <Input id="evidence-period" value={draft.period} onChange={(event) => setDraft({ ...draft, period: event.target.value })} placeholder="2023–2025" />
+            </Field>
           </div>
 
-          <label className="block text-[11px] font-semibold text-slate-600">
-            What does this prove?
-            <textarea rows={3} value={draft.description} onChange={(event) => setDraft({ ...draft, description: event.target.value })} placeholder="Describe your responsibility, outcome, or credential in a sentence or two." className="mt-1.5 w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs leading-5 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
-          </label>
+          <Field id="evidence-description" label="What does this prove?" required>
+            <Textarea id="evidence-description" rows={3} value={draft.description} onChange={(event) => setDraft({ ...draft, description: event.target.value })} placeholder="Describe your responsibility, outcome, or credential in a sentence or two." />
+          </Field>
 
           <fieldset>
             <legend className="text-[11px] font-semibold text-slate-600">Claims supported</legend>
@@ -233,8 +233,8 @@ export function ProfileEvidenceManager({ evidence, skills, certifications, onCha
           {error && <StatusNotice tone="error">{error}</StatusNotice>}
 
           <div className="flex justify-end gap-2">
-            <button type="button" onClick={cancelEditing} className="rounded-lg border border-slate-200 px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>
-            <button type="button" onClick={saveEvidence} className="rounded-lg bg-blue-600 px-3 py-2 text-[11px] font-semibold text-white hover:bg-blue-700">{editingId ? "Save changes" : "Link evidence"}</button>
+            <Button type="button" onClick={cancelEditing} size="sm">Cancel</Button>
+            <Button type="button" onClick={saveEvidence} size="sm" variant="primary">{editingId ? "Save changes" : "Link evidence"}</Button>
           </div>
         </div>
       )}

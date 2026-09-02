@@ -4,8 +4,10 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "@/components/CommandPalette";
+import { ProfileDrawer } from "@/components/ProfileDrawer";
 import { UserManagementModal } from "@/components/UserManagementModal";
 import { DEFAULT_USER } from "@/lib/storage";
+import { makeProfile } from "./fixtures";
 
 describe("workspace overlays", () => {
   it("opens global search from the documented keyboard shortcut", async () => {
@@ -42,5 +44,27 @@ describe("workspace overlays", () => {
       expect.objectContaining({ name: "Jordan Smith", email: "jordan@example.com" }),
       expect.objectContaining({ full_name: "Jordan Smith" }),
     );
+  });
+
+  it("edits and saves a candidate profile from the accessible drawer", async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    const onSaveProfile = vi.fn();
+    render(<ProfileDrawer profile={makeProfile()} isOpen onClose={onClose} onSaveProfile={onSaveProfile} />);
+
+    expect(screen.getByRole("dialog", { name: "Candidate profile" })).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Career direction" })).toBeDefined();
+    const name = screen.getByRole("textbox", { name: "Full name" });
+    await user.clear(name);
+    await user.type(name, "Taylor Quinn");
+    await user.type(screen.getByRole("textbox", { name: /Skills/ }), "OpenTelemetry");
+    await user.keyboard("{Enter}");
+    expect(screen.getByRole("button", { name: "Remove OpenTelemetry" })).toBeDefined();
+    await user.click(screen.getByRole("button", { name: "Save profile" }));
+
+    expect(onSaveProfile).toHaveBeenCalledWith(
+      expect.objectContaining({ full_name: "Taylor Quinn", skills: expect.arrayContaining(["OpenTelemetry"]) }),
+    );
+    expect(onClose).toHaveBeenCalledOnce();
   });
 });

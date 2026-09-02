@@ -28,6 +28,11 @@ describe("ProfileOnboardingModal", () => {
       />,
     );
 
+    expect(screen.getByRole("dialog", { name: "Build your Vecta profile" })).toBeDefined();
+    expect(document.body.style.overflow).toBe("hidden");
+    expect(screen.getByRole("navigation", { name: "Profile setup progress" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "Direction: Where you are heading" }).getAttribute("aria-current")).toBe("step");
+
     await user.click(screen.getByRole("button", { name: /Continue/ }));
     expect((await screen.findByRole("alert")).textContent).toContain("Add your name");
 

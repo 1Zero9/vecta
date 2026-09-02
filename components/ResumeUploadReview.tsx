@@ -3,6 +3,11 @@
 import { useRef, useState } from "react";
 import { Check, FileCheck2, FileUp, LoaderCircle, LockKeyhole, RotateCcw, X } from "lucide-react";
 import { extractResume, ResumeExtraction } from "@/lib/resumeExtraction";
+import { Button } from "@/components/ui/button";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { StatusNotice } from "@/components/ui/status-notice";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ResumeUploadReviewProps {
   currentSkills: string[];
@@ -117,9 +122,9 @@ export function ResumeUploadReview({
               </p>
             </div>
           </div>
-          <button type="button" onClick={reset} className="rounded-lg p-1.5 text-slate-400 hover:bg-white hover:text-slate-700" aria-label="Choose a different résumé">
+          <Button type="button" onClick={reset} variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:bg-white" aria-label="Choose a different résumé">
             <X className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
 
         {(suggestedSkills.length > 0 || suggestedCertifications.length > 0 || extraction.suggestedYearsExperience) && (
@@ -160,24 +165,22 @@ export function ResumeUploadReview({
             )}
 
             {extraction.suggestedYearsExperience && (
-              <label className="mt-3 block text-[11px] font-semibold text-slate-600">
-                Years of experience
-                <input type="number" min="0" max="50" value={yearsExperience} onChange={(event) => setYearsExperience(Number(event.target.value))} className="ml-2 w-20 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
-              </label>
+              <Field id="resume-years-experience" label="Years of experience" className="mt-3 max-w-40">
+                <Input id="resume-years-experience" type="number" min="0" max="50" value={yearsExperience} onChange={(event) => setYearsExperience(Number(event.target.value))} />
+              </Field>
             )}
           </div>
         )}
 
-        <label className="block text-xs font-semibold text-slate-700">
-          Extracted résumé text
-          <textarea rows={8} value={reviewText} onChange={(event) => setReviewText(event.target.value)} className="mt-1.5 w-full resize-none rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm leading-6 text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
-        </label>
+        <Field id="resume-review-text" label="Extracted résumé text">
+          <Textarea id="resume-review-text" rows={8} value={reviewText} onChange={(event) => setReviewText(event.target.value)} />
+        </Field>
 
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="flex items-center gap-1.5 text-[10px] leading-4 text-slate-500"><LockKeyhole className="h-3.5 w-3.5" /> Nothing is saved until you apply and save your profile.</p>
-          <button type="button" onClick={applyReview} disabled={!reviewText.trim()} className="rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50">
+          <Button type="button" onClick={applyReview} disabled={!reviewText.trim()} size="sm" variant="primary">
             Apply reviewed details
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -199,12 +202,12 @@ export function ResumeUploadReview({
       </label>
 
       {status === "applied" && (
-        <button type="button" onClick={reset} className="flex items-center gap-1.5 text-xs font-semibold text-blue-700 hover:text-blue-800">
+        <Button type="button" onClick={reset} variant="ghost" size="sm" className="text-blue-700 hover:text-blue-800">
           <RotateCcw className="h-3.5 w-3.5" /> Review another résumé
-        </button>
+        </Button>
       )}
 
-      {error && <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-medium text-rose-700">{error}</p>}
+      {error && <StatusNotice tone="error">{error}</StatusNotice>}
     </div>
   );
 }

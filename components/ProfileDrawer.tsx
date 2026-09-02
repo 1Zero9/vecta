@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import { Plus, Save, UserCheck, X } from "lucide-react";
 import { CandidateProfile, DomainType } from "@/lib/types";
 import { ProfileEvidenceManager } from "@/components/ProfileEvidenceManager";
-import { 
-  X, 
-  UserCheck, 
-  Save, 
-  CheckCircle2,
-  Plus
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DialogShell } from "@/components/ui/dialog-shell";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ProfileDrawerProps {
   profile: CandidateProfile;
@@ -18,306 +18,140 @@ interface ProfileDrawerProps {
   onSaveProfile: (profile: CandidateProfile) => void;
 }
 
-export function ProfileDrawer({
-  profile,
-  isOpen,
-  onClose,
-  onSaveProfile,
-}: ProfileDrawerProps) {
+export function ProfileDrawer({ profile, isOpen, onClose, onSaveProfile }: ProfileDrawerProps) {
   const [formData, setFormData] = useState<CandidateProfile>(profile);
   const [skillInput, setSkillInput] = useState("");
   const [certInput, setCertInput] = useState("");
-  const [savedSuccess, setSavedSuccess] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleAddSkill = (e: React.KeyboardEvent | React.MouseEvent) => {
-    if ("key" in e && e.key !== "Enter") return;
-    e.preventDefault();
-    if (!skillInput.trim()) return;
-    if (!formData.skills.includes(skillInput.trim())) {
-      setFormData({
-        ...formData,
-        skills: [...formData.skills, skillInput.trim()],
-      });
-    }
+  const addSkill = () => {
+    const skill = skillInput.trim();
+    if (!skill) return;
+    if (!formData.skills.includes(skill)) setFormData((current) => ({ ...current, skills: [...current.skills, skill] }));
     setSkillInput("");
   };
 
-  const handleRemoveSkill = (skillToRemove: string) => {
-    setFormData({
-      ...formData,
-      skills: formData.skills.filter((s) => s !== skillToRemove),
-    });
-  };
-
-  const handleAddCert = (e: React.KeyboardEvent | React.MouseEvent) => {
-    if ("key" in e && e.key !== "Enter") return;
-    e.preventDefault();
-    if (!certInput.trim()) return;
-    if (!formData.certifications.includes(certInput.trim())) {
-      setFormData({
-        ...formData,
-        certifications: [...formData.certifications, certInput.trim()],
-      });
+  const addCertification = () => {
+    const certification = certInput.trim();
+    if (!certification) return;
+    if (!formData.certifications.includes(certification)) {
+      setFormData((current) => ({ ...current, certifications: [...current.certifications, certification] }));
     }
     setCertInput("");
   };
 
-  const handleRemoveCert = (certToRemove: string) => {
-    setFormData({
-      ...formData,
-      certifications: formData.certifications.filter((c) => c !== certToRemove),
-    });
+  const handleTokenKeyDown = (event: React.KeyboardEvent<HTMLInputElement>, add: () => void) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    add();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     onSaveProfile(formData);
-    setSavedSuccess(true);
-    setTimeout(() => {
-      setSavedSuccess(false);
-      onClose();
-    }, 1200);
+    onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/30 backdrop-blur-sm">
-      <div className="bg-white border-l border-slate-200 max-w-xl w-full h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300">
-        
-        {/* Drawer Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#2563EB] text-white font-black flex items-center justify-center shadow-sm">
-              <UserCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-slate-900">
-                Candidate Profile & Vector Settings
-              </h3>
-              <p className="text-xs text-slate-400">
-                Powers real-time ATS match scoring and tailored application drafting.
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+    <DialogShell
+      titleId="candidate-profile-title"
+      title="Candidate profile"
+      description="Review the information used by Vecta’s deterministic fit estimates and application templates."
+      icon={<UserCheck className="h-5 w-5" />}
+      onClose={onClose}
+      closeLabel="Close candidate profile"
+      size="drawer"
+      placement="right"
+      bodyClassName="flex overflow-hidden p-0 sm:p-0"
+      footer={(
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-xs text-slate-500">Changes are stored in this browser.</span>
+          <Button type="submit" form="candidate-profile-form" variant="primary">
+            <Save className="h-4 w-4" /> Save profile
+          </Button>
         </div>
-
-        {/* Drawer Body Form */}
-        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5 flex-1 text-xs">
-          
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-slate-600 font-bold uppercase tracking-wider mb-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.full_name}
-                onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-600 font-bold uppercase tracking-wider mb-1">
-                Current / Target Title
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.current_title}
-                onChange={(e) => setFormData({ ...formData, current_title: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-              />
-            </div>
+      )}
+    >
+      <form id="candidate-profile-form" onSubmit={handleSubmit} className="h-full space-y-6 overflow-y-auto p-5 text-xs sm:p-6">
+        <section aria-labelledby="profile-basics-heading" className="space-y-4">
+          <div>
+            <h3 id="profile-basics-heading" className="text-sm font-semibold text-slate-900">Career direction</h3>
+            <p className="mt-1 text-xs leading-5 text-slate-500">Keep these details current so role comparisons use the right context.</p>
           </div>
-
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="block text-slate-600 font-bold uppercase tracking-wider mb-1">
-                Primary Vector
-              </label>
-              <select
-                value={formData.primary_domain}
-                onChange={(e) => setFormData({ ...formData, primary_domain: e.target.value as DomainType })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-              >
-                <option value="AI">AI & ML</option>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field id="drawer-profile-name" label="Full name" required>
+              <Input id="drawer-profile-name" required value={formData.full_name} onChange={(event) => setFormData({ ...formData, full_name: event.target.value })} />
+            </Field>
+            <Field id="drawer-profile-title" label="Current or target title" required>
+              <Input id="drawer-profile-title" required value={formData.current_title} onChange={(event) => setFormData({ ...formData, current_title: event.target.value })} />
+            </Field>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Field id="drawer-profile-domain" label="Primary discipline">
+              <Select id="drawer-profile-domain" value={formData.primary_domain} onChange={(event) => setFormData({ ...formData, primary_domain: event.target.value as DomainType })}>
+                <option value="AI">AI & Machine Learning</option>
                 <option value="Security">Cybersecurity</option>
                 <option value="Governance">Governance & GRC</option>
-                <option value="IT">IT Infrastructure</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-slate-600 font-bold uppercase tracking-wider mb-1">
-                Years Experience
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="40"
-                value={formData.years_experience}
-                onChange={(e) => setFormData({ ...formData, years_experience: parseInt(e.target.value) || 0 })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-600 font-bold uppercase tracking-wider mb-1">
-                Target Salary (£)
-              </label>
-              <input
-                type="number"
-                step="5000"
-                value={formData.target_salary_min || 100000}
-                onChange={(e) => setFormData({ ...formData, target_salary_min: parseInt(e.target.value) || 0 })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-              />
-            </div>
+                <option value="IT">IT & Cloud</option>
+              </Select>
+            </Field>
+            <Field id="drawer-profile-experience" label="Years’ experience">
+              <Input id="drawer-profile-experience" type="number" min="0" max="50" value={formData.years_experience} onChange={(event) => setFormData({ ...formData, years_experience: Number(event.target.value) })} />
+            </Field>
+            <Field id="drawer-profile-salary" label="Target salary (£)">
+              <Input id="drawer-profile-salary" type="number" min="0" step="5000" value={formData.target_salary_min ?? ""} onChange={(event) => setFormData({ ...formData, target_salary_min: Number(event.target.value) || undefined })} />
+            </Field>
           </div>
+        </section>
 
-          {/* Technical Skills Manager */}
-          <div className="space-y-2">
-            <label className="block text-slate-600 font-bold uppercase tracking-wider">
-              Core Technical Skills ({formData.skills.length})
-            </label>
+        <section aria-labelledby="profile-expertise-heading" className="space-y-4 border-t border-slate-200 pt-5">
+          <div>
+            <h3 id="profile-expertise-heading" className="text-sm font-semibold text-slate-900">Skills and credentials</h3>
+            <p className="mt-1 text-xs leading-5 text-slate-500">Add exact technologies, practices, standards, and current certifications.</p>
+          </div>
+          <Field id="drawer-skill" label={`Skills (${formData.skills.length})`} hint="Type a skill and press Enter, or use Add.">
             <div className="flex gap-2">
-              <input
-                type="text"
-                value={skillInput}
-                onChange={(e) => setSkillInput(e.target.value)}
-                onKeyDown={handleAddSkill}
-                placeholder="Type skill & press Enter (e.g. PyTorch, vLLM, ISO 27001, Kubernetes)..."
-                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-              />
-              <button
-                type="button"
-                onClick={handleAddSkill}
-                className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-xl font-bold"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
+              <Input id="drawer-skill" value={skillInput} onChange={(event) => setSkillInput(event.target.value)} onKeyDown={(event) => handleTokenKeyDown(event, addSkill)} placeholder="e.g. Kubernetes" aria-describedby="drawer-skill-hint" />
+              <Button size="icon" onClick={addSkill} aria-label="Add skill"><Plus className="h-4 w-4" /></Button>
             </div>
+          </Field>
+          <ul aria-label="Saved skills" className="flex flex-wrap gap-2">
+            {formData.skills.map((skill) => (
+              <li key={skill} className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 py-1 pl-2.5 pr-1 text-xs text-slate-700">
+                <span>{skill}</span>
+                <Button type="button" onClick={() => setFormData((current) => ({ ...current, skills: current.skills.filter((item) => item !== skill) }))} variant="ghost" size="icon" className="h-7 w-7 rounded-md text-slate-400 hover:bg-rose-50 hover:text-rose-700" aria-label={`Remove ${skill}`}><X className="h-3 w-3" /></Button>
+              </li>
+            ))}
+          </ul>
 
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {formData.skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 flex items-center gap-1.5 border border-slate-200/70"
-                >
-                  <span>{skill}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveSkill(skill)}
-                    className="text-slate-400 hover:text-rose-700"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Certifications Manager */}
-          <div className="space-y-2">
-            <label className="block text-slate-600 font-bold uppercase tracking-wider">
-              Certifications & Accreditations ({formData.certifications.length})
-            </label>
+          <Field id="drawer-certification" label={`Certifications (${formData.certifications.length})`} hint="Type a certification and press Enter, or use Add.">
             <div className="flex gap-2">
-              <input
-                type="text"
-                value={certInput}
-                onChange={(e) => setCertInput(e.target.value)}
-                onKeyDown={handleAddCert}
-                placeholder="Type cert & press Enter (e.g. CISSP, AWS ML, CIPP/E, CKA)..."
-                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-              />
-              <button
-                type="button"
-                onClick={handleAddCert}
-                className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-xl font-bold"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
+              <Input id="drawer-certification" value={certInput} onChange={(event) => setCertInput(event.target.value)} onKeyDown={(event) => handleTokenKeyDown(event, addCertification)} placeholder="e.g. CISSP" aria-describedby="drawer-certification-hint" />
+              <Button size="icon" onClick={addCertification} aria-label="Add certification"><Plus className="h-4 w-4" /></Button>
             </div>
+          </Field>
+          <ul aria-label="Saved certifications" className="flex flex-wrap gap-2">
+            {formData.certifications.map((certification) => (
+              <li key={certification} className="flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 py-1 pl-2.5 pr-1 text-xs text-amber-800">
+                <span>{certification}</span>
+                <Button type="button" onClick={() => setFormData((current) => ({ ...current, certifications: current.certifications.filter((item) => item !== certification) }))} variant="ghost" size="icon" className="h-7 w-7 rounded-md text-amber-700 hover:bg-white hover:text-rose-700" aria-label={`Remove ${certification}`}><X className="h-3 w-3" /></Button>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {formData.certifications.map((cert) => (
-                <span
-                  key={cert}
-                  className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-700 flex items-center gap-1.5 border border-amber-500/20"
-                >
-                  <span>{cert}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveCert(cert)}
-                    className="text-amber-700 hover:text-rose-700"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              ))}
-            </div>
+        <section aria-labelledby="profile-history-heading" className="space-y-4 border-t border-slate-200 pt-5">
+          <div>
+            <h3 id="profile-history-heading" className="text-sm font-semibold text-slate-900">Career history and evidence</h3>
+            <p className="mt-1 text-xs leading-5 text-slate-500">This reviewed text is checked locally for role-relevant terms. It is not sent to an AI service.</p>
           </div>
-
-          {/* Resume Raw Text for ATS Deep Scanning */}
-          <div className="space-y-1.5">
-            <label className="block text-slate-600 font-bold uppercase tracking-wider flex items-center justify-between">
-              <span>Resume & Career History (For Deep ATS Keyword Parsing)</span>
-              <span className="text-[10px] text-emerald-700 font-mono">Real-time vector synced</span>
-            </label>
-            <textarea
-              rows={6}
-              value={formData.resume_text}
-              onChange={(e) => setFormData({ ...formData, resume_text: e.target.value })}
-              placeholder="Paste your CV text, project highlights, or key deliverables here..."
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-slate-600 font-mono text-xs focus:outline-none focus:border-blue-500 leading-relaxed"
-            />
-          </div>
-
-          <ProfileEvidenceManager
-            evidence={formData.evidence ?? []}
-            skills={formData.skills}
-            certifications={formData.certifications}
-            onChange={(evidence) => setFormData({ ...formData, evidence })}
-          />
-
-          {/* Submit / Save Button */}
-          <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-            <span className="text-[11px] text-slate-500">
-              Changes persist in browser local storage.
-            </span>
-
-            <button
-              type="submit"
-              className="px-5 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all"
-            >
-              {savedSuccess ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Saved!</span>
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4" />
-                  <span>Save Vector Profile</span>
-                </>
-              )}
-            </button>
-          </div>
-
-        </form>
-
-      </div>
-    </div>
+          <Field id="drawer-profile-history" label="Résumé or career summary">
+            <Textarea id="drawer-profile-history" rows={7} value={formData.resume_text} onChange={(event) => setFormData({ ...formData, resume_text: event.target.value })} placeholder="Paste your résumé text, project highlights, or key achievements…" className="resize-y leading-6" />
+          </Field>
+          <ProfileEvidenceManager evidence={formData.evidence ?? []} skills={formData.skills} certifications={formData.certifications} onChange={(evidence) => setFormData({ ...formData, evidence })} />
+        </section>
+      </form>
+    </DialogShell>
   );
 }

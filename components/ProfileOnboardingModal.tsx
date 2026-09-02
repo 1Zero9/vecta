@@ -11,7 +11,6 @@ import {
   Sparkles,
   UserRound,
   Wrench,
-  X,
 } from "lucide-react";
 import { CandidateProfile, DomainType, WorkMode } from "@/lib/types";
 import { getProfileCompletion } from "@/lib/profileCompletion";
@@ -23,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusNotice } from "@/components/ui/status-notice";
+import { DialogShell } from "@/components/ui/dialog-shell";
 
 interface ProfileOnboardingModalProps {
   profile: CandidateProfile;
@@ -101,35 +101,41 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/35 p-3 backdrop-blur-sm sm:p-6">
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="profile-onboarding-title"
-        className="flex max-h-[94vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl"
-      >
-        <header className="flex items-center justify-between border-b border-slate-200 px-5 py-4 sm:px-7">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
-              <UserRound className="h-5 w-5" />
-            </span>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 id="profile-onboarding-title" className="text-base font-semibold text-slate-900 sm:text-lg">
-                  Build your Vecta profile
-                </h2>
-                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700">About 3 minutes</span>
-              </div>
-              <p className="text-xs text-slate-500">Give fit scores the context they need to be useful.</p>
-            </div>
+    <DialogShell
+      titleId="profile-onboarding-title"
+      title="Build your Vecta profile"
+      description="Give fit estimates the context they need to be useful. Most people finish in about three minutes."
+      icon={<UserRound className="h-5 w-5" />}
+      onClose={onClose}
+      closeLabel="Close profile setup"
+      size="2xl"
+      bodyClassName="flex overflow-hidden p-0 sm:p-0"
+      footer={(
+        <div className="flex items-center justify-between gap-3">
+          <div className="hidden text-xs text-slate-500 sm:block">
+            <span className="font-semibold text-slate-700">{completion.score}% complete</span> · saved to this device
           </div>
-          <Button onClick={onClose} variant="ghost" size="icon" className="h-9 w-9" aria-label="Close profile setup">
-            <X className="h-5 w-5" />
-          </Button>
-        </header>
-
+          <div className="ml-auto flex items-center gap-2">
+            {step > 0 && (
+              <Button onClick={() => { setError(null); setStep((current) => current - 1); }} size="sm">
+                <ArrowLeft className="h-4 w-4" /> Back
+              </Button>
+            )}
+            {step < steps.length - 1 ? (
+              <Button onClick={handleNext} size="sm" variant="primary">
+                Continue <ArrowRight className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button onClick={handleSave} size="sm" variant="primary">
+                <Check className="h-4 w-4" /> Save profile
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+    >
         <div className="grid min-h-0 flex-1 md:grid-cols-[240px_minmax(0,1fr)]">
-          <aside className="border-b border-slate-200 bg-slate-50 p-4 md:border-b-0 md:border-r md:p-6">
+          <nav aria-label="Profile setup progress" className="border-b border-slate-200 bg-slate-50 p-4 md:border-b-0 md:border-r md:p-6">
             <div className="grid grid-cols-4 gap-2 md:grid-cols-1 md:gap-1.5">
               {steps.map((item, index) => {
                 const Icon = item.icon;
@@ -138,8 +144,11 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
                 return (
                   <button
                     key={item.title}
+                    type="button"
                     onClick={() => index < step && setStep(index)}
                     disabled={index > step}
+                    aria-label={`${item.title}: ${item.description}`}
+                    aria-current={isActive ? "step" : undefined}
                     className={`flex min-w-0 items-center gap-3 rounded-xl p-2.5 text-left transition md:w-full ${
                       isActive ? "bg-white text-blue-700 shadow-sm ring-1 ring-slate-200" : isComplete ? "text-slate-700 hover:bg-white" : "text-slate-400"
                     }`}
@@ -161,12 +170,19 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
                 <span>Profile strength</span>
                 <span className="text-blue-700">{completion.score}%</span>
               </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-white">
+              <div
+                className="mt-2 h-2 overflow-hidden rounded-full bg-white"
+                role="progressbar"
+                aria-label="Profile strength"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={completion.score}
+              >
                 <div className="h-full rounded-full bg-blue-600 transition-all" style={{ width: `${completion.score}%` }} />
               </div>
               <p className="mt-2 text-[10px] leading-4 text-slate-500">You can return and improve this profile at any time.</p>
             </div>
-          </aside>
+          </nav>
 
           <div className="min-h-0 overflow-y-auto px-5 py-6 sm:px-8 sm:py-8">
             {step === 0 && (
@@ -290,28 +306,6 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
           </div>
         </div>
 
-        <footer className="flex items-center justify-between gap-3 border-t border-slate-200 bg-white px-5 py-4 sm:px-7">
-          <div className="hidden text-xs text-slate-500 sm:block">
-            <span className="font-semibold text-slate-700">{completion.score}% complete</span> · saved to this device
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            {step > 0 && (
-              <Button onClick={() => { setError(null); setStep((current) => current - 1); }} size="sm">
-                <ArrowLeft className="h-4 w-4" /> Back
-              </Button>
-            )}
-            {step < steps.length - 1 ? (
-              <Button onClick={handleNext} size="sm" variant="primary">
-                Continue <ArrowRight className="h-4 w-4" />
-              </Button>
-            ) : (
-              <Button onClick={handleSave} size="sm" variant="primary">
-                <Check className="h-4 w-4" /> Save profile
-              </Button>
-            )}
-          </div>
-        </footer>
-      </section>
-    </div>
+    </DialogShell>
   );
 }

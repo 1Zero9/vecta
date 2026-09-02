@@ -4,7 +4,7 @@ Version identifiers make demos, exports, matching behaviour, and roadmap progres
 
 | Surface | Current | Source | Meaning |
 | --- | --- | --- | --- |
-| Product | `0.7.0` | `package.json` | The complete Vecta application milestone. |
+| Product | `0.8.0` | `package.json` | The complete Vecta application milestone. |
 | Skill taxonomy | `1.1.0` | `lib/skillTaxonomy.ts` | The canonical skill concepts and explicit aliases used by matching. |
 | Export schema | `1` | `lib/version.ts` | The shape of the downloaded user-data bundle. |
 
@@ -22,6 +22,7 @@ Vecta uses semantic versions:
 
 ### Milestone history
 
+- `0.8.0` — Shared accessible profile drawer and onboarding shell, consistent profile/evidence/résumé controls, mobile-readable setup steps, and semantic profile progress.
 - `0.7.0` — Shared, keyboard-contained overlays for search, profile switching, governance, fit review, and application preparation, plus responsive workspace verification.
 - `0.6.0` — Calm workspace loading, recoverable application errors, shared status notices, and specific confirmation for saved and pipeline actions.
 - `0.5.0` — Shared form and dialog foundations applied to onboarding and manually tracked applications, with accessible validation and keyboard dismissal.

@@ -15,7 +15,8 @@ interface DialogShellProps {
   closeLabel?: string;
   className?: string;
   bodyClassName?: string;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "drawer";
+  placement?: "center" | "right";
 }
 
 const sizes = {
@@ -23,6 +24,8 @@ const sizes = {
   md: "max-w-2xl",
   lg: "max-w-3xl",
   xl: "max-w-4xl",
+  "2xl": "max-w-5xl",
+  drawer: "max-w-xl",
 };
 
 const focusableSelector = [
@@ -34,7 +37,7 @@ const focusableSelector = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
-export function DialogShell({ titleId, title, description, icon, children, footer, onClose, closeLabel = "Close dialog", className = "", bodyClassName = "", size = "sm" }: DialogShellProps) {
+export function DialogShell({ titleId, title, description, icon, children, footer, onClose, closeLabel = "Close dialog", className = "", bodyClassName = "", size = "sm", placement = "center" }: DialogShellProps) {
   const dialogRef = useRef<HTMLElement>(null);
   const onCloseRef = useRef(onClose);
   const descriptionId = description ? `${titleId}-description` : undefined;
@@ -80,7 +83,7 @@ export function DialogShell({ titleId, title, description, icon, children, foote
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-sm">
+    <div className={`fixed inset-0 z-50 flex bg-slate-900/30 backdrop-blur-sm ${placement === "right" ? "items-stretch justify-end" : "items-center justify-center p-4"}`}>
       <section
         ref={dialogRef}
         role="dialog"
@@ -88,7 +91,7 @@ export function DialogShell({ titleId, title, description, icon, children, foote
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         tabIndex={-1}
-        className={`flex max-h-[92vh] w-full ${sizes[size]} flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl outline-none ${className}`}
+        className={`flex w-full ${sizes[size]} flex-col overflow-hidden border border-slate-200 bg-white shadow-2xl outline-none ${placement === "right" ? "h-full max-h-none rounded-none border-y-0 border-r-0" : "max-h-[92vh] rounded-3xl"} ${className}`}
       >
         <header className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-6">
           <div className="flex items-start gap-3">

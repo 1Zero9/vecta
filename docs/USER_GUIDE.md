@@ -2,7 +2,7 @@
 
 Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data and stores candidate information primarily on the current device.
 
-The current milestone is **Vecta v0.7.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
+The current milestone is **Vecta v0.8.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. In Vecta, your experience, evidence, and ambitions come together to carry your career forward with clarity.
 
@@ -25,6 +25,8 @@ The current role catalogue is curated prototype data. A listing should not be tr
 ## 2. Build your candidate profile
 
 Select **Complete your profile** from the Jobs workspace to open the four-step guided flow.
+
+The setup opens as a keyboard-contained dialog. Its step controls have spoken labels at every screen size, the current step is announced, Escape closes the flow, and focus returns to the control that opened it.
 
 ### Direction
 
@@ -55,6 +57,8 @@ Nothing is accepted or saved automatically. Scanned or image-only PDFs do not co
 ## 3. Link claims to evidence
 
 Use **Evidence links** in onboarding or Candidate Profile settings to connect a claim with something you can discuss or verify.
+
+Candidate Profile settings use the same keyboard behaviour as onboarding. The drawer groups career direction, skills and credentials, and career history under labelled headings; skill and certification chips have explicit remove actions.
 
 Evidence types are:
 

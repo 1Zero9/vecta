@@ -59,13 +59,13 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Add a calm hydration and route-loading shell, a recoverable application error boundary, shared status notices, and specific confirmation for privacy, saved-role, saved-company, pipeline-stage, notes, and removal actions.
 - [x] Move global search, profile switching, governance, fit review, and application preparation onto the shared dialog foundation with focus containment, Escape dismissal, background scroll locking, and focus restoration.
 - [x] Make search results and demo-profile cards semantic keyboard actions, restore the documented Cmd/Ctrl+K shortcut, and label governance/application tabs for assistive technology.
+- [x] Move the candidate profile drawer and onboarding shell onto the shared dialog foundation, convert their evidence and résumé-review controls, and expose mobile setup steps and profile strength to assistive technology.
 - [x] Verify Jobs, Companies, Market, and Pipeline at 360 px, 768 px, and 1440 px without page-level horizontal overflow.
 
 ### Remaining
 
-- Extend shared controls to the remaining profile drawer, onboarding shell, and older inline action groups.
 - Extend state-specific handling when real network-backed Companies, Market, profile, and governance operations replace the current local and curated workflows.
-- Review keyboard access, focus states, semantic headings, contrast, and screen-reader labels.
+- Continue keyboard, focus, heading, contrast, and screen-reader reviews as server-backed workflows are introduced.
 - Continue interaction-level mobile checks as new server-backed states and workflows are introduced.
 - Replace overstated labels such as “live feeds” and “AI generated” where the underlying feature is curated or deterministic.
 - Clean up the repository-wide lint baseline.
@@ -231,11 +231,11 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Immediate next sprint
 
-1. Convert the remaining profile drawer, onboarding shell, and older inline action groups, then finish the semantic-heading and screen-reader audit.
+1. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
 2. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-3. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
-4. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
-5. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
+3. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
+4. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
+5. Clean up the repository-wide lint baseline and make it a release quality gate.
 
 ### Dependencies and decisions
 

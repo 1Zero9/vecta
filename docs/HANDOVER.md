@@ -4,7 +4,7 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
-Current identifiers are Vecta **v0.7.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
+Current identifiers are Vecta **v0.8.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
 
 The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
 
@@ -115,15 +115,15 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Résumé files are limited to 10 MB.
 - Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- Vitest covers 52 domain, persistence, parser-boundary, matching, versioning, interface-foundation, state-feedback, overlay-accessibility, and component scenarios across fifteen test files.
+- Vitest covers 53 domain, persistence, parser-boundary, matching, versioning, interface-foundation, state-feedback, overlay-accessibility, and component scenarios across fifteen test files.
 - Four Playwright journeys cover role search and tracking, complete onboarding persistence, fit review with reversible corrections, and persisted pipeline-stage movement with visible confirmation.
-- Jobs, Companies, Market, and Pipeline have been checked at 360 px, 768 px, and 1440 px without document-level horizontal overflow. Shared dialogs lock background scroll, contain Tab focus, close with Escape, and restore the invoking control.
+- Jobs, Companies, Market, and Pipeline have been checked at 360 px, 768 px, and 1440 px without document-level horizontal overflow. Search, local profiles, governance, fit review, application preparation, candidate profile, and onboarding now use shared dialogs that lock background scroll, contain Tab focus, close with Escape, and restore the invoking control.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
 
 ## Next engineering priorities
 
-1. Convert the remaining profile drawer, onboarding shell, and older inline action groups, then finish the semantic-heading and screen-reader audit.
+1. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
 2. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
-3. Correct remaining product language around curated and deterministic features.
-4. Add a Sites-compatible deployment build or choose another production hosting target.
-5. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.
+3. Add a Sites-compatible deployment build or choose another production hosting target.
+4. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.
+5. Clean up the repository-wide lint baseline and make it a release quality gate.
