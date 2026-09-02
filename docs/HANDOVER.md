@@ -23,6 +23,7 @@ The catalogue, market records, and drafting outputs are curated or deterministic
 
 Use [BUILD.md](BUILD.md) as the operational build checklist.
 Use [DEMO_GUIDE.md](DEMO_GUIDE.md) for the approved product walkthrough, reset procedure, fallback paths, and prototype claims.
+The owner-only Sites preview is published at <https://vecta-career.dexincognito.chatgpt.site>.
 
 ## Architecture
 

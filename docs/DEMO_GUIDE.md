@@ -14,6 +14,8 @@ npm run dev
 
 Open the exact local URL printed by Next.js. Before an important session, also run `npm test`, `npm run build`, and `npm run test:e2e`. Start with the Alex Mercer persona and an empty or known pipeline. If the browser contains earlier demo state, use the reset steps below.
 
+The owner can alternatively use the private [hosted preview](https://vecta-career.dexincognito.chatgpt.site). It uses the same local-first candidate-data model, so reset that browser separately before presenting.
+
 ## Seven-minute walkthrough
 
 ### 1. Frame the product — 30 seconds

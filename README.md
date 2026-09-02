@@ -8,7 +8,7 @@ The name is inspired by the Latin *vecta* — “carried forward” or “convey
 
 This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. Production authentication, self-service user management, an auditable admin workbench, durable multi-device ownership, and verified job ingestion remain roadmap work.
 
-The local and production Next.js builds pass. A separate vinext/Vite build emits the worker bundle required by the configured Sites project. Because Sites cannot run the prototype's native SQLite client, that build preserves the documented device-local workflow and returns an explicit offline response from optional synchronization APIs.
+The local and production Next.js builds pass. A separate vinext/Vite/Cloudflare build powers an owner-only [hosted preview](https://vecta-career.dexincognito.chatgpt.site). Because Sites cannot run the prototype's native SQLite client, that build preserves the documented device-local workflow and returns an explicit offline response from optional synchronization APIs.
 
 ## Current capabilities
 
