@@ -2,7 +2,7 @@
 
 Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data and stores candidate information primarily on the current device.
 
-The current milestone is **Vecta v0.5.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
+The current milestone is **Vecta v0.6.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. In Vecta, your experience, evidence, and ambitions come together to carry your career forward with clarity.
 
@@ -112,6 +112,8 @@ When the pipeline is empty, use **Add application** or return to Jobs and track 
 
 When adding an application manually, job title and company are required. Missing fields are identified beside their controls. Use **Cancel**, the close button, or Escape to leave the dialog without adding a record.
 
+Vecta confirms stage changes, saved notes, and removals in a short status message. It also confirms saved roles, saved companies, profile changes, and privacy choices. These messages are announced to assistive technology without taking focus away from the current task.
+
 ## 7. Switch demo personas
 
 Use the profile control in the header to switch between the included demonstration personas or create a custom local profile. Switching personas recalculates role comparisons.
@@ -136,6 +138,8 @@ These controls cover the current local prototype state. They should not be prese
 - Skill matching uses versioned taxonomy v1.1.0 rather than a complete industry vocabulary. Corrections are local, role-specific decisions and do not teach or update the shared taxonomy.
 - Market and company records are curated demonstration data.
 - Core scoring, profile-completion, storage, filtering, and pipeline rules have automated unit coverage. Component coverage includes onboarding, résumé review, job empty states, and pipeline actions. Chromium journeys cover onboarding persistence, fit review and corrections, role-to-pipeline tracking, and pipeline-stage persistence.
+
+While saved browser data is being restored, Vecta shows a labelled workspace preview rather than briefly displaying default persona data. If an unexpected application error occurs, the recovery screen preserves local data, offers **Try again**, and provides a route back to the workspace.
 
 For implementation status and planned work, see [ROADMAP.md](ROADMAP.md).
 For the version policy and current identifiers, see [VERSIONING.md](VERSIONING.md).

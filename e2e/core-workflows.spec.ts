@@ -120,9 +120,11 @@ test("a candidate advances an application and the pipeline persists the stage", 
   await page.getByTitle("Advance stage").click();
   let storedPipeline = await page.evaluate(() => JSON.parse(localStorage.getItem("vecta_application_pipeline") ?? "[]"));
   expect(storedPipeline[0].stage).toBe("drafting");
+  await expect(page.getByRole("status")).toContainText('Moved "Workflow Test Role" to Drafting & Tailoring.');
 
   await page.getByTitle("Advance stage").click();
   storedPipeline = await page.evaluate(() => JSON.parse(localStorage.getItem("vecta_application_pipeline") ?? "[]"));
   expect(storedPipeline[0].stage).toBe("applied");
-  await expect(page.getByText("Applied / Submitted")).toBeVisible();
+  await expect(page.getByRole("status")).toContainText('Moved "Workflow Test Role" to Applied / Submitted.');
+  await expect(page.getByText("Applied / Submitted", { exact: true })).toBeVisible();
 });

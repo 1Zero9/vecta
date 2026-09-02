@@ -2,7 +2,7 @@
 
 Vecta is a light-only recruitment workspace for specialist candidates in AI, cybersecurity, governance, and cloud/IT. It combines a curated role catalogue, a local-first candidate profile, explainable fit estimates, résumé review, evidence linking, and an application pipeline.
 
-Current release: **Vecta v0.5.0 Preview** · Skill taxonomy **v1.1.0** · Export schema **v1**.
+Current release: **Vecta v0.6.0 Preview** · Skill taxonomy **v1.1.0** · Export schema **v1**.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. For the product, it means bringing experience, evidence, and ambition together to carry a career forward with clarity.
 

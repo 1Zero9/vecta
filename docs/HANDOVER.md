@@ -4,7 +4,7 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
-Current identifiers are Vecta **v0.5.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
+Current identifiers are Vecta **v0.6.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
 
 The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
 
@@ -50,7 +50,8 @@ flowchart TD
 | Area | File | Responsibility |
 | --- | --- | --- |
 | Application shell | `app/page.tsx` | Owns active views, local state, modals, and persistence callbacks. |
-| Interface foundations | `components/ui/*` | Shared buttons, panels, badges, empty states, form controls, field messaging, and dialog structure. |
+| Interface foundations | `components/ui/*` | Shared buttons, panels, badges, empty states, form controls, field messaging, dialog structure, loading skeletons, and status notices. |
+| Workspace state | `app/loading.tsx`, `app/error.tsx`, `components/WorkspaceLoading.tsx` | Calm route/hydration loading and recoverable unexpected-error handling. |
 | Guided profile | `components/ProfileOnboardingModal.tsx` | Four-step candidate onboarding and final save boundary. |
 | Résumé review | `components/ResumeUploadReview.tsx` | File selection, extraction state, suggestions, and explicit apply action. |
 | Evidence editor | `components/ProfileEvidenceManager.tsx` | Adds, edits, removes, and links evidence to profile claims. |
@@ -68,7 +69,7 @@ flowchart TD
 
 ## Candidate data flow
 
-1. The client hydrates the active profile and pipeline from `localStorage`.
+1. The client shows a labelled workspace skeleton while it hydrates the active profile and pipeline from `localStorage`, preventing default demonstration state from flashing before saved data is ready.
 2. Onboarding holds edits in component state until **Save profile**.
 3. PDF and DOCX files are read as `ArrayBuffer` values in the browser.
 4. Extracted text and suggestions remain temporary until **Apply reviewed details**.
@@ -112,14 +113,14 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Résumé files are limited to 10 MB.
 - Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- Vitest covers 45 domain, persistence, parser-boundary, matching, versioning, interface-foundation, and component scenarios across thirteen test files.
-- Four Playwright journeys cover role search and tracking, complete onboarding persistence, fit review with reversible corrections, and persisted pipeline-stage movement.
+- Vitest covers 48 domain, persistence, parser-boundary, matching, versioning, interface-foundation, state-feedback, and component scenarios across fourteen test files.
+- Four Playwright journeys cover role search and tracking, complete onboarding persistence, fit review with reversible corrections, and persisted pipeline-stage movement with visible confirmation.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
 
 ## Next engineering priorities
 
-1. Add loading, error, and success states across the remaining workspaces.
-2. Extend shared foundations to remaining legacy controls and overlays, then finish responsive and keyboard audits.
-3. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
+1. Extend shared foundations to remaining legacy controls and overlays, then finish responsive and keyboard audits.
+2. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
+3. Correct remaining product language around curated and deterministic features.
 4. Add a Sites-compatible deployment build or choose another production hosting target.
 5. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.

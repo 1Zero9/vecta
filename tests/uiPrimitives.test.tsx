@@ -10,6 +10,8 @@ import { PipelineBoard } from "@/components/PipelineBoard";
 import { DialogShell } from "@/components/ui/dialog-shell";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { StatusNotice } from "@/components/ui/status-notice";
+import { WorkspaceLoading } from "@/components/WorkspaceLoading";
 
 describe("shared interface foundations", () => {
   it("provides a keyboard-ready button with a safe default type", async () => {
@@ -29,6 +31,20 @@ describe("shared interface foundations", () => {
     expect(screen.getByRole("status")).toBeDefined();
     expect(screen.getByRole("heading", { name: "Nothing here yet" })).toBeDefined();
     expect(screen.getByRole("button", { name: "Add item" })).toBeDefined();
+  });
+
+  it("announces success and error notices with the right urgency", () => {
+    const { rerender } = render(<StatusNotice tone="success">Application updated.</StatusNotice>);
+    expect(screen.getByRole("status").textContent).toContain("Application updated.");
+
+    rerender(<StatusNotice tone="error" title="Could not save">Try again.</StatusNotice>);
+    expect(screen.getByRole("alert").textContent).toContain("Could not saveTry again.");
+  });
+
+  it("provides one calm, labelled workspace loading state", () => {
+    render(<WorkspaceLoading />);
+    expect(screen.getByRole("status", { name: "Loading your Vecta workspace" })).toBeDefined();
+    expect(screen.getByText("Loading your workspace")).toBeDefined();
   });
 
   it("gives an empty pipeline one clear starting point", () => {

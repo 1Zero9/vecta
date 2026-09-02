@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { BriefcaseBusiness, Check, FileBadge2, FolderKanban, Pencil, Plus, Trash2, X } from "lucide-react";
 import { ProfileEvidence, ProfileEvidenceType } from "@/lib/types";
+import { StatusNotice } from "@/components/ui/status-notice";
 
 interface ProfileEvidenceManagerProps {
   evidence: ProfileEvidence[];
@@ -229,7 +230,7 @@ export function ProfileEvidenceManager({ evidence, skills, certifications, onCha
             )}
           </fieldset>
 
-          {error && <p role="alert" className="rounded-lg bg-rose-50 px-3 py-2 text-[10px] font-medium text-rose-700">{error}</p>}
+          {error && <StatusNotice tone="error">{error}</StatusNotice>}
 
           <div className="flex justify-end gap-2">
             <button type="button" onClick={cancelEditing} className="rounded-lg border border-slate-200 px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>

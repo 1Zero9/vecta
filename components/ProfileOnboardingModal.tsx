@@ -22,6 +22,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { StatusNotice } from "@/components/ui/status-notice";
 
 interface ProfileOnboardingModalProps {
   profile: CandidateProfile;
@@ -285,7 +286,7 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
               </div>
             )}
 
-            {error && <p role="alert" className="mx-auto mt-5 max-w-2xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-medium text-rose-700">{error}</p>}
+            {error && <StatusNotice tone="error" className="mx-auto mt-5 max-w-2xl">{error}</StatusNotice>}
           </div>
         </div>
 

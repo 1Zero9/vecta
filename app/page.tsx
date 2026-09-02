@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { APP_VERSION, EXPORT_SCHEMA_VERSION } from "@/lib/version";
 import { SKILL_TAXONOMY_VERSION } from "@/lib/skillTaxonomy";
@@ -18,6 +18,8 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { UserManagementModal } from "@/components/UserManagementModal";
 import { GovernanceModal } from "@/components/GovernanceModal";
 import { ConsentBanner } from "@/components/ConsentBanner";
+import { WorkspaceLoading } from "@/components/WorkspaceLoading";
+import { StatusNotice } from "@/components/ui/status-notice";
 
 import companiesData from "@/data/companies.json";
 import jobsData from "@/data/jobs.json";
@@ -56,6 +58,16 @@ import {
 import { getProfileCompletion } from "@/lib/profileCompletion";
 import { addJobToPipeline } from "@/lib/pipeline";
 
+const APPLICATION_STAGE_LABELS: Record<ApplicationStage, string> = {
+  saved: "Saved / Evaluating",
+  drafting: "Drafting & Tailoring",
+  applied: "Applied / Submitted",
+  screening: "Recruiter Screen",
+  interviewing: "Technical Interview",
+  offer: "Offer / Negotiation",
+  archived: "Archived",
+};
+
 export default function Home() {
   // Navigation & View State
   const [activeTab, setActiveTab] = useState<"jobs" | "radar" | "recruiter" | "pipeline" | "governance">("jobs");
@@ -74,6 +86,7 @@ export default function Home() {
   const [favouriteCompanyIds, setFavouriteCompanyIds] = useState<string[]>([]);
   const [savedJobIds, setSavedJobIds] = useState<string[]>([]);
   const [pipeline, setPipeline] = useState<ApplicationTrack[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   // Modals & Drawers
   const [selectedJobForAudit, setSelectedJobForAudit] = useState<Job | null>(null);
@@ -86,11 +99,13 @@ export default function Home() {
   const [isGovernanceModalOpen, setIsGovernanceModalOpen] = useState(false);
 
   // Toast / notification feedback
-  const [notification, setNotification] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ message: string; tone: "success" | "info" } | null>(null);
+  const notificationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const showToast = (msg: string) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(null), 3000);
+  const showToast = (message: string, tone: "success" | "info" = "success") => {
+    if (notificationTimeout.current) clearTimeout(notificationTimeout.current);
+    setNotification({ message, tone });
+    notificationTimeout.current = setTimeout(() => setNotification(null), 3000);
   };
 
   // Hydrate persistent state on client mount
@@ -101,7 +116,11 @@ export default function Home() {
     setFavouriteCompanyIds(getStoredFavourites());
     setSavedJobIds(getStoredSavedJobs());
     setPipeline(getStoredPipeline());
+    setIsHydrated(true);
 
+    return () => {
+      if (notificationTimeout.current) clearTimeout(notificationTimeout.current);
+    };
   }, []);
 
   // Switch demo persona
@@ -147,6 +166,7 @@ export default function Home() {
     };
     setConsent(settings);
     saveStoredConsent(settings);
+    showToast("Privacy choices saved on this device.");
 
     // Log to Prisma
     fetch("/api/governance/consent", {
@@ -162,19 +182,25 @@ export default function Home() {
   };
 
   const handleToggleFavourite = (companyId: string) => {
-    const next = favouriteCompanyIds.includes(companyId)
+    const wasFavourite = favouriteCompanyIds.includes(companyId);
+    const next = wasFavourite
       ? favouriteCompanyIds.filter((id) => id !== companyId)
       : [...favouriteCompanyIds, companyId];
     setFavouriteCompanyIds(next);
     saveStoredFavourites(next);
+    const company = companies.find((item) => item.id === companyId);
+    if (company) showToast(`${wasFavourite ? "Removed" : "Saved"} ${company.name} ${wasFavourite ? "from" : "to"} your company list.`);
   };
 
   const handleToggleSaveJob = (jobId: string) => {
-    const next = savedJobIds.includes(jobId)
+    const wasSaved = savedJobIds.includes(jobId);
+    const next = wasSaved
       ? savedJobIds.filter((id) => id !== jobId)
       : [...savedJobIds, jobId];
     setSavedJobIds(next);
     saveStoredSavedJobs(next);
+    const job = jobs.find((item) => item.id === jobId);
+    if (job) showToast(`${wasSaved ? "Removed" : "Saved"} "${job.title}" ${wasSaved ? "from" : "to"} your role list.`);
   };
 
   const handleTrackInPipeline = (job: Job) => {
@@ -184,29 +210,35 @@ export default function Home() {
       saveStoredPipeline(result.pipeline);
       showToast(`Added "${job.title}" to career pipeline.`);
     } else {
-      showToast(`"${job.title}" is already in your career pipeline.`);
+      showToast(`"${job.title}" is already in your career pipeline.`, "info");
     }
     setActiveTab("pipeline");
   };
 
   const handleUpdateStage = (id: string, newStage: ApplicationStage) => {
+    const application = pipeline.find((item) => item.id === id);
     const updated = pipeline.map((p) =>
       p.id === id ? { ...p, stage: newStage, date_updated: new Date().toISOString().slice(0, 10) } : p
     );
     setPipeline(updated);
     saveStoredPipeline(updated);
+    if (application) showToast(`Moved "${application.job_title}" to ${APPLICATION_STAGE_LABELS[newStage]}.`);
   };
 
   const handleUpdateNotes = (id: string, notes: string) => {
+    const application = pipeline.find((item) => item.id === id);
     const updated = pipeline.map((p) => (p.id === id ? { ...p, notes } : p));
     setPipeline(updated);
     saveStoredPipeline(updated);
+    if (application) showToast(`Notes saved for "${application.job_title}".`);
   };
 
   const handleRemoveApplication = (id: string) => {
+    const application = pipeline.find((item) => item.id === id);
     const updated = pipeline.filter((p) => p.id !== id);
     setPipeline(updated);
     saveStoredPipeline(updated);
+    if (application) showToast(`Removed "${application.job_title}" from your pipeline.`);
   };
 
   const handleAddCustomApplication = (app: Partial<ApplicationTrack>) => {
@@ -272,16 +304,15 @@ export default function Home() {
   const itJobsCount = jobs.filter((j) => j.domain === "IT").length;
   const profileCompletion = getProfileCompletion(profile);
 
+  if (!isHydrated) return <WorkspaceLoading />;
+
   return (
     <div className="min-h-screen flex flex-col text-slate-900">
       
       {/* Toast Notification */}
       {notification && (
-        <div role="status" aria-live="polite" className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4 duration-200">
-          <div className="px-4 py-2.5 rounded-xl bg-white border border-emerald-200 text-emerald-800 text-xs font-semibold shadow-lg flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-            <span>{notification}</span>
-          </div>
+        <div className="fixed top-24 left-1/2 z-50 w-[min(92vw,34rem)] -translate-x-1/2 animate-in fade-in slide-in-from-top-4 duration-200">
+          <StatusNotice tone={notification.tone} className="bg-white shadow-lg">{notification.message}</StatusNotice>
         </div>
       )}
 

@@ -2,7 +2,7 @@
 
 This roadmap turns Vecta from a strong interactive prototype into a trustworthy, useful recruitment product. Work is ordered by user value and dependency, rather than speculative dates.
 
-**Last reconciled:** 1 September 2026
+**Last reconciled:** 2 September 2026
 
 ## Product direction
 
@@ -32,7 +32,7 @@ Before presenting these features as production-ready, the product still needs re
 | Priority | Workstream | Current state | What remains |
 | ---: | --- | --- | --- |
 | 1 | Fit and profile reliability | Active | Real-world résumé fixtures and ongoing measured taxonomy maintenance. |
-| 2 | UI and delivery hardening | Active | Remaining loading/error/success states, accessibility and responsive checks, repository lint cleanup, and a Sites-compatible deployment output. |
+| 2 | UI and delivery hardening | Active | Remaining legacy controls, accessibility and responsive checks, repository lint cleanup, and a Sites-compatible deployment output. |
 | 3 | Accounts, user management, and admin operations | Not started | Authentication, self-service account management, role-based authorization, server-owned records, an auditable admin workbench, cross-device recovery, and complete export/erasure. |
 | 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
 | 5 | Grounded application assistance | Not started | Evidence-grounded generation, user review, version history, and audit records. |
@@ -56,11 +56,12 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Add a single recovery-oriented empty pipeline state, clearer Companies/Market empty results, global visible focus, and semantic fit/archetype controls.
 - [x] Add shared input, textarea, select, field, and dialog foundations; apply them to profile onboarding and manually tracked applications.
 - [x] Add explicit application-field validation, Escape dismissal, focus restoration, labelled dialog descriptions, and normalized saved values.
+- [x] Add a calm hydration and route-loading shell, a recoverable application error boundary, shared status notices, and specific confirmation for privacy, saved-role, saved-company, pipeline-stage, notes, and removal actions.
 
 ### Remaining
 
 - Extend the shared foundations to remaining legacy controls and overlays.
-- Add skeleton, error, and success states to Companies, Market, Pipeline, profile, and governance workflows.
+- Extend state-specific handling when real network-backed Companies, Market, profile, and governance operations replace the current local and curated workflows.
 - Review keyboard access, focus states, semantic headings, contrast, and screen-reader labels.
 - Run mobile, tablet, and desktop usability checks on Jobs, Companies, Market, and Pipeline.
 - Replace overstated labels such as “live feeds” and “AI generated” where the underlying feature is curated or deterministic.
@@ -99,7 +100,7 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Establish Vecta v0.2.0, taxonomy v1.1.0, and export schema v1; expose versions in-product, documentation, and data exports.
 - [x] Expand the versioned taxonomy with observed identity, observability, vector-database, application-security, governance, resilience, and device-management language.
 - [x] Cover complete onboarding, fit review and reversible corrections, role-to-pipeline tracking, and persisted pipeline-stage changes in Chromium.
-- [ ] Add polished empty states to the remaining workspaces, anonymized real-world résumé fixtures, and broader end-to-end coverage.
+- [ ] Add anonymized real-world résumé fixtures and broader end-to-end coverage.
 
 ### Scope
 
@@ -227,12 +228,11 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Immediate next sprint
 
-1. Add loading, error, and success states across Companies, Market, Pipeline, profile, and governance workflows.
-2. Extend shared foundations to remaining legacy controls and overlays, then finish responsive and keyboard audits.
-3. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-4. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
-5. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
-6. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
+1. Extend shared foundations to remaining legacy controls and overlays, then finish responsive and keyboard audits at 360 px, 768 px, and desktop widths.
+2. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
+3. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
+4. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
+5. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
 
 ### Dependencies and decisions
 
