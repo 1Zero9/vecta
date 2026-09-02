@@ -15,7 +15,7 @@ interface HeaderProps {
   openCmdPalette: () => void;
   openUserManagement: () => void;
   openGovernance: () => void;
-  totalLiveJobs: number;
+  totalJobs: number;
 }
 
 const navigation = [
@@ -32,7 +32,7 @@ export function Header({
   openCmdPalette,
   openUserManagement,
   openGovernance,
-  totalLiveJobs,
+  totalJobs,
 }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-[#F8FAFC]/92 backdrop-blur-xl">
@@ -61,7 +61,7 @@ export function Header({
               >
                 <Icon className="h-4 w-4" />
                 {label}
-                {id === "jobs" && <span className="rounded-full bg-white px-1.5 text-[10px] text-slate-500">{totalLiveJobs}</span>}
+                {id === "jobs" && <span className="rounded-full bg-white px-1.5 text-[10px] text-slate-500">{totalJobs}</span>}
               </button>
             ))}
             <button onClick={openGovernance} className="flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900">
@@ -100,7 +100,7 @@ export function Header({
               onClick={() => setActiveTab(id)}
               className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold ${activeTab === id ? "bg-[#2563EB] text-white" : "text-slate-600 hover:bg-white"}`}
             >
-              {label}{id === "jobs" ? ` ${totalLiveJobs}` : ""}
+              {label}{id === "jobs" ? ` ${totalJobs}` : ""}
             </button>
           ))}
           <button onClick={openGovernance} className="whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-white">Trust</button>

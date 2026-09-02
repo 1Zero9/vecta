@@ -135,7 +135,7 @@ export function CommandPalette({
               >
                 <div className="flex items-center gap-2.5">
                   <Briefcase className="w-4 h-4 text-emerald-700" />
-                  <span className="font-bold">Browse Direct ATS Jobs (IT, AI, GRC, Security)</span>
+                  <span className="font-bold">Browse Curated Role Examples (IT, AI, GRC, Security)</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
               </Button>
@@ -150,7 +150,7 @@ export function CommandPalette({
               >
                 <div className="flex items-center gap-2.5">
                   <Building2 className="w-4 h-4 text-sky-700" />
-                  <span className="font-bold">Explore Company Tech Radar & Compliance Hub</span>
+                  <span className="font-bold">Explore Company Tech & Framework Examples</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
               </Button>

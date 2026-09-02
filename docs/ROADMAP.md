@@ -60,6 +60,8 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Move global search, profile switching, governance, fit review, and application preparation onto the shared dialog foundation with focus containment, Escape dismissal, background scroll locking, and focus restoration.
 - [x] Make search results and demo-profile cards semantic keyboard actions, restore the documented Cmd/Ctrl+K shortcut, and label governance/application tabs for assistive technology.
 - [x] Move the candidate profile drawer and onboarding shell onto the shared dialog foundation, convert their evidence and résumé-review controls, and expose mobile setup steps and profile strength to assistive technology.
+- [x] Replace claims of live or verified data, external AI generation, and regulatory conformity with accurate curated-data, deterministic-feature, and prototype-governance boundaries.
+- [x] Remove invented achievements and metrics from application and STAR templates; use saved evidence or explicit prompts that require user verification.
 - [x] Verify Jobs, Companies, Market, and Pipeline at 360 px, 768 px, and 1440 px without page-level horizontal overflow.
 
 ### Remaining
@@ -67,7 +69,6 @@ Before presenting these features as production-ready, the product still needs re
 - Extend state-specific handling when real network-backed Companies, Market, profile, and governance operations replace the current local and curated workflows.
 - Continue keyboard, focus, heading, contrast, and screen-reader reviews as server-backed workflows are introduced.
 - Continue interaction-level mobile checks as new server-backed states and workflows are introduced.
-- Replace overstated labels such as “live feeds” and “AI generated” where the underlying feature is curated or deterministic.
 - Clean up the repository-wide lint baseline.
 - Add a Sites-compatible build output or explicitly select another production hosting target.
 
@@ -231,11 +232,11 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Immediate next sprint
 
-1. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
-2. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-3. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
-4. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
-5. Clean up the repository-wide lint baseline and make it a release quality gate.
+1. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
+2. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
+3. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
+4. Clean up the repository-wide lint baseline and make it a release quality gate.
+5. Extend state-specific handling when real network-backed Companies, Market, profile, and governance workflows are introduced.
 
 ### Dependencies and decisions
 

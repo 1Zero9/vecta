@@ -4,6 +4,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "@/components/CommandPalette";
+import { GovernanceModal } from "@/components/GovernanceModal";
 import { ProfileDrawer } from "@/components/ProfileDrawer";
 import { UserManagementModal } from "@/components/UserManagementModal";
 import { DEFAULT_USER } from "@/lib/storage";
@@ -25,8 +26,19 @@ describe("workspace overlays", () => {
     render(<CommandPalette isOpen onOpen={vi.fn()} onClose={vi.fn()} jobs={[]} companies={[]} benchmarks={[]} onSelectJob={vi.fn()} setActiveTab={setActiveTab} openProfileDrawer={vi.fn()} />);
 
     expect(screen.getByRole("dialog", { name: "Search Vecta" })).toBeDefined();
-    await user.click(screen.getByRole("button", { name: /Explore Company Tech Radar/ }));
+    await user.click(screen.getByRole("button", { name: /Explore Company Tech/ }));
     expect(setActiveTab).toHaveBeenCalledWith("radar");
+  });
+
+  it("states the prototype governance boundary without claiming compliance", async () => {
+    const user = userEvent.setup();
+    render(<GovernanceModal isOpen onClose={vi.fn()} onDataWiped={vi.fn()} />);
+
+    expect(screen.getByText(/does not call an external generative-AI model/)).toBeDefined();
+    await user.click(screen.getByRole("tab", { name: "Privacy controls" }));
+    expect(screen.getByText(/do not establish production GDPR/)).toBeDefined();
+    await user.click(screen.getByRole("tab", { name: "Governance roadmap" }));
+    expect(screen.getByText(/not certified to ISO\/IEC 42001/)).toBeDefined();
   });
 
   it("labels local profiles honestly and creates one through shared form controls", async () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Company, DomainType, ScaleTier } from "@/lib/types";
+import { Company, DomainType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Panel } from "@/components/ui/panel";
@@ -12,14 +12,6 @@ import {
   ChevronRight, 
   Search, 
   Download, 
-  Sparkles, 
-  ShieldCheck, 
-  CheckCircle2, 
-  Cpu, 
-  Flame,
-  Layers,
-  MapPin,
-  Lock,
   Globe
 } from "lucide-react";
 
@@ -75,7 +67,7 @@ export function RadarTable({
   });
 
   const exportCSV = () => {
-    const headers = ["Name", "Domain", "Scale Tier", "Funding", "Location", "ATS Type", "Compliance", "Tech Stack", "Open Roles", "Careers URL"];
+    const headers = ["Name", "Domain", "Scale Tier", "Funding", "Location", "ATS Type", "Reported Frameworks (Demo)", "Tech Stack", "Listed Roles", "Careers URL"];
     const rows = filteredCompanies.map((c) => [
       `"${c.name}"`,
       `"${c.domain}"`,
@@ -261,9 +253,9 @@ export function RadarTable({
                 <th className="py-4 px-5">Company & Mission</th>
                 <th className="py-4 px-4">Domain</th>
                 <th className="py-4 px-4">Scale</th>
-                <th className="py-4 px-4">Compliance / Badges</th>
+                <th className="py-4 px-4">Reported frameworks</th>
                 <th className="py-4 px-4">Location</th>
-                <th className="py-4 px-4 text-center">Live Roles</th>
+                <th className="py-4 px-4 text-center">Listed roles</th>
                 <th className="py-4 px-5 text-right">Careers Portal</th>
               </tr>
             </thead>
@@ -364,8 +356,7 @@ export function RadarTable({
                         {/* Open Roles Count */}
                         <td className="py-4 px-4 text-center whitespace-nowrap">
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 font-mono font-bold text-xs">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            {company.open_roles_count} live
+                            {company.open_roles_count} listed
                           </span>
                         </td>
 
@@ -435,7 +426,7 @@ export function RadarTable({
 
                                 <div className="pt-2 border-t border-slate-200/70">
                                   <span className="font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                                    Full Compliance & Governance
+                                    Reported frameworks (demo data)
                                   </span>
                                   <div className="flex flex-wrap gap-1">
                                     {company.compliance_tags.map((comp, idx) => (

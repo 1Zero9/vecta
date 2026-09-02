@@ -22,7 +22,7 @@ Open the exact local URL printed by Next.js. Before an important session, also r
 
 **Say:** “Vecta helps specialist candidates move from scattered career information to a clear, evidence-led decision: which role fits, why it fits, what is missing, and what to do next.”
 
-Point out **Vecta v0.8.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
+Point out **Vecta v0.9.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
 
 ### 2. Establish the candidate context — 60 seconds
 
@@ -46,7 +46,7 @@ Point out **Vecta v0.8.0 Preview** in the header. Explain that the fit audit als
 
 **Do:** Add the role to the pipeline. Open the application preparation view, then show the Pipeline stages. Advance the role once and point out the concise confirmation message.
 
-**Say:** “The next step stays attached to the decision. Current drafting is deterministic and must be reviewed; it is designed to help the candidate articulate real experience, never invent it.”
+**Say:** “The next step stays attached to the decision. Current drafting is deterministic and must be reviewed; it uses saved evidence or explicit fill-in prompts instead of inventing experience or performance figures.”
 
 ### 6. Close on trust and direction — 60 seconds
 

@@ -330,7 +330,7 @@ export default function Home() {
         openCmdPalette={() => setIsCmdPaletteOpen(true)}
         openUserManagement={() => setIsUserManagementOpen(true)}
         openGovernance={() => setIsGovernanceModalOpen(true)}
-        totalLiveJobs={jobs.length}
+        totalJobs={jobs.length}
       />
 
       {/* Main Container */}
@@ -423,7 +423,7 @@ export default function Home() {
               onClick={() => setIsGovernanceModalOpen(true)}
               className="text-amber-700 hover:underline"
             >
-              EU AI Act & GDPR Disclosures
+              Data controls & feature boundaries
             </button>
             <span>•</span>
             <button

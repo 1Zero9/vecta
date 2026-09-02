@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { ConsentSettings } from "@/lib/types";
-import { ShieldCheck, Sparkles, Lock, X, Check } from "lucide-react";
+import { ShieldCheck, X, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ConsentBannerProps {
   onAcceptAll: () => void;
@@ -33,41 +33,47 @@ export function ConsentBanner({
             </div>
             <div>
               <h4 className="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2">
-                <span>Privacy, GDPR & EU AI Act Notice</span>
+                <span>Prototype privacy and data notice</span>
               </h4>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Vecta operates local-first data processing with human-in-the-loop AI assistance.
+                Candidate data is primarily stored on this device.
               </p>
             </div>
           </div>
 
-          <button
+          <Button
             onClick={() => setIsVisible(false)}
-            className="text-slate-500 hover:text-slate-600 p-1"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-slate-500"
+            aria-label="Dismiss privacy notice"
           >
             <X className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
         <p className="text-[11px] text-slate-600 leading-relaxed">
-          We use strictly essential local storage to calculate your vector match scores and draft tailored applications. No automated candidate disqualifications or biometric profiling are conducted.
+          Vecta uses browser storage for your profile and workspace. Fit estimates and application drafts are deterministic aids, not hiring decisions or externally generated AI content. This preview is not a claim of legal or regulatory compliance.
         </p>
 
         <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-200 text-xs">
-          <button
+          <Button
             onClick={onOpenGovernance}
-            className="text-sky-700 hover:underline font-semibold text-[11px] flex items-center gap-1"
+            variant="ghost"
+            size="sm"
+            className="text-sky-700"
           >
-            <span>Read EU AI Act & GDPR Charter</span>
-          </button>
+            <span>Review data controls and boundaries</span>
+          </Button>
 
-          <button
+          <Button
             onClick={handleAccept}
-            className="px-4 py-1.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-xl text-xs flex items-center gap-1 shadow-sm transition-all"
+            variant="primary"
+            size="sm"
           >
             <Check className="w-3.5 h-3.5" />
-            <span>Acknowledge & Continue</span>
-          </button>
+            <span>Continue</span>
+          </Button>
         </div>
 
       </div>
