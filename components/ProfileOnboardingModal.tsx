@@ -17,6 +17,11 @@ import { CandidateProfile, DomainType, WorkMode } from "@/lib/types";
 import { getProfileCompletion } from "@/lib/profileCompletion";
 import { ResumeUploadReview } from "@/components/ResumeUploadReview";
 import { ProfileEvidenceManager } from "@/components/ProfileEvidenceManager";
+import { Button } from "@/components/ui/button";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ProfileOnboardingModalProps {
   profile: CandidateProfile;
@@ -30,9 +35,6 @@ const steps = [
   { title: "Expertise", description: "What you bring", icon: Wrench },
   { title: "Evidence", description: "What supports your profile", icon: FileText },
 ] as const;
-
-const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
 function parseList(value: string): string[] {
   return Array.from(
@@ -120,9 +122,9 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
               <p className="text-xs text-slate-500">Give fit scores the context they need to be useful.</p>
             </div>
           </div>
-          <button onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700" aria-label="Close profile setup">
+          <Button onClick={onClose} variant="ghost" size="icon" className="h-9 w-9" aria-label="Close profile setup">
             <X className="h-5 w-5" />
-          </button>
+          </Button>
         </header>
 
         <div className="grid min-h-0 flex-1 md:grid-cols-[240px_minmax(0,1fr)]">
@@ -174,27 +176,23 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
                   <p className="mt-1 text-sm text-slate-500">Start with the role and discipline that best describe your career direction.</p>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="text-xs font-semibold text-slate-700">
-                    Full name
-                    <input value={formData.full_name} onChange={(event) => setFormData({ ...formData, full_name: event.target.value })} className={`${inputClass} mt-1.5`} />
-                  </label>
-                  <label className="text-xs font-semibold text-slate-700">
-                    Current or most recent role
-                    <input value={formData.current_title} onChange={(event) => setFormData({ ...formData, current_title: event.target.value })} placeholder="e.g. Senior Platform Engineer" className={`${inputClass} mt-1.5`} />
-                  </label>
-                  <label className="text-xs font-semibold text-slate-700">
-                    Primary discipline
-                    <select value={formData.primary_domain} onChange={(event) => setFormData({ ...formData, primary_domain: event.target.value as DomainType })} className={`${inputClass} mt-1.5`}>
+                  <Field id="profile-name" label="Full name" required>
+                    <Input id="profile-name" value={formData.full_name} onChange={(event) => setFormData({ ...formData, full_name: event.target.value })} />
+                  </Field>
+                  <Field id="profile-title" label="Current or most recent role" required>
+                    <Input id="profile-title" value={formData.current_title} onChange={(event) => setFormData({ ...formData, current_title: event.target.value })} placeholder="e.g. Senior Platform Engineer" />
+                  </Field>
+                  <Field id="profile-domain" label="Primary discipline">
+                    <Select id="profile-domain" value={formData.primary_domain} onChange={(event) => setFormData({ ...formData, primary_domain: event.target.value as DomainType })}>
                       <option value="AI">AI & Machine Learning</option>
                       <option value="Security">Cybersecurity</option>
                       <option value="Governance">Governance & GRC</option>
                       <option value="IT">IT & Cloud</option>
-                    </select>
-                  </label>
-                  <label className="text-xs font-semibold text-slate-700">
-                    Years of experience
-                    <input type="number" min="0" max="50" value={formData.years_experience} onChange={(event) => setFormData({ ...formData, years_experience: Number(event.target.value) })} className={`${inputClass} mt-1.5`} />
-                  </label>
+                    </Select>
+                  </Field>
+                  <Field id="profile-experience" label="Years of experience">
+                    <Input id="profile-experience" type="number" min="0" max="50" value={formData.years_experience} onChange={(event) => setFormData({ ...formData, years_experience: Number(event.target.value) })} />
+                  </Field>
                 </div>
               </div>
             )}
@@ -207,25 +205,21 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
                   <p className="mt-1 text-sm text-slate-500">These preferences help Vecta separate interesting roles from genuinely practical ones.</p>
                 </div>
                 <div className="space-y-4">
-                  <label className="block text-xs font-semibold text-slate-700">
-                    Preferred locations
-                    <input value={locationsText} onChange={(event) => setLocationsText(event.target.value)} placeholder="Dublin, London, Remote Europe" className={`${inputClass} mt-1.5`} />
-                    <span className="mt-1.5 block font-normal text-slate-400">Separate multiple locations with commas. “Remote” is welcome.</span>
-                  </label>
+                  <Field id="profile-locations" label="Preferred locations" required hint="Separate multiple locations with commas. “Remote” is welcome.">
+                    <Input id="profile-locations" value={locationsText} onChange={(event) => setLocationsText(event.target.value)} placeholder="Dublin, London, Remote Europe" aria-describedby="profile-locations-hint" />
+                  </Field>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <label className="text-xs font-semibold text-slate-700">
-                      Preferred work mode
-                      <select value={formData.preferred_work_mode} onChange={(event) => setFormData({ ...formData, preferred_work_mode: event.target.value as WorkMode | "Any" })} className={`${inputClass} mt-1.5`}>
+                    <Field id="profile-work-mode" label="Preferred work mode">
+                      <Select id="profile-work-mode" value={formData.preferred_work_mode} onChange={(event) => setFormData({ ...formData, preferred_work_mode: event.target.value as WorkMode | "Any" })}>
                         <option value="Any">Any</option>
                         <option value="Remote">Remote</option>
                         <option value="Hybrid">Hybrid</option>
                         <option value="Onsite">Onsite</option>
-                      </select>
-                    </label>
-                    <label className="text-xs font-semibold text-slate-700">
-                      Minimum target salary (£)
-                      <input type="number" min="0" step="5000" value={formData.target_salary_min ?? ""} onChange={(event) => setFormData({ ...formData, target_salary_min: Number(event.target.value) || undefined })} placeholder="100000" className={`${inputClass} mt-1.5`} />
-                    </label>
+                      </Select>
+                    </Field>
+                    <Field id="profile-salary" label="Minimum target salary (£)">
+                      <Input id="profile-salary" type="number" min="0" step="5000" value={formData.target_salary_min ?? ""} onChange={(event) => setFormData({ ...formData, target_salary_min: Number(event.target.value) || undefined })} placeholder="100000" />
+                    </Field>
                   </div>
                 </div>
               </div>
@@ -238,16 +232,12 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
                   <h3 className="mt-1 text-2xl font-semibold tracking-tight text-slate-900">What do you bring?</h3>
                   <p className="mt-1 text-sm text-slate-500">Use specific technologies, practices, standards, and credentials. You can refine these later.</p>
                 </div>
-                <label className="block text-xs font-semibold text-slate-700">
-                  Skills and capabilities
-                  <textarea rows={4} value={skillsText} onChange={(event) => setSkillsText(event.target.value)} placeholder="Python, Kubernetes, ISO 42001, Stakeholder Management" className={`${inputClass} mt-1.5 resize-none`} />
-                  <span className="mt-1.5 block font-normal text-slate-400">Add at least three, separated by commas.</span>
-                </label>
-                <label className="block text-xs font-semibold text-slate-700">
-                  Certifications and accreditations
-                  <textarea rows={3} value={certificationsText} onChange={(event) => setCertificationsText(event.target.value)} placeholder="CISSP, CKA, IAPP AIGP" className={`${inputClass} mt-1.5 resize-none`} />
-                  <span className="mt-1.5 block font-normal text-slate-400">Optional, but useful when a role requires formal credentials.</span>
-                </label>
+                <Field id="profile-skills" label="Skills and capabilities" required hint="Add at least three, separated by commas.">
+                  <Textarea id="profile-skills" rows={4} value={skillsText} onChange={(event) => setSkillsText(event.target.value)} placeholder="Python, Kubernetes, ISO 42001, Stakeholder Management" className="resize-none" aria-describedby="profile-skills-hint" />
+                </Field>
+                <Field id="profile-certifications" label="Certifications and accreditations" hint="Optional, but useful when a role requires formal credentials.">
+                  <Textarea id="profile-certifications" rows={3} value={certificationsText} onChange={(event) => setCertificationsText(event.target.value)} placeholder="CISSP, CKA, IAPP AIGP" className="resize-none" aria-describedby="profile-certifications-hint" />
+                </Field>
               </div>
             )}
 
@@ -277,10 +267,9 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
                 <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-400">
                   <span className="h-px flex-1 bg-slate-200" /> Or paste text <span className="h-px flex-1 bg-slate-200" />
                 </div>
-                <label className="block text-xs font-semibold text-slate-700">
-                  Career history and achievements
-                  <textarea rows={9} value={formData.resume_text} onChange={(event) => setFormData({ ...formData, resume_text: event.target.value })} placeholder="Paste résumé text, key projects, responsibilities, and measurable outcomes…" className={`${inputClass} mt-1.5 resize-none leading-6`} />
-                </label>
+                <Field id="profile-history" label="Career history and achievements">
+                  <Textarea id="profile-history" rows={9} value={formData.resume_text} onChange={(event) => setFormData({ ...formData, resume_text: event.target.value })} placeholder="Paste résumé text, key projects, responsibilities, and measurable outcomes…" className="resize-none leading-6" />
+                </Field>
 
                 <ProfileEvidenceManager
                   evidence={formData.evidence ?? []}
@@ -306,18 +295,18 @@ export function ProfileOnboardingModal({ profile, onClose, onSave }: ProfileOnbo
           </div>
           <div className="ml-auto flex items-center gap-2">
             {step > 0 && (
-              <button onClick={() => { setError(null); setStep((current) => current - 1); }} className="flex items-center gap-1.5 rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+              <Button onClick={() => { setError(null); setStep((current) => current - 1); }} size="sm">
                 <ArrowLeft className="h-4 w-4" /> Back
-              </button>
+              </Button>
             )}
             {step < steps.length - 1 ? (
-              <button onClick={handleNext} className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-700">
+              <Button onClick={handleNext} size="sm" variant="primary">
                 Continue <ArrowRight className="h-4 w-4" />
-              </button>
+              </Button>
             ) : (
-              <button onClick={handleSave} className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-700">
+              <Button onClick={handleSave} size="sm" variant="primary">
                 <Check className="h-4 w-4" /> Save profile
-              </button>
+              </Button>
             )}
           </div>
         </footer>

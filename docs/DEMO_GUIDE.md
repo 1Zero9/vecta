@@ -22,7 +22,7 @@ Open the exact local URL printed by Next.js. Before an important session, also r
 
 **Say:** “Vecta helps specialist candidates move from scattered career information to a clear, evidence-led decision: which role fits, why it fits, what is missing, and what to do next.”
 
-Point out **Vecta v0.4.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
+Point out **Vecta v0.5.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
 
 ### 2. Establish the candidate context — 60 seconds
 

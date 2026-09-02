@@ -5,6 +5,10 @@ import { ApplicationTrack, ApplicationStage, DomainType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Panel } from "@/components/ui/panel";
+import { DialogShell } from "@/components/ui/dialog-shell";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { 
   Kanban, 
   Plus, 
@@ -55,6 +59,7 @@ export function PipelineBoard({
   const [newDomain, setNewDomain] = useState<DomainType>("AI");
   const [newUrl, setNewUrl] = useState("");
   const [newSalary, setNewSalary] = useState("");
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSaveNotes = (id: string) => {
     onUpdateNotes(id, tempNotes);
@@ -63,11 +68,14 @@ export function PipelineBoard({
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTitle || !newCompany) return;
+    if (!newTitle.trim() || !newCompany.trim()) {
+      setFormError("Add both a job title and company before saving.");
+      return;
+    }
 
     onAddCustomApplication({
-      job_title: newTitle,
-      company_name: newCompany,
+      job_title: newTitle.trim(),
+      company_name: newCompany.trim(),
       domain: newDomain,
       apply_url: newUrl || "https://linkedin.com",
       salary_target: newSalary || undefined,
@@ -80,6 +88,12 @@ export function PipelineBoard({
     setNewCompany("");
     setNewUrl("");
     setNewSalary("");
+    setFormError(null);
+    setShowAddModal(false);
+  };
+
+  const closeAddModal = () => {
+    setFormError(null);
     setShowAddModal(false);
   };
 
@@ -309,96 +323,45 @@ export function PipelineBoard({
 
       {/* Add Custom Application Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <h3 className="font-bold text-slate-900 text-base">Add Tracked Application</h3>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-900">
-                <Plus className="w-5 h-5 rotate-45" />
-              </button>
+        <DialogShell
+          titleId="add-application-title"
+          title="Add tracked application"
+          description="Add a role already in progress. You can update its stage and notes from the board."
+          icon={<Plus className="h-5 w-5" />}
+          onClose={closeAddModal}
+          closeLabel="Close add application"
+          footer={(
+            <div className="flex justify-end gap-2">
+              <Button onClick={closeAddModal}>Cancel</Button>
+              <Button type="submit" form="add-application-form" variant="primary">Add to pipeline</Button>
             </div>
-
-            <form onSubmit={handleAddSubmit} className="space-y-3 text-xs">
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Job Title *</label>
-                <input
-                  type="text"
-                  required
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  placeholder="e.g. Lead Security Architect"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-                />
-              </div>
-
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Company Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={newCompany}
-                  onChange={(e) => setNewCompany(e.target.value)}
-                  placeholder="e.g. CloudMesh Cyber"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-slate-400 font-semibold mb-1">Domain</label>
-                  <select
-                    value={newDomain}
-                    onChange={(e) => setNewDomain(e.target.value as DomainType)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-                  >
-                    <option value="AI">AI & Machine Learning</option>
-                    <option value="Security">Cybersecurity</option>
-                    <option value="Governance">Governance & GRC</option>
-                    <option value="IT">IT Infrastructure</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-slate-400 font-semibold mb-1">Target Salary</label>
-                  <input
-                    type="text"
-                    value={newSalary}
-                    onChange={(e) => setNewSalary(e.target.value)}
-                    placeholder="e.g. £120k"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Application URL</label>
-                <input
-                  type="url"
-                  value={newUrl}
-                  onChange={(e) => setNewUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900"
-                />
-              </div>
-
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-200">
-                <button
-                  type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl font-bold"
-                >
-                  Add to Board
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+          )}
+        >
+          <form id="add-application-form" onSubmit={handleAddSubmit} noValidate className="space-y-4">
+            <Field id="application-title" label="Job title" required error={formError && !newTitle.trim() ? "Enter a job title." : undefined}>
+              <Input id="application-title" autoFocus value={newTitle} onChange={(event) => setNewTitle(event.target.value)} placeholder="e.g. Lead Security Architect" aria-invalid={Boolean(formError && !newTitle.trim())} aria-describedby={formError && !newTitle.trim() ? "application-title-error" : undefined} />
+            </Field>
+            <Field id="application-company" label="Company" required error={formError && !newCompany.trim() ? "Enter a company name." : undefined}>
+              <Input id="application-company" value={newCompany} onChange={(event) => setNewCompany(event.target.value)} placeholder="e.g. CloudMesh Cyber" aria-invalid={Boolean(formError && !newCompany.trim())} aria-describedby={formError && !newCompany.trim() ? "application-company-error" : undefined} />
+            </Field>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field id="application-domain" label="Discipline">
+                <Select id="application-domain" value={newDomain} onChange={(event) => setNewDomain(event.target.value as DomainType)}>
+                  <option value="AI">AI & Machine Learning</option>
+                  <option value="Security">Cybersecurity</option>
+                  <option value="Governance">Governance & GRC</option>
+                  <option value="IT">IT Infrastructure</option>
+                </Select>
+              </Field>
+              <Field id="application-salary" label="Target salary" hint="Optional; use the format meaningful to you.">
+                <Input id="application-salary" value={newSalary} onChange={(event) => setNewSalary(event.target.value)} placeholder="e.g. £120k" />
+              </Field>
+            </div>
+            <Field id="application-url" label="Application URL" hint="Optional; add the employer or ATS link.">
+              <Input id="application-url" type="url" value={newUrl} onChange={(event) => setNewUrl(event.target.value)} placeholder="https://…" />
+            </Field>
+          </form>
+        </DialogShell>
       )}
 
     </div>

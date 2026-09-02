@@ -2,7 +2,7 @@
 
 Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data and stores candidate information primarily on the current device.
 
-The current milestone is **Vecta v0.4.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
+The current milestone is **Vecta v0.5.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. In Vecta, your experience, evidence, and ambitions come together to carry your career forward with clarity.
 
@@ -109,6 +109,8 @@ Always review drafts before use. Do not retain a statement that is not supported
 Open **Pipeline** to manage applications across Saved, Drafting, Applied, Screening, Interviewing, Offer, and Archived stages. Pipeline state is stored on this device in the current prototype.
 
 When the pipeline is empty, use **Add application** or return to Jobs and track a role. Export remains unavailable until the pipeline contains at least one record.
+
+When adding an application manually, job title and company are required. Missing fields are identified beside their controls. Use **Cancel**, the close button, or Escape to leave the dialog without adding a record.
 
 ## 7. Switch demo personas
 

@@ -32,7 +32,7 @@ Before presenting these features as production-ready, the product still needs re
 | Priority | Workstream | Current state | What remains |
 | ---: | --- | --- | --- |
 | 1 | Fit and profile reliability | Active | Real-world résumé fixtures and ongoing measured taxonomy maintenance. |
-| 2 | UI and delivery hardening | Active | Remaining error/loading states, accessibility and responsive checks, repository lint cleanup, and a Sites-compatible deployment output. |
+| 2 | UI and delivery hardening | Active | Remaining loading/error/success states, accessibility and responsive checks, repository lint cleanup, and a Sites-compatible deployment output. |
 | 3 | Accounts, user management, and admin operations | Not started | Authentication, self-service account management, role-based authorization, server-owned records, an auditable admin workbench, cross-device recovery, and complete export/erasure. |
 | 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
 | 5 | Grounded application assistance | Not started | Evidence-grounded generation, user review, version history, and audit records. |
@@ -54,10 +54,12 @@ Before presenting these features as production-ready, the product still needs re
 - [x] Cover the first role-search-to-pipeline journey in Chromium.
 - [x] Introduce shared button, panel, badge, and empty-state foundations and use them across Jobs, Pipeline, Companies, and Market.
 - [x] Add a single recovery-oriented empty pipeline state, clearer Companies/Market empty results, global visible focus, and semantic fit/archetype controls.
+- [x] Add shared input, textarea, select, field, and dialog foundations; apply them to profile onboarding and manually tracked applications.
+- [x] Add explicit application-field validation, Escape dismissal, focus restoration, labelled dialog descriptions, and normalized saved values.
 
 ### Remaining
 
-- Extend the shared foundations to inputs, dialogs, and remaining legacy controls.
+- Extend the shared foundations to remaining legacy controls and overlays.
 - Add skeleton, error, and success states to Companies, Market, Pipeline, profile, and governance workflows.
 - Review keyboard access, focus states, semantic headings, contrast, and screen-reader labels.
 - Run mobile, tablet, and desktop usability checks on Jobs, Companies, Market, and Pipeline.
@@ -225,11 +227,12 @@ Before presenting these features as production-ready, the product still needs re
 
 ## Immediate next sprint
 
-1. Extend shared foundations to inputs and dialogs, then finish error, loading, success, focus, and responsive states.
-2. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-3. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
-4. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
-5. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
+1. Add loading, error, and success states across Companies, Market, Pipeline, profile, and governance workflows.
+2. Extend shared foundations to remaining legacy controls and overlays, then finish responsive and keyboard audits.
+3. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
+4. Correct remaining product language around curated jobs, deterministic drafting, database sync, and compliance.
+5. Choose and implement the production hosting path; the current standard Next.js output is not compatible with the configured Sites bundle contract.
+6. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
 
 ### Dependencies and decisions
 
