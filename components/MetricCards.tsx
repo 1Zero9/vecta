@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Sparkles, ShieldCheck, CheckCircle2, Cpu, Scale, ArrowUpRight, UserRound } from "lucide-react";
-import { DomainType } from "@/lib/types";
+import { DomainType, WorkspaceTab } from "@/lib/types";
 
 interface MetricCardsProps {
   totalCompanies: number;
@@ -14,7 +14,7 @@ interface MetricCardsProps {
   pipelineCount: number;
   activeDomainFilter: DomainType | "ALL";
   setDomainFilter: (domain: DomainType | "ALL") => void;
-  setActiveTab: (tab: "jobs" | "radar" | "recruiter" | "pipeline" | "governance") => void;
+  setActiveTab: (tab: WorkspaceTab) => void;
   openGovernance: () => void;
   openProfileOnboarding: () => void;
   profileCompletion: number;

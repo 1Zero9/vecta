@@ -24,7 +24,7 @@ The owner can alternatively use the private [hosted preview](https://vecta-caree
 
 **Say:** “Vecta helps specialist candidates move from scattered career information to a clear, evidence-led decision: which role fits, why it fits, what is missing, and what to do next.”
 
-Point out **Vecta v0.10.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
+Point out **Vecta v0.11.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
 
 ### 2. Establish the candidate context — 60 seconds
 
@@ -85,6 +85,7 @@ Do not present the prototype as having capabilities that are not implemented:
 - Browser storage is the primary candidate store; production authentication and durable multi-device ownership are not implemented.
 - The hosted preview keeps the same local-first model. Its optional synchronization endpoints do not persist data because the prototype SQLite adapter is intentionally excluded from the worker bundle.
 - The profile switcher is not production user management, and there is no production admin workbench yet.
+- Vecta is for people searching for roles. It does not provide recruiter, employer, or vacancy-publishing accounts.
 - Image-only or scanned PDFs require manual text entry because OCR is not included.
 - Governance screens demonstrate product intent and local controls; they are not certification of legal or regulatory compliance.
 

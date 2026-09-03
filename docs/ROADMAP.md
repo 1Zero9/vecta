@@ -2,7 +2,7 @@
 
 This roadmap turns Vecta from a strong interactive prototype into a trustworthy, useful recruitment product. Work is ordered by user value and dependency, rather than speculative dates.
 
-**Last reconciled:** 2 September 2026
+**Last reconciled:** 3 September 2026
 
 ## Product direction
 
@@ -12,7 +12,7 @@ Vecta should help specialist candidates answer three questions with less effort:
 2. Why am I a good fit, and where are the gaps?
 3. What is the next useful action for each application?
 
-The near-term focus is the candidate experience. Recruiter and enterprise workflows remain valuable, but should follow a reliable jobs, profile, fit, and pipeline foundation.
+Vecta is a candidate product: people use it to find roles and manage their own career search. Vacancy publishing and recruiter workspaces are outside the product boundary. A separate administrator workbench will support Vecta operations.
 
 ## Current foundation
 
@@ -33,10 +33,10 @@ Before presenting these features as production-ready, the product still needs re
 | ---: | --- | --- | --- |
 | 1 | Fit and profile reliability | Active | Real-world résumé fixtures and ongoing measured taxonomy maintenance. |
 | 2 | UI and delivery hardening | Active | Remaining legacy controls, accessibility and responsive checks, and repository lint cleanup. The owner-only hosted preview is operational. |
-| 3 | Accounts, user management, and admin operations | Not started | Authentication, self-service account management, role-based authorization, server-owned records, an auditable admin workbench, cross-device recovery, and complete export/erasure. |
+| 3 | Accounts, user management, and admin operations | In progress | Product roles and security boundaries are defined; authenticated identity, server-owned records, the auditable admin workbench, cross-device recovery, and complete export/erasure remain. |
 | 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
 | 5 | Grounded application assistance | Not started | Evidence-grounded generation, user review, version history, and audit records. |
-| 6 | Market and recruiter expansion | Deferred | Sourced market data and a validated recruiter product boundary. |
+| 6 | Candidate market intelligence | Deferred | Sourced compensation and role-market data with provenance and useful candidate comparisons. |
 
 ## Phase 1 — UI foundation and product clarity
 
@@ -126,15 +126,15 @@ Before presenting these features as production-ready, the product still needs re
 
 **Goal:** Make Vecta safe to use across sessions and devices, while giving users control of their accounts and operators the minimum tools needed to support the service.
 
-**Status:** Not started. The current account modal switches demonstration personas and must not be treated as production user management.
+**Status:** In progress. The User/Administrator boundary and first device-local account state are defined in [ACCOUNT_ADMIN_ARCHITECTURE.md](ACCOUNT_ADMIN_ARCHITECTURE.md). Authenticated identity and durable ownership remain unimplemented.
 
 ### Identity and access
 
-- Add Auth.js or Supabase Auth with Google, GitHub, and magic-link sign-in.
-- Define candidate, recruiter, auditor, and administrator permissions.
+- Use the Sites-provided authenticated subject for the private hosted product; confirm a separate external identity path before any public standalone launch.
+- Keep exactly two access roles: User and Administrator. Career discipline is profile data, not permission data.
 - Add email verification, session management, recovery, optional MFA, rate limits, and abuse protection.
 - Enforce least-privilege role checks on the server rather than relying on hidden interface controls.
-- Support tenant or organisation membership only after its ownership model is defined.
+- Do not introduce employer, recruiter, tenant, or organisation workflows into the candidate product.
 
 ### User management system
 
@@ -146,18 +146,18 @@ Before presenting these features as production-ready, the product still needs re
 
 ### Admin system and workbench
 
-- Build a separate admin-only workspace with user search, account status, roles, memberships, verification state, and support history.
+- Build a separate admin-only workspace with user search, account status, verification state, and support history.
 - Allow authorised operators to suspend, restore, or restrict accounts; revoke sessions; resend verification; and initiate approved recovery workflows.
 - Require a reason, audit entry, and elevated confirmation for high-impact actions. Avoid silent impersonation; use time-limited, visible support access only if it is later proven necessary.
-- Add role and permission management with protection against removing the final administrator or escalating beyond the operator’s own authority.
+- Add administrator assignment and permission management with protection against removing the final administrator or escalating beyond the operator’s own authority.
 - Provide operational queues for user reports, deletion/export requests, consent issues, stale-job reports, ingestion failures, and data-quality review.
 - Expose service-health summaries and job-ingestion status without leaking private candidate data.
 - Record immutable audit events for administrator access, searches, exports, role changes, suspensions, recovery actions, and data operations.
 
 ### Durable candidate data and pipeline
 
-- Move saved jobs, favourites, profiles, applications, notes, and consent records to server-owned storage.
-- Add tenant boundaries and authorization checks to every mutation.
+- Move saved jobs, favourites, profiles, applications, notes, and consent records to server-owned D1 storage, with R2 reserved for résumé files and other blobs.
+- Add authenticated ownership and authorization checks to every query and mutation.
 - Implement genuine account export and deletion across browser and database storage.
 - Add application reminders, activity history, follow-up dates, and archive/reopen actions.
 
@@ -207,16 +207,15 @@ Before presenting these features as production-ready, the product still needs re
 - Users can see which profile evidence supported each draft.
 - Drafting failures degrade gracefully without blocking job and pipeline workflows.
 
-## Phase 6 — Market and recruiter intelligence
+## Phase 6 — Candidate market intelligence
 
-**Goal:** Expand beyond the candidate core once the underlying data is credible.
+**Goal:** Help users make better career decisions once the underlying market data is credible.
 
 ### Scope
 
 - Add sourced compensation datasets with geography, currency, sample size, and update date.
 - Build salary distributions, location comparisons, and purchasing-power views.
-- Validate recruiter workflows and decide whether they belong in the same product or a separate workspace.
-- Add structured hiring rubrics and calibration packs with explicit provenance.
+- Add candidate-oriented role archetypes and interview preparation patterns with explicit provenance.
 - Explore semantic job search only after normalized job and profile data are established.
 
 ## Delivery sequence
@@ -226,15 +225,15 @@ Before presenting these features as production-ready, the product still needs re
 | 1 | Finish UI foundation and accessibility | Active hardening | M |
 | 2 | Profile onboarding and résumé ingest | Feature slice complete | L |
 | 3 | Explainable fit engine | Active hardening | L |
-| 4 | Accounts, user management, admin workbench, and durable data | Not started | XL |
+| 4 | Accounts, user management, admin workbench, and durable data | In progress | XL |
 | 5 | Verified ATS ingestion | Not started | XL |
 | 6 | Grounded application assistance | Not started | L |
-| 7 | Market and recruiter expansion | Deferred | XL |
+| 7 | Candidate market intelligence | Deferred | L |
 
 ## Immediate next sprint
 
 1. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-2. Define the production data model, authentication choice, user-management boundaries, administrator roles, and admin-workbench action matrix before adding more persistent features.
+2. Implement authenticated Sites identity and the initial D1 user record defined in `ACCOUNT_ADMIN_ARCHITECTURE.md`, with server-side ownership and authorization tests.
 3. Clean up the repository-wide lint baseline and make it a release quality gate.
 4. Extend state-specific handling when real network-backed Companies, Market, profile, and governance workflows are introduced.
 5. Test the Prisma major-version migration needed to clear the current development-only dependency advisory chain.
@@ -252,4 +251,4 @@ Before presenting these features as production-ready, the product still needs re
 - **Assist, do not impersonate:** Never invent achievements on a candidate’s behalf.
 - **Provenance by default:** Jobs, salary data, and generated claims need visible sources.
 - **Privacy is a system property:** Export and erasure must cover every storage layer.
-- **Candidate core first:** Add recruiter complexity only when it strengthens the primary experience.
+- **Candidate product:** Every user-facing workflow helps a person find and manage their own role opportunities.

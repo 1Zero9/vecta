@@ -1,6 +1,7 @@
 import { ApplicationTrack, CandidateProfile, UserAccount, ConsentSettings } from "./types";
 import { SKILL_TAXONOMY_VERSION } from "./skillTaxonomy";
 import { APP_VERSION, EXPORT_SCHEMA_VERSION } from "./version";
+import { normalizeAccountRole } from "./accountRole";
 
 const FAVOURITES_KEY = "vecta_favourite_companies";
 const SAVED_JOBS_KEY = "vecta_saved_jobs";
@@ -13,7 +14,7 @@ export const DEFAULT_USER: UserAccount = {
   id: "user-alex-01",
   name: "Alex Mercer",
   email: "alex.mercer@vector-talent.io",
-  role: "Candidate",
+  role: "User",
   avatar: "AM",
   isDemo: true,
   activePersonaId: "alex-ai-sec",
@@ -25,7 +26,7 @@ export const DEMO_PERSONAS: Record<string, { user: UserAccount; profile: Candida
       id: "user-alex-01",
       name: "Alex Mercer",
       email: "alex.mercer@vector-talent.io",
-      role: "Candidate",
+      role: "User",
       avatar: "AM",
       isDemo: true,
       activePersonaId: "alex-ai-sec",
@@ -52,7 +53,7 @@ Experience:
       id: "user-elena-02",
       name: "Elena Beaumont",
       email: "elena.beaumont@vector-talent.io",
-      role: "Auditor / GRC Lead",
+      role: "User",
       avatar: "EB",
       isDemo: true,
       activePersonaId: "elena-grc",
@@ -78,7 +79,7 @@ Experience:
       id: "user-marcus-03",
       name: "Marcus Sterling",
       email: "marcus.sterling@vector-talent.io",
-      role: "Candidate",
+      role: "User",
       avatar: "MS",
       isDemo: true,
       activePersonaId: "marcus-it",
@@ -105,7 +106,9 @@ export function getStoredUser(): UserAccount {
   if (typeof window === "undefined") return DEFAULT_USER;
   try {
     const raw = localStorage.getItem(USER_KEY);
-    return raw ? JSON.parse(raw) : DEFAULT_USER;
+    if (!raw) return DEFAULT_USER;
+    const stored = JSON.parse(raw) as UserAccount & { role?: unknown };
+    return { ...stored, role: normalizeAccountRole(stored.role) };
   } catch (e) {
     return DEFAULT_USER;
   }

@@ -3,14 +3,12 @@
 import React from "react";
 import Image from "next/image";
 import { Briefcase, Compass, Users, Kanban, Search, Scale, ChevronDown } from "lucide-react";
-import { UserAccount } from "@/lib/types";
+import { UserAccount, WorkspaceTab } from "@/lib/types";
 import { APP_VERSION, PRODUCT_STAGE } from "@/lib/version";
 
-type Tab = "jobs" | "radar" | "recruiter" | "pipeline" | "governance";
-
 interface HeaderProps {
-  activeTab: Tab;
-  setActiveTab: (tab: Tab) => void;
+  activeTab: WorkspaceTab;
+  setActiveTab: (tab: WorkspaceTab) => void;
   currentUser: UserAccount;
   openCmdPalette: () => void;
   openUserManagement: () => void;
@@ -21,7 +19,7 @@ interface HeaderProps {
 const navigation = [
   { id: "jobs", label: "Jobs", icon: Briefcase },
   { id: "radar", label: "Companies", icon: Compass },
-  { id: "recruiter", label: "Market", icon: Users },
+  { id: "market", label: "Market", icon: Users },
   { id: "pipeline", label: "Pipeline", icon: Kanban },
 ] as const;
 

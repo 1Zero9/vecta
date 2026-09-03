@@ -47,13 +47,15 @@ describe("workspace overlays", () => {
     render(<UserManagementModal currentUser={DEFAULT_USER} isOpen onClose={vi.fn()} onSelectPersona={vi.fn()} onSaveCustomUser={onSaveCustomUser} onOpenGovernance={vi.fn()} />);
 
     expect(screen.getByRole("dialog", { name: "Profiles on this device" })).toBeDefined();
+    expect(screen.getByText("Device-local preview")).toBeDefined();
+    expect(screen.queryByText(/Recruiter \/ Talent Lead/)).toBeNull();
     await user.click(screen.getByRole("button", { name: "Create local profile" }));
     expect(screen.getByRole("dialog", { name: "Create a local profile" })).toBeDefined();
     await user.type(screen.getByRole("textbox", { name: "Full name" }), "Jordan Smith");
     await user.type(screen.getByRole("textbox", { name: "Email address" }), "jordan@example.com");
     await user.click(screen.getByRole("button", { name: "Save and switch profile" }));
     expect(onSaveCustomUser).toHaveBeenCalledWith(
-      expect.objectContaining({ name: "Jordan Smith", email: "jordan@example.com" }),
+      expect.objectContaining({ name: "Jordan Smith", email: "jordan@example.com", role: "User" }),
       expect.objectContaining({ full_name: "Jordan Smith" }),
     );
   });

@@ -1,5 +1,9 @@
 export type DomainType = "AI" | "Security" | "Governance" | "IT";
 
+export type AccountRole = "User" | "Administrator";
+
+export type WorkspaceTab = "jobs" | "radar" | "market" | "pipeline" | "governance";
+
 export type ScaleTier = "Startup (1-20)" | "Scaleup (20-100)" | "Mid-Market (100-500)" | "Enterprise / FDI (500+)";
 
 export type WorkMode = "Remote" | "Hybrid" | "Onsite";
@@ -30,7 +34,7 @@ export interface UserAccount {
   id: string;
   name: string;
   email: string;
-  role: "Candidate" | "Recruiter" | "Auditor / GRC Lead";
+  role: AccountRole;
   avatar: string;
   isDemo: boolean;
   activePersonaId: "alex-ai-sec" | "elena-grc" | "marcus-it" | "custom";

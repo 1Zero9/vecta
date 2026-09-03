@@ -20,19 +20,19 @@ import {
   ChevronRight
 } from "lucide-react";
 
-interface RecruiterLookupProps {
+interface MarketInsightsProps {
   benchmarks: SalaryBenchmark[];
   archetypes: TalentArchetype[];
   activeDomain: DomainType | "ALL";
   setActiveDomain: (d: DomainType | "ALL") => void;
 }
 
-export function RecruiterLookup({
+export function MarketInsights({
   benchmarks,
   archetypes,
   activeDomain,
   setActiveDomain,
-}: RecruiterLookupProps) {
+}: MarketInsightsProps) {
   const [selectedArchetype, setSelectedArchetype] = useState<TalentArchetype | null>(
     archetypes.length > 0 ? archetypes[0] : null
   );
@@ -56,14 +56,14 @@ export function RecruiterLookup({
         <div className="max-w-3xl space-y-2 relative z-10">
           <div className="flex items-center gap-2">
             <Badge className="rounded-full border-emerald-200 bg-emerald-50 font-mono uppercase text-emerald-700">
-              Recruiter & Market Telemetry
+              Candidate market intelligence
             </Badge>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Compensation Benchmarks & Talent Archetypes
+            Compensation benchmarks & role archetypes
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Market compensation percentiles (P25 - P90), demanded skill matrices, and structured interview rubrics specifically verified for <span className="text-sky-700 font-semibold">AI/ML</span>, <span className="text-rose-700 font-semibold">Cybersecurity</span>, <span className="text-amber-700 font-semibold">Governance & GRC</span>, and <span className="text-indigo-700 font-semibold">IT Infrastructure</span>.
+            Compare curated compensation ranges, in-demand skills, and interview preparation patterns for <span className="text-sky-700 font-semibold">AI/ML</span>, <span className="text-rose-700 font-semibold">Cybersecurity</span>, <span className="text-amber-700 font-semibold">Governance & GRC</span>, and <span className="text-indigo-700 font-semibold">IT Infrastructure</span> roles.
           </p>
         </div>
 
@@ -230,24 +230,24 @@ export function RecruiterLookup({
         </div>
       </div>
 
-      {/* Section 2: Talent Archetypes & Hiring Rubrics */}
+      {/* Section 2: Role archetypes and interview preparation */}
       <div className="space-y-4 pt-6 border-t border-slate-200">
         <div className="flex items-center gap-2">
           <Users className="w-5 h-5 text-sky-700" />
           <h3 className="text-lg font-bold text-slate-900">
-            Talent Archetypes & Interview Rubrics
+            Role archetypes & interview preparation
           </h3>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* Left Column: Archetype selector list */}
+          {/* Left Column: Role archetype selector list */}
           <div className="space-y-2">
             {filteredArchetypes.length === 0 ? (
               <EmptyState
                 compact
                 icon={<Users className="h-5 w-5" />}
-                title="No talent archetype available"
+                title="No role archetype available"
                 description="Choose another discipline to view its interview rubric."
               />
             ) : filteredArchetypes.map((arch) => {
@@ -280,7 +280,7 @@ export function RecruiterLookup({
             })}
           </div>
 
-          {/* Right Column: Deep Archetype Blueprint */}
+          {/* Right Column: Detailed role blueprint */}
           {displayedArchetype && (
             <div className="lg:col-span-2 glass-panel rounded-3xl p-6 sm:p-8 border border-slate-200 space-y-6">
               
@@ -353,7 +353,7 @@ export function RecruiterLookup({
               <div className="space-y-3 pt-2">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                   <HelpCircle className="w-4 h-4 text-sky-700" />
-                  <span>High-Signal Interview Questions</span>
+                  <span>Interview preparation prompts</span>
                 </h4>
                 <div className="space-y-2">
                   {displayedArchetype.interview_question_samples.map((q, idx) => (

@@ -8,7 +8,7 @@ import { Header } from "@/components/Header";
 import { MetricCards } from "@/components/MetricCards";
 import { JobBoard } from "@/components/JobBoard";
 import { RadarTable } from "@/components/RadarTable";
-import { RecruiterLookup } from "@/components/RecruiterLookup";
+import { MarketInsights } from "@/components/MarketInsights";
 import { PipelineBoard } from "@/components/PipelineBoard";
 import { FitEvaluatorModal } from "@/components/FitEvaluatorModal";
 import { CopilotModal } from "@/components/CopilotModal";
@@ -36,6 +36,7 @@ import {
   ApplicationStage,
   CandidateProfile,
   UserAccount,
+  WorkspaceTab,
   ConsentSettings
 } from "@/lib/types";
 
@@ -62,7 +63,7 @@ const APPLICATION_STAGE_LABELS: Record<ApplicationStage, string> = {
   saved: "Saved / Evaluating",
   drafting: "Drafting & Tailoring",
   applied: "Applied / Submitted",
-  screening: "Recruiter Screen",
+  screening: "Initial Screen",
   interviewing: "Technical Interview",
   offer: "Offer / Negotiation",
   archived: "Archived",
@@ -70,7 +71,7 @@ const APPLICATION_STAGE_LABELS: Record<ApplicationStage, string> = {
 
 export default function Home() {
   // Navigation & View State
-  const [activeTab, setActiveTab] = useState<"jobs" | "radar" | "recruiter" | "pipeline" | "governance">("jobs");
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>("jobs");
   const [activeDomain, setActiveDomain] = useState<DomainType | "ALL">("ALL");
 
   // Data State
@@ -385,8 +386,8 @@ export default function Home() {
           />
         )}
 
-        {activeTab === "recruiter" && (
-          <RecruiterLookup
+        {activeTab === "market" && (
+          <MarketInsights
             benchmarks={benchmarks}
             archetypes={archetypes}
             activeDomain={activeDomain}

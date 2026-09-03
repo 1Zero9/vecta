@@ -4,13 +4,15 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
-Current identifiers are Vecta **v0.10.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
+Current identifiers are Vecta **v0.11.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
 
 The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
 
 The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. Candidate state is primarily device-local until authentication and durable ownership are implemented.
 
 `UserManagementModal` is currently a demonstration-persona switcher and local custom-profile form. It is not a production identity, user-management, or administrator system.
+
+Vecta has two future access roles: User and Administrator. Career discipline remains profile data; recruiter and employer vacancy-management workflows are outside the product. See [ACCOUNT_ADMIN_ARCHITECTURE.md](ACCOUNT_ADMIN_ARCHITECTURE.md).
 
 ## Runtime and build
 
@@ -57,6 +59,7 @@ flowchart TD
 | Interface foundations | `components/ui/*` | Shared buttons, panels, badges, empty states, form controls, field messaging, keyboard-contained dialog structure, loading skeletons, and status notices. |
 | Global search | `components/CommandPalette.tsx` | Cmd/Ctrl+K search, semantic quick navigation, and keyboard-accessible results. |
 | Local profiles | `components/UserManagementModal.tsx` | Honest demo-profile switching and local custom-profile setup; not production identity management. |
+| Account/admin boundary | `docs/ACCOUNT_ADMIN_ARCHITECTURE.md` | Product roles, authentication direction, owned records, admin action limits, and delivery slices. |
 | Workspace state | `app/loading.tsx`, `app/error.tsx`, `components/WorkspaceLoading.tsx` | Calm route/hydration loading and recoverable unexpected-error handling. |
 | Guided profile | `components/ProfileOnboardingModal.tsx` | Four-step candidate onboarding and final save boundary. |
 | Résumé review | `components/ResumeUploadReview.tsx` | File selection, extraction state, suggestions, and explicit apply action. |
@@ -122,7 +125,7 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
 - The Sites build aliases native Prisma to a worker-safe no-op. Optional API writes return `{ success: true, offline: true }`; durable hosted persistence remains Phase 3 work.
-- Vitest covers 57 domain, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, delivery-boundary, and component scenarios across seventeen test files.
+- Vitest covers 58 domain, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, delivery-boundary, and component scenarios across seventeen test files.
 - Four Playwright journeys cover role search and tracking, complete onboarding persistence, fit review with reversible corrections, and persisted pipeline-stage movement with visible confirmation.
 - Jobs, Companies, Market, and Pipeline have been checked at 360 px, 768 px, and 1440 px without document-level horizontal overflow. Search, local profiles, governance, fit review, application preparation, candidate profile, and onboarding now use shared dialogs that lock background scroll, contain Tab focus, close with Escape, and restore the invoking control.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).

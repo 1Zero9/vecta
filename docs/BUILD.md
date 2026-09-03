@@ -79,7 +79,7 @@ npx eslint --quiet \
 
 - Production build: passing.
 - Candidate Profile v1 focused lint: passing.
-- Automated unit and component suite: 57 tests across 17 files, passing.
+- Automated unit and component suite: 58 tests across 17 files, passing.
 - Playwright core workflows: 4 Chromium end-to-end tests, passing.
 - Current V8 coverage: 82.24% statements, 71.55% branches, 93.05% functions, and 87.06% lines across the selected domain modules. Skill normalization has 100% statement, branch, function, and line coverage.
 - Production dependency audit (`npm audit --omit=dev`): no known vulnerabilities. The full development audit reports three high-severity findings in Prisma CLI's `deepmerge-ts` chain; resolving them requires a separately tested Prisma major-version migration.
@@ -98,7 +98,7 @@ npx eslint --quiet \
 | Port 3000 is occupied | Use the alternative URL printed by `npm run dev`. |
 | Stale dependencies in a running dev server | Stop the server, run `npm ci`, and restart it. |
 | Sites build cannot find a Vite native binding | Use the supported Node.js version, reinstall with `npm ci`, and rerun `npm run build:sites`. |
-| Hosted profile or consent sync returns `offline: true` | Expected in v0.10.0: the Sites build excludes native SQLite and uses browser storage as the primary store. |
+| Hosted profile or consent sync returns `offline: true` | Expected in v0.11.0: the Sites build excludes native SQLite and uses browser storage as the primary store. |
 | Sites publish says the default `fetch` handler is missing | Confirm `@cloudflare/vite-plugin` is installed and registered for the `rsc` environment, then rebuild and save a new version. Do not retry the unchanged archive. |
 
 ## Release checklist

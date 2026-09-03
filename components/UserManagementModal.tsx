@@ -1,18 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, Cpu, Lock, ShieldCheck, Sparkles, UserCheck, UserPlus } from "lucide-react";
+import { ArrowLeft, Cpu, HardDrive, Lock, ShieldCheck, Sparkles, UserCheck, UserPlus } from "lucide-react";
 import { CandidateProfile, UserAccount } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogShell } from "@/components/ui/dialog-shell";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { StatusNotice } from "@/components/ui/status-notice";
 
 type PersonaKey = "alex-ai-sec" | "elena-grc" | "marcus-it";
-type AccountRole = "Candidate" | "Recruiter" | "Auditor / GRC Lead";
 
 interface UserManagementModalProps {
   currentUser: UserAccount;
@@ -33,7 +31,6 @@ export function UserManagementModal({ currentUser, isOpen, onClose, onSelectPers
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customEmail, setCustomEmail] = useState("");
-  const [customRole, setCustomRole] = useState<AccountRole>("Candidate");
 
   if (!isOpen) return null;
 
@@ -48,21 +45,20 @@ export function UserManagementModal({ currentUser, isOpen, onClose, onSelectPers
       id: `user-custom-${Date.now()}`,
       name,
       email,
-      role: customRole,
+      role: "User",
       avatar: initials || "CU",
       isDemo: false,
       activePersonaId: "custom",
     };
     const profile: CandidateProfile = {
       full_name: name,
-      current_title: `${customRole} Specialist`,
+      current_title: "",
       primary_domain: "AI",
-      years_experience: 5,
-      skills: ["Python", "Cloud Architecture", "Security Controls", "Data Pipelines"],
-      certifications: ["Industry Certified"],
-      target_salary_min: 110000,
-      preferred_work_mode: "Hybrid",
-      resume_text: `${name} - ${customRole} Specialist with a background in technology systems.`,
+      years_experience: 0,
+      skills: [],
+      certifications: [],
+      preferred_work_mode: "Any",
+      resume_text: "",
     };
 
     onSaveCustomUser(user, profile);
@@ -109,13 +105,9 @@ export function UserManagementModal({ currentUser, isOpen, onClose, onSelectPers
               <Input id="custom-profile-email" type="email" required value={customEmail} onChange={(event) => setCustomEmail(event.target.value)} placeholder="jordan@example.com" />
             </Field>
           </div>
-          <Field id="custom-profile-role" label="Profile role">
-            <Select id="custom-profile-role" value={customRole} onChange={(event) => setCustomRole(event.target.value as AccountRole)}>
-              <option value="Candidate">Candidate</option>
-              <option value="Recruiter">Recruiter / Talent Lead</option>
-              <option value="Auditor / GRC Lead">Auditor / GRC Lead</option>
-            </Select>
-          </Field>
+          <StatusNotice tone="info" title="One product role">
+            Every local profile represents a person using Vecta to discover roles and manage their own career search.
+          </StatusNotice>
           <div className="flex justify-end gap-2 border-t border-slate-200 pt-4">
             <Button onClick={() => setIsCreatingCustom(false)}>Cancel</Button>
             <Button type="submit" variant="primary">Save and switch profile</Button>
@@ -132,7 +124,19 @@ export function UserManagementModal({ currentUser, isOpen, onClose, onSelectPers
                   <p className="truncate font-semibold text-slate-900">{currentUser.name}</p>
                   {currentUser.isDemo && <Badge className="border-emerald-200 bg-emerald-50 text-emerald-700">Demo profile</Badge>}
                 </div>
-                <p className="truncate text-xs text-slate-500">{currentUser.email} · {currentUser.role}</p>
+                <p className="truncate text-xs text-slate-500">{currentUser.email} · Vecta user</p>
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="account-status-heading" className="rounded-2xl border border-blue-100 bg-blue-50/60 p-4">
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-blue-700 shadow-sm">
+                <HardDrive className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <div>
+                <h3 id="account-status-heading" className="text-sm font-semibold text-slate-900">Device-local preview</h3>
+                <p className="mt-1 text-xs leading-5 text-slate-600">This profile and its career data are stored in this browser. Secure sign-in, recovery, and cross-device access are the next account milestone.</p>
               </div>
             </div>
           </section>

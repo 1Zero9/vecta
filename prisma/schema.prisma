@@ -11,7 +11,7 @@ model User {
   id           String        @id @default(cuid())
   email        String        @unique
   name         String
-  role         String        @default("Candidate") // "Candidate" | "Recruiter" | "Admin"
+  role         String        @default("User") // "User" | "Administrator"
   avatar       String?
   isDemo       Boolean       @default(false)
   createdAt    DateTime      @default(now())

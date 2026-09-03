@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { exportAllUserData, getStoredProfile, saveStoredProfile, wipeAllUserData } from "@/lib/storage";
+import { exportAllUserData, getStoredProfile, getStoredUser, saveStoredProfile, wipeAllUserData } from "@/lib/storage";
 import { makeProfile } from "./fixtures";
 
 class MemoryStorage implements Storage {
@@ -47,6 +47,20 @@ describe("profile storage", () => {
     expect(hydrated.skill_match_overrides).toEqual([]);
   });
 
+  it("migrates legacy product roles to a standard user", () => {
+    localStorage.setItem("vecta_active_user", JSON.stringify({
+      id: "legacy-user",
+      name: "Legacy Profile",
+      email: "legacy@example.com",
+      role: "Recruiter",
+      avatar: "LP",
+      isDemo: false,
+      activePersonaId: "custom",
+    }));
+
+    expect(getStoredUser().role).toBe("User");
+  });
+
   it("includes evidence in export and removes it during erasure", () => {
     saveStoredProfile(makeProfile({
       evidence: [{ id: "evidence-1", type: "Project", title: "Migration", description: "Moved the platform.", claims: ["AWS"] }],
@@ -55,7 +69,7 @@ describe("profile storage", () => {
     expect(exported.profile.evidence).toHaveLength(1);
     expect(exported).toMatchObject({
       schemaVersion: 1,
-      appVersion: "0.10.0",
+      appVersion: "0.11.0",
       skillTaxonomyVersion: "1.1.0",
     });
     wipeAllUserData();

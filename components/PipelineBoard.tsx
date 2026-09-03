@@ -37,7 +37,7 @@ const STAGES: { id: ApplicationStage; label: string; color: string; border: stri
   { id: "saved", label: "Saved / Evaluating", color: "bg-slate-100 text-slate-600", border: "border-slate-700" },
   { id: "drafting", label: "Drafting & Tailoring", color: "bg-sky-50 text-sky-700", border: "border-cyan-500/30" },
   { id: "applied", label: "Applied / Submitted", color: "bg-blue-950/60 text-blue-400", border: "border-blue-500/30" },
-  { id: "screening", label: "Recruiter Screen", color: "bg-indigo-950/60 text-indigo-700", border: "border-indigo-500/30" },
+  { id: "screening", label: "Initial Screen", color: "bg-indigo-950/60 text-indigo-700", border: "border-indigo-500/30" },
   { id: "interviewing", label: "Technical Interview", color: "bg-amber-50 text-amber-700", border: "border-amber-500/30" },
   { id: "offer", label: "Offer / Negotiation", color: "bg-emerald-50 text-emerald-700", border: "border-emerald-500/40" },
 ];

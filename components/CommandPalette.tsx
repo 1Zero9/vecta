@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Job, Company, SalaryBenchmark } from "@/lib/types";
+import { Job, Company, SalaryBenchmark, WorkspaceTab } from "@/lib/types";
 import { 
   Search, 
   Briefcase, 
@@ -22,7 +22,7 @@ interface CommandPaletteProps {
   companies: Company[];
   benchmarks: SalaryBenchmark[];
   onSelectJob: (job: Job) => void;
-  setActiveTab: (tab: "jobs" | "radar" | "recruiter" | "pipeline" | "governance") => void;
+  setActiveTab: (tab: WorkspaceTab) => void;
   openProfileDrawer: () => void;
 }
 
@@ -158,7 +158,7 @@ export function CommandPalette({
               <Button
                 variant="ghost"
                 onClick={() => {
-                  setActiveTab("recruiter");
+                  setActiveTab("market");
                   onClose();
                 }}
                 className="h-auto w-full justify-between px-3 py-2.5 text-left"
@@ -270,7 +270,7 @@ export function CommandPalette({
                   variant="ghost"
                   key={b.id}
                   onClick={() => {
-                    setActiveTab("recruiter");
+                    setActiveTab("market");
                     onClose();
                   }}
                   className="h-auto w-full justify-between p-2.5 text-left"

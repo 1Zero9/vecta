@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import type { CandidateProfile, ConsentSettings, UserAccount } from "@/lib/types";
+import { normalizeAccountRole } from "@/lib/accountRole";
 
 export interface SynchronizedProfile {
   user: Omit<UserAccount, "activePersonaId">;
@@ -19,7 +20,7 @@ export async function loadSynchronizedProfile(email: string): Promise<Synchroniz
       id: dbUser.id,
       name: dbUser.name,
       email: dbUser.email,
-      role: dbUser.role as UserAccount["role"],
+      role: normalizeAccountRole(dbUser.role),
       avatar: dbUser.avatar || "AM",
       isDemo: dbUser.isDemo,
     },
