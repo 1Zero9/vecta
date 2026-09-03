@@ -214,7 +214,7 @@ export function GovernanceModal({
                   Data Minimization & Local-First Architecture
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Your résumé text, profile, and pipeline are primarily stored in this browser. A developer may configure optional Prisma synchronization; the prototype does not yet provide authenticated accounts, tenant isolation, retention operations, or a complete server-side erasure workflow.
+                  Your pipeline and saved items are stored in this browser. On the private hosted preview, a signed-in user can explicitly copy a reviewed profile, résumé text, evidence, preferences, and fit corrections to a protected D1 account. These controls do not yet export or erase that protected copy.
                 </p>
               </div>
 
@@ -232,7 +232,7 @@ export function GovernanceModal({
                       Download local data
                     </div>
                     <p className="text-[11px] text-slate-400">
-                      Download a complete machine-readable JSON copy of your profile, saved jobs, pipeline records, and consent history.
+                      Download a machine-readable JSON copy of this browser’s profile, saved jobs, pipeline records, and consent history. It does not include a protected account copy.
                     </p>
                     <button
                       onClick={handleExportData}
@@ -249,7 +249,7 @@ export function GovernanceModal({
                       Erase local Vecta data
                     </div>
                     <p className="text-[11px] text-slate-400">
-                      Delete the current browser’s Vecta profile, résumé text, pipeline records, saved items, and privacy acknowledgement.
+                      Delete this browser’s Vecta profile, résumé text, pipeline records, saved items, and privacy acknowledgement. A protected account copy is not deleted.
                     </p>
                     
                     {!showWipeConfirm ? (

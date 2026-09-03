@@ -59,6 +59,7 @@ import {
 } from "@/lib/storage";
 import { getProfileCompletion } from "@/lib/profileCompletion";
 import { addJobToPipeline } from "@/lib/pipeline";
+import { profilesAreEquivalent, type ProfileProtectionState } from "@/lib/profileProtection";
 
 const APPLICATION_STAGE_LABELS: Record<ApplicationStage, string> = {
   saved: "Saved / Evaluating",
@@ -89,6 +90,8 @@ export default function Home() {
   const [savedJobIds, setSavedJobIds] = useState<string[]>([]);
   const [pipeline, setPipeline] = useState<ApplicationTrack[]>([]);
   const [authenticatedAccount, setAuthenticatedAccount] = useState<AuthenticatedAccount | null>(null);
+  const [protectedProfile, setProtectedProfile] = useState<CandidateProfile | null>(null);
+  const [profileProtectionState, setProfileProtectionState] = useState<ProfileProtectionState>("unavailable");
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Modals & Drawers
@@ -114,28 +117,59 @@ export default function Home() {
   // Hydrate persistent state on client mount
   useEffect(() => {
     let cancelled = false;
-    setCurrentUser(getStoredUser());
-    setProfile(getStoredProfile());
+    const storedUser = getStoredUser();
+    const storedProfile = getStoredProfile();
+    setCurrentUser(storedUser);
+    setProfile(storedProfile);
     setConsent(getStoredConsent());
     setFavouriteCompanyIds(getStoredFavourites());
     setSavedJobIds(getStoredSavedJobs());
     setPipeline(getStoredPipeline());
     setIsHydrated(true);
 
-    fetch("/api/account", { method: "POST" })
-      .then(async (response) => response.ok ? response.json() : null)
-      .then((payload) => {
-        if (!cancelled && payload?.authenticated && payload.account) {
-          setAuthenticatedAccount(payload.account as AuthenticatedAccount);
-        }
-      })
-      .catch(() => undefined);
+    void (async () => {
+      try {
+        const accountResponse = await fetch("/api/account", { method: "POST" });
+        const accountPayload = accountResponse.ok ? await accountResponse.json() : null;
+        if (cancelled || !accountPayload?.authenticated || !accountPayload.account) return;
+
+        const account = accountPayload.account as AuthenticatedAccount;
+        setAuthenticatedAccount(account);
+        if (!account.persisted) return;
+
+        setProfileProtectionState("checking");
+        const profileResponse = await fetch("/api/profile");
+        if (!profileResponse.ok) throw new Error("Protected profile unavailable.");
+        const profilePayload = await profileResponse.json();
+        if (cancelled) return;
+
+        const remoteProfile = profilePayload.profile as CandidateProfile | null;
+        setProtectedProfile(remoteProfile);
+        setProfileProtectionState(
+          remoteProfile
+            ? profilesAreEquivalent(storedProfile, remoteProfile) ? "protected" : "conflict"
+            : "local-only",
+        );
+      } catch {
+        if (!cancelled) setProfileProtectionState("error");
+      }
+    })();
 
     return () => {
       cancelled = true;
       if (notificationTimeout.current) clearTimeout(notificationTimeout.current);
     };
   }, []);
+
+  const reconcileProfileProtection = (nextProfile: CandidateProfile) => {
+    if (!authenticatedAccount?.persisted) {
+      setProfileProtectionState("unavailable");
+    } else if (!protectedProfile) {
+      setProfileProtectionState("local-only");
+    } else {
+      setProfileProtectionState(profilesAreEquivalent(nextProfile, protectedProfile) ? "protected" : "conflict");
+    }
+  };
 
   // Switch demo persona
   const handleSelectPersona = (personaKey: "alex-ai-sec" | "elena-grc" | "marcus-it") => {
@@ -145,6 +179,7 @@ export default function Home() {
       setProfile(chosen.profile);
       saveStoredUser(chosen.user);
       saveStoredProfile(chosen.profile);
+      reconcileProfileProtection(chosen.profile);
       showToast(`Switched active account to ${chosen.user.name} (${chosen.profile.primary_domain})`);
 
       // Optionally sync to Prisma API in background
@@ -161,6 +196,7 @@ export default function Home() {
     setProfile(newProfile);
     saveStoredUser(newUser);
     saveStoredProfile(newProfile);
+    reconcileProfileProtection(newProfile);
     showToast(`Account created & switched to ${newUser.name}`);
 
     // Sync to Prisma
@@ -278,6 +314,7 @@ export default function Home() {
   const handleSaveProfile = (newProfile: CandidateProfile) => {
     setProfile(newProfile);
     saveStoredProfile(newProfile);
+    reconcileProfileProtection(newProfile);
     showToast("Profile and vector match weights updated.");
   };
 
@@ -298,6 +335,7 @@ export default function Home() {
     const updatedProfile = { ...profile, skill_match_overrides };
     setProfile(updatedProfile);
     saveStoredProfile(updatedProfile);
+    reconcileProfileProtection(updatedProfile);
     showToast(decision ? "Vector Match correction saved." : "Vector Match correction removed.");
   };
 
@@ -308,7 +346,49 @@ export default function Home() {
     setSavedJobIds([]);
     setPipeline([]);
     setConsent(null);
+    reconcileProfileProtection(DEMO_PERSONAS["alex-ai-sec"].profile);
     showToast("All user telemetry, resume text, and pipeline records permanently erased.");
+  };
+
+  const handleProtectProfile = async () => {
+    setProfileProtectionState("saving");
+    try {
+      const response = await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile }),
+      });
+      if (!response.ok) throw new Error("Profile save failed.");
+      const payload = await response.json();
+      const savedProfile = payload.profile as CandidateProfile;
+      setProtectedProfile(savedProfile);
+      setProfileProtectionState("protected");
+      showToast("Career profile copied to your protected account.");
+    } catch {
+      setProfileProtectionState("error");
+      showToast("The protected profile could not be updated. Your device copy is unchanged.", "info");
+    }
+  };
+
+  const handleUseProtectedProfile = () => {
+    if (!protectedProfile || !authenticatedAccount) return;
+    const name = protectedProfile.full_name || authenticatedAccount.name || authenticatedAccount.email;
+    const initials = name.split(/\s+/).map((part) => part[0]).join("").toUpperCase().slice(0, 2);
+    const linkedUser: UserAccount = {
+      id: `protected-${authenticatedAccount.id}`,
+      name,
+      email: authenticatedAccount.email,
+      role: "User",
+      avatar: initials || "VU",
+      isDemo: false,
+      activePersonaId: "custom",
+    };
+    setCurrentUser(linkedUser);
+    setProfile(protectedProfile);
+    saveStoredUser(linkedUser);
+    saveStoredProfile(protectedProfile);
+    setProfileProtectionState("protected");
+    showToast("Protected career profile restored to this device.");
   };
 
   // Counts for metric cards
@@ -467,10 +547,15 @@ export default function Home() {
       <UserManagementModal
         currentUser={currentUser}
         authenticatedAccount={authenticatedAccount}
+        profile={profile}
+        protectedProfile={protectedProfile}
+        profileProtectionState={profileProtectionState}
         isOpen={isUserManagementOpen}
         onClose={() => setIsUserManagementOpen(false)}
         onSelectPersona={handleSelectPersona}
         onSaveCustomUser={handleSaveCustomUser}
+        onProtectProfile={handleProtectProfile}
+        onUseProtectedProfile={handleUseProtectedProfile}
         onOpenGovernance={() => setIsGovernanceModalOpen(true)}
       />
 

@@ -1,8 +1,8 @@
 # Vecta User Guide
 
-Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data and stores candidate information primarily on the current device.
+Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data. Browser storage remains the working copy; the private hosted preview can also protect a reviewed career profile under its signed-in account.
 
-The current milestone is **Vecta v0.12.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
+The current milestone is **Vecta v0.13.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. In Vecta, your experience, evidence, and ambitions come together to carry your career forward with clarity.
 
@@ -122,7 +122,13 @@ Vecta confirms stage changes, saved notes, and removals in a short status messag
 
 Use the profile control in the header to switch between the included demonstration profiles or create a custom local profile. Switching profiles recalculates role comparisons. The dialog keeps keyboard focus inside while open, closes with Escape, and returns focus to the profile control.
 
-This is a local prototype profile switcher, not a production account-management system. On the private hosted preview, this panel also confirms when the signed-in visitor has a protected Vecta account record. Career profiles remain on the current device until the next migration milestone. Vecta has no recruiter or vacancy-publisher account type; session management, account recovery, and administrator support tools remain roadmap work.
+This is still a prototype profile switcher, not a complete account-management system. On the private hosted preview, the panel confirms the signed-in Vecta account and shows one of these protected-profile states:
+
+- **Protected career profile:** the device and protected copies match.
+- **Protected career profile:** no protected copy exists yet; review the summary and choose **Copy this profile to protected account** when ready.
+- **Choose which profile to keep:** the copies differ. Vecta preserves both until you choose one and confirm the replacement.
+
+The protected snapshot includes profile details, preferences, résumé text, evidence, and per-role fit corrections. Saved roles, favourites, applications, notes, and consent remain device-local. Vecta has no recruiter or vacancy-publisher account type; session management, account recovery, and administrator support tools remain roadmap work.
 
 Press **Cmd+K** on macOS or **Ctrl+K** elsewhere to open global search. Search results and quick navigation are standard keyboard-accessible actions; Tab moves through them and Escape closes the search.
 
@@ -133,11 +139,11 @@ The Governance area provides local-data controls:
 - **Export** downloads a JSON representation of the current user, profile, résumé text, evidence, pipeline, saved roles, favourites, and consent settings.
 - **Erase** removes those records from browser storage.
 
-These controls cover the current local prototype state. They should not be presented as a complete production data-subject workflow until authentication and server-owned storage are implemented.
+These controls cover only the current browser state. They do not export or delete a protected D1 profile copy. Do not present them as a complete production data-subject workflow until protected-account export, deletion, and retention handling are implemented.
 
 ## 9. Current limitations
 
-- No production authentication or multi-device profile ownership.
+- The private hosted preview has server-trusted identity and protected profile snapshots, but no standalone public authentication, recovery, automatic cross-device synchronization, or complete account data-rights workflow.
 - No OCR for scanned résumés.
 - No verified live job-ingestion service.
 - No external AI drafting service.

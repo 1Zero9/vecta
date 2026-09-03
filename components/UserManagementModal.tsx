@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, Cloud, Cpu, HardDrive, Lock, ShieldCheck, Sparkles, UserCheck, UserPlus } from "lucide-react";
+import { ArrowLeft, Cloud, CloudUpload, Cpu, HardDrive, Loader2, Lock, ShieldCheck, Sparkles, UserCheck, UserPlus } from "lucide-react";
 import { AuthenticatedAccount, CandidateProfile, UserAccount } from "@/lib/types";
+import type { ProfileProtectionState } from "@/lib/profileProtection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogShell } from "@/components/ui/dialog-shell";
@@ -15,10 +16,15 @@ type PersonaKey = "alex-ai-sec" | "elena-grc" | "marcus-it";
 interface UserManagementModalProps {
   currentUser: UserAccount;
   authenticatedAccount?: AuthenticatedAccount | null;
+  profile: CandidateProfile;
+  protectedProfile?: CandidateProfile | null;
+  profileProtectionState?: ProfileProtectionState;
   isOpen: boolean;
   onClose: () => void;
   onSelectPersona: (personaKey: PersonaKey) => void;
   onSaveCustomUser: (user: UserAccount, profile: CandidateProfile) => void;
+  onProtectProfile?: () => Promise<void>;
+  onUseProtectedProfile?: () => void;
   onOpenGovernance: () => void;
 }
 
@@ -28,10 +34,11 @@ const personas: Array<{ key: PersonaKey; initials: string; name: string; descrip
   { key: "marcus-it", initials: "MS", name: "Marcus Sterling", description: "Principal cloud and enterprise IT architect", icon: Cpu, accent: "bg-indigo-50 text-indigo-700" },
 ];
 
-export function UserManagementModal({ currentUser, authenticatedAccount, isOpen, onClose, onSelectPersona, onSaveCustomUser, onOpenGovernance }: UserManagementModalProps) {
+export function UserManagementModal({ currentUser, authenticatedAccount, profile, protectedProfile, profileProtectionState = "unavailable", isOpen, onClose, onSelectPersona, onSaveCustomUser, onProtectProfile, onUseProtectedProfile, onOpenGovernance }: UserManagementModalProps) {
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customEmail, setCustomEmail] = useState("");
+  const [pendingResolution, setPendingResolution] = useState<"device" | "protected" | null>(null);
 
   if (!isOpen) return null;
 
@@ -139,12 +146,84 @@ export function UserManagementModal({ currentUser, authenticatedAccount, isOpen,
                 <h3 id="account-status-heading" className="text-sm font-semibold text-slate-900">{authenticatedAccount?.persisted ? "Protected account connected" : "Device-local preview"}</h3>
                 <p className="mt-1 text-xs leading-5 text-slate-600">
                   {authenticatedAccount?.persisted
-                    ? `Signed in as ${authenticatedAccount.name || authenticatedAccount.email}. Your account identity is stored securely; this career profile remains on this device until the migration step.`
+                    ? `Signed in as ${authenticatedAccount.name || authenticatedAccount.email}. Your account identity is stored securely; career data is copied only when you review and confirm it below.`
                     : "This profile and its career data are stored in this browser. Secure sign-in, recovery, and cross-device access are the next account milestone."}
                 </p>
               </div>
             </div>
           </section>
+
+          {authenticatedAccount?.persisted && (
+            <section aria-labelledby="profile-protection-heading" className="rounded-2xl border border-slate-200 bg-white p-4">
+              <div className="flex items-start gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
+                  {profileProtectionState === "checking" || profileProtectionState === "saving"
+                    ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    : <CloudUpload className="h-4 w-4" aria-hidden="true" />}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3 id="profile-protection-heading" className="text-sm font-semibold text-slate-900">
+                    {profileProtectionState === "protected" ? "Career profile protected" : profileProtectionState === "conflict" ? "Choose which profile to keep" : "Protected career profile"}
+                  </h3>
+
+                  {(profileProtectionState === "checking" || profileProtectionState === "saving") && (
+                    <p className="mt-1 text-xs leading-5 text-slate-600">{profileProtectionState === "saving" ? "Saving your reviewed profile and evidence…" : "Checking this device against your protected profile…"}</p>
+                  )}
+
+                  {profileProtectionState === "local-only" && (
+                    <div className="mt-2 space-y-3">
+                      <p className="text-xs leading-5 text-slate-600">Review before copying: <strong>{profile.full_name}</strong>{profile.current_title ? ` · ${profile.current_title}` : ""}, {profile.skills.length} skills and {profile.evidence?.length ?? 0} evidence records. Your device copy remains available.</p>
+                      <Button size="sm" variant="primary" onClick={() => void onProtectProfile?.()}>
+                        Copy this profile to protected account
+                      </Button>
+                    </div>
+                  )}
+
+                  {profileProtectionState === "protected" && (
+                    <p className="mt-1 text-xs leading-5 text-slate-600">This profile, its preferences, résumé text, fit corrections, and {profile.evidence?.length ?? 0} evidence records match the protected account copy.</p>
+                  )}
+
+                  {profileProtectionState === "conflict" && protectedProfile && (
+                    <div className="mt-2 space-y-3">
+                      <p className="text-xs leading-5 text-slate-600">This device has <strong>{profile.full_name}</strong>; the protected account has <strong>{protectedProfile.full_name}</strong>. Vecta will not choose or overwrite either copy automatically.</p>
+                      {!pendingResolution ? (
+                        <div className="flex flex-wrap gap-2">
+                          <Button size="sm" variant="primary" onClick={() => setPendingResolution("protected")}>Use protected profile</Button>
+                          <Button size="sm" onClick={() => setPendingResolution("device")}>Keep this device profile</Button>
+                        </div>
+                      ) : (
+                        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3">
+                          <p className="text-xs leading-5 text-amber-900">
+                            {pendingResolution === "protected"
+                              ? `Replace this device’s active profile with ${protectedProfile.full_name}?`
+                              : `Replace the protected account copy with ${profile.full_name}?`}
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            <Button
+                              size="sm"
+                              variant={pendingResolution === "device" ? "danger" : "primary"}
+                              onClick={() => {
+                                if (pendingResolution === "protected") onUseProtectedProfile?.();
+                                else void onProtectProfile?.();
+                                setPendingResolution(null);
+                              }}
+                            >
+                              Confirm replacement
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => setPendingResolution(null)}>Cancel</Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {profileProtectionState === "error" && (
+                    <p className="mt-1 text-xs leading-5 text-rose-700">The protected copy could not be checked. Nothing on this device was changed; try again later before replacing either version.</p>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
 
           <section aria-labelledby="demo-profile-heading">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

@@ -69,7 +69,7 @@ describe("profile storage", () => {
     expect(exported.profile.evidence).toHaveLength(1);
     expect(exported).toMatchObject({
       schemaVersion: 1,
-      appVersion: "0.12.0",
+      appVersion: "0.13.0",
       skillTaxonomyVersion: "1.1.0",
     });
     wipeAllUserData();

@@ -44,7 +44,7 @@ describe("workspace overlays", () => {
   it("labels local profiles honestly and creates one through shared form controls", async () => {
     const user = userEvent.setup();
     const onSaveCustomUser = vi.fn();
-    render(<UserManagementModal currentUser={DEFAULT_USER} isOpen onClose={vi.fn()} onSelectPersona={vi.fn()} onSaveCustomUser={onSaveCustomUser} onOpenGovernance={vi.fn()} />);
+    render(<UserManagementModal currentUser={DEFAULT_USER} profile={makeProfile()} isOpen onClose={vi.fn()} onSelectPersona={vi.fn()} onSaveCustomUser={onSaveCustomUser} onOpenGovernance={vi.fn()} />);
 
     expect(screen.getByRole("dialog", { name: "Profiles on this device" })).toBeDefined();
     expect(screen.getByText("Device-local preview")).toBeDefined();
@@ -64,7 +64,9 @@ describe("workspace overlays", () => {
     render(
       <UserManagementModal
         currentUser={DEFAULT_USER}
+        profile={makeProfile()}
         authenticatedAccount={{ id: "account-1", email: "jordan@example.com", name: "Jordan Quinn", persisted: true }}
+        profileProtectionState="local-only"
         isOpen
         onClose={vi.fn()}
         onSelectPersona={vi.fn()}
@@ -76,6 +78,33 @@ describe("workspace overlays", () => {
     expect(screen.getByText("Protected account connected")).toBeDefined();
     expect(screen.getByText(/Signed in as Jordan Quinn/)).toBeDefined();
     expect(screen.getAllByText("Alex Mercer")).toHaveLength(2);
+    expect(screen.getByRole("button", { name: "Copy this profile to protected account" })).toBeDefined();
+  });
+
+  it("requires confirmation before replacing a protected profile", async () => {
+    const user = userEvent.setup();
+    const onProtectProfile = vi.fn().mockResolvedValue(undefined);
+    render(
+      <UserManagementModal
+        currentUser={DEFAULT_USER}
+        profile={makeProfile({ full_name: "Device Candidate" })}
+        protectedProfile={makeProfile({ full_name: "Protected Candidate" })}
+        authenticatedAccount={{ id: "account-1", email: "jordan@example.com", name: "Jordan Quinn", persisted: true }}
+        profileProtectionState="conflict"
+        isOpen
+        onClose={vi.fn()}
+        onSelectPersona={vi.fn()}
+        onSaveCustomUser={vi.fn()}
+        onProtectProfile={onProtectProfile}
+        onOpenGovernance={vi.fn()}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Keep this device profile" }));
+    expect(onProtectProfile).not.toHaveBeenCalled();
+    expect(screen.getByText(/Replace the protected account copy with Device Candidate/)).toBeDefined();
+    await user.click(screen.getByRole("button", { name: "Confirm replacement" }));
+    expect(onProtectProfile).toHaveBeenCalledOnce();
   });
 
   it("edits and saves a candidate profile from the accessible drawer", async () => {

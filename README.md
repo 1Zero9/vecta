@@ -2,13 +2,13 @@
 
 Vecta is a light-only recruitment workspace for specialist candidates in AI, cybersecurity, governance, and cloud/IT. It combines a curated role catalogue, a local-first candidate profile, explainable fit estimates, résumé review, evidence linking, and an application pipeline.
 
-Current release: **Vecta v0.12.0 Preview** · Skill taxonomy **v1.1.0** · Export schema **v1**.
+Current release: **Vecta v0.13.0 Preview** · Skill taxonomy **v1.1.0** · Export schema **v1**.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. For the product, it means bringing experience, evidence, and ambition together to carry a career forward with clarity.
 
-This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. The private Sites build now creates a server-owned account from its authenticated visitor headers, but self-service account management, an auditable admin workbench, durable career-data ownership, and verified job ingestion remain roadmap work.
+This repository is currently a product prototype. Job and market records are curated demonstration data and drafting is deterministic. The private Sites build creates a server-owned account from authenticated visitor headers and lets that person explicitly copy a reviewed profile and evidence into D1. Pipeline data, complete data rights, self-service account management, an auditable admin workbench, and verified job ingestion remain roadmap work.
 
-The local and production Next.js builds pass. A separate vinext/Vite/Cloudflare build powers an owner-only [hosted preview](https://vecta-career.dexincognito.chatgpt.site). Because Sites cannot run the prototype's native SQLite client, that build preserves the documented device-local workflow and returns an explicit offline response from optional synchronization APIs.
+The local and production Next.js builds pass. A separate vinext/Vite/Cloudflare build powers an owner-only [hosted preview](https://vecta-career.dexincognito.chatgpt.site). Its authenticated profile API uses D1; legacy optional Prisma synchronization remains disabled in the Worker build.
 
 ## Current capabilities
 
@@ -23,6 +23,7 @@ The local and production Next.js builds pass. A separate vinext/Vite/Cloudflare 
 - Save roles and manage applications through a local pipeline.
 - Export or erase locally stored candidate data.
 - Connect the authenticated private Sites visitor to a server-owned account record without trusting browser-provided identity or roles.
+- Review and explicitly copy the active profile, résumé text, evidence, preferences, and role-specific fit corrections to that protected account, with a confirmation step for conflicts.
 
 ## Technology
 
@@ -32,7 +33,7 @@ The local and production Next.js builds pass. A separate vinext/Vite/Cloudflare 
 - vinext, Vite, and the Sites plugin for the worker-compatible hosted build
 - PDF.js and Mammoth for local PDF/DOCX text extraction
 - Browser `localStorage` for the prototype’s device-local profile and pipeline state
-- Cloudflare D1 for the authenticated Sites account record
+- Cloudflare D1 for authenticated Sites accounts and explicitly protected career profiles
 - Vitest, Testing Library, and V8 coverage for deterministic logic and core profile interactions
 
 ## Local setup
@@ -101,7 +102,7 @@ docs/                              Build, user, handover, and roadmap documentat
 
 ## Privacy model
 
-Résumé files are parsed in the browser and are not uploaded by the current implementation. Extracted content is only added to the profile after review, and the profile is only persisted after the user saves it. Export and erasure include the stored résumé text and evidence records.
+Résumé files are parsed in the browser and are not uploaded as files. Extracted content is added only after review. On the hosted preview, a signed-in user can separately confirm copying the resulting text and profile evidence to D1. Current export and erasure controls cover browser data only; complete protected-account export and deletion remain Phase 3 work.
 
 This is a prototype privacy model, not a claim of production compliance. Production use still requires authentication, server-side authorization, retention controls, operational security, and a complete legal review.
 

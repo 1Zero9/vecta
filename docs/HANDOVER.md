@@ -4,13 +4,13 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
-Current identifiers are Vecta **v0.12.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
+Current identifiers are Vecta **v0.13.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
 
 The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
 
-The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. The private Sites runtime creates a D1 account record from authenticated platform headers; career-profile and pipeline state remain device-local until durable ownership is implemented.
+The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. The private Sites runtime creates a D1 account record from authenticated platform headers and can store an explicitly reviewed profile snapshot with evidence. Saved roles, favourites, applications, notes, and consent remain device-local.
 
-`UserManagementModal` is currently a demonstration-persona switcher and local custom-profile form. It is not a production identity, user-management, or administrator system.
+`UserManagementModal` is a demonstration-persona switcher, local custom-profile form, and protected-profile migration surface. It is not a complete production user-management or administrator system.
 
 Vecta has two future access roles: User and Administrator. Career discipline remains profile data; recruiter and employer vacancy-management workflows are outside the product. See [ACCOUNT_ADMIN_ARCHITECTURE.md](ACCOUNT_ADMIN_ARCHITECTURE.md).
 
@@ -52,6 +52,9 @@ flowchart TD
     Page --> AccountAPI[/api/account]
     AccountAPI --> Identity[Server-provided Sites identity]
     AccountAPI --> D1[(Sites D1 users)]
+    Page --> ProfileAPI[/api/profile]
+    ProfileAPI --> Identity
+    ProfileAPI --> D1Profiles[(Sites D1 profiles and evidence)]
 ```
 
 ## Important files
@@ -61,7 +64,7 @@ flowchart TD
 | Application shell | `app/page.tsx` | Owns active views, local state, modals, and persistence callbacks. |
 | Interface foundations | `components/ui/*` | Shared buttons, panels, badges, empty states, form controls, field messaging, keyboard-contained dialog structure, loading skeletons, and status notices. |
 | Global search | `components/CommandPalette.tsx` | Cmd/Ctrl+K search, semantic quick navigation, and keyboard-accessible results. |
-| Local profiles | `components/UserManagementModal.tsx` | Honest demo-profile switching and local custom-profile setup; not production identity management. |
+| Profiles and account copy | `components/UserManagementModal.tsx` | Demo-profile switching, local custom-profile setup, protected-copy review, and explicit conflict resolution; not complete identity management. |
 | Account/admin boundary | `docs/ACCOUNT_ADMIN_ARCHITECTURE.md` | Product roles, authentication direction, owned records, admin action limits, and delivery slices. |
 | Workspace state | `app/loading.tsx`, `app/error.tsx`, `components/WorkspaceLoading.tsx` | Calm route/hydration loading and recoverable unexpected-error handling. |
 | Guided profile | `components/ProfileOnboardingModal.tsx` | Four-step candidate onboarding and final save boundary. |
@@ -79,7 +82,8 @@ flowchart TD
 | Persistence | `lib/storage.ts` | Local save/load, backward-compatible profile hydration, export, and erasure. |
 | Optional synchronization | `lib/profileSync.ts`, `lib/prismaClient.sites.ts` | Keeps Prisma/SQLite available to standard Next development while replacing it with a worker-safe no-op in the Sites build. |
 | Hosted account | `app/api/account/route.ts`, `lib/sitesIdentity.ts`, `lib/d1AccountStore.ts` | Reads server-provided Sites identity, creates or refreshes the D1 user record, and enforces account status. |
-| D1 schema | `db/schema.ts`, `drizzle/0000_create_users.sql` | Defines and migrates the initial authenticated user record. |
+| Protected profile | `app/api/profile/route.ts`, `lib/profileValidation.ts`, `lib/d1ProfileStore.ts` | Validates a complete profile, derives ownership from authenticated identity, and reads or writes the matching D1 profile and evidence records. |
+| D1 schema | `db/schema.ts`, `drizzle/*.sql` | Defines and migrates authenticated users, profiles, and normalized profile evidence. |
 | Sites delivery | `vite.config.mts`, `wrangler.jsonc`, `.openai/hosting.json` | Selects vinext's Worker fetch entry and emits the required worker and client assets while preserving the local-first persistence boundary. |
 | Types | `lib/types.ts` | Candidate, evidence, job, application, and result contracts. |
 
@@ -92,7 +96,8 @@ flowchart TD
 5. Evidence records link a description to selected skill or certification strings.
 6. Candidate match corrections are stored against a role ID and requirement, then immediately recalculate role fit.
 7. Saving updates browser storage and immediately recalculates role fit.
-8. JSON export includes the full profile, résumé text, evidence records, and match corrections; erasure removes them.
+8. On Sites, the profile panel fetches the authenticated D1 snapshot and classifies it as absent, matching, or conflicting. Upload or replacement happens only after the user confirms it.
+9. JSON export includes the browser profile, résumé text, evidence records, and match corrections; local erasure removes them. Neither action currently covers the D1 snapshot.
 
 The file bytes themselves are not persisted or sent to an API.
 
@@ -119,9 +124,9 @@ Gap talking points must describe transferable experience and learning plans hone
 
 ## Persistence boundary
 
-The authenticated Sites account identity is persisted in D1. `CandidateProfile.evidence` and `CandidateProfile.skill_match_overrides` are still part of the browser-stored TypeScript profile. The existing Prisma `Profile` model does not yet persist evidence records, preferred locations, or match corrections. Do not describe career data as multi-device or fully database-backed.
+The authenticated Sites account identity and explicitly protected `CandidateProfile` snapshot are persisted in D1. Evidence uses child records with the authenticated subject in its composite key; profile preferences, résumé text, and match corrections are stored with the owned profile. The API never accepts a user ID or role from the profile payload.
 
-The Phase 3 data-model work should normalize profile evidence with ownership and authorization checks before production use.
+Browser storage remains the active working copy. There is no automatic synchronization: a missing protected copy requires an explicit upload, and divergent copies require a confirmed choice. Saved roles, favourites, applications, notes, and consent remain browser-only. Export and erasure also remain browser-only, so do not describe the account as fully portable or the data-rights workflow as complete.
 
 ## Operational notes
 
@@ -129,8 +134,8 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Résumé files are limited to 10 MB.
 - Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- The Sites build aliases native Prisma to a worker-safe no-op for legacy profile sync. The authenticated account endpoint uses D1; career records remain local-first.
-- Vitest covers 63 domain, identity, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, delivery-boundary, and component scenarios across eighteen test files.
+- The Sites build aliases native Prisma to a worker-safe no-op for legacy sync. The authenticated account and protected-profile endpoints use D1.
+- Vitest covers 71 domain, identity, protected-profile, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, delivery-boundary, and component scenarios across twenty-one test files.
 - Four Playwright journeys cover role search and tracking, complete onboarding persistence, fit review with reversible corrections, and persisted pipeline-stage movement with visible confirmation.
 - Jobs, Companies, Market, and Pipeline have been checked at 360 px, 768 px, and 1440 px without document-level horizontal overflow. Search, local profiles, governance, fit review, application preparation, candidate profile, and onboarding now use shared dialogs that lock background scroll, contain Tab focus, close with Escape, and restore the invoking control.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
@@ -138,6 +143,6 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 ## Next engineering priorities
 
 1. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
-2. Define the production identity and owned-data model, self-service user management, administrator roles, auditable support actions, and admin-workbench boundaries before expanding persistence.
+2. Move saved roles and favourites into authenticated D1 ownership with the same explicit migration and authorization boundary.
 3. Clean up the repository-wide lint baseline and make it a release quality gate.
-4. Extend state-specific handling when real network-backed Companies, Market, profile, and governance workflows are introduced.
+4. Implement complete browser-and-D1 export and deletion before expanding privacy claims.

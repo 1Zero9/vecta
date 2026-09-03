@@ -51,7 +51,7 @@ The first production account surface should provide:
 5. deletion request, retention explanation, and cancellation window;
 6. clear migration of existing device-local data after sign-in.
 
-The current profile dialog remains labelled **Device-local preview** until these capabilities are real.
+The profile dialog labels unsigned/local use as **Device-local preview**. For a persisted hosted account it presents the protected-copy state and requires explicit confirmation before the device or D1 version replaces the other.
 
 ## Admin workbench boundary
 
@@ -69,8 +69,8 @@ High-impact actions require a reason, fresh confirmation, least-privilege permis
 
 1. **Boundary and preview UI — complete in v0.11.0.** Remove recruiter roles and vocabulary, migrate legacy local roles to User, label account state honestly, and document this model.
 2. **Authenticated identity — complete in v0.12.0.** Read the Sites-authenticated subject server-side, create the D1 user record, reject missing identity, enforce suspended status, and add authorization tests.
-3. **Durable profile migration.** Add D1 schema and migrate profile, evidence, preferences, saved roles, and match decisions with an explicit user review.
-4. **Durable pipeline and rights.** Move applications and consent history, then implement complete export and deletion.
+3. **Durable profile migration — complete in v0.13.0.** Add D1 schema and explicitly migrate the profile, evidence, preferences, résumé text, and match decisions after review; detect conflicts and never infer ownership from browser input.
+4. **Durable saved roles, pipeline, and rights.** Move saved roles, favourites, applications, notes, and consent history, then implement complete export and deletion.
 5. **Admin foundation.** Add server-protected operator assignment, read-only queues, and audit recording before mutating support actions.
 6. **Operational actions.** Add individually approved actions with reason capture, confirmation, least privilege, and recovery paths.
 

@@ -14,7 +14,7 @@ npm run dev
 
 Open the exact local URL printed by Next.js. Before an important session, also run `npm test`, `npm run build`, and `npm run test:e2e`. Start with the Alex Mercer persona and an empty or known pipeline. If the browser contains earlier demo state, use the reset steps below.
 
-The owner can alternatively use the private [hosted preview](https://vecta-career.dexincognito.chatgpt.site). It uses the same local-first candidate-data model, so reset that browser separately before presenting.
+The owner can alternatively use the private [hosted preview](https://vecta-career.dexincognito.chatgpt.site). Browser state remains the working copy, and the profile panel can explicitly protect or restore a reviewed career-profile snapshot. Reset that browser separately before presenting.
 
 ## Seven-minute walkthrough
 
@@ -24,7 +24,7 @@ The owner can alternatively use the private [hosted preview](https://vecta-caree
 
 **Say:** “Vecta helps specialist candidates move from scattered career information to a clear, evidence-led decision: which role fits, why it fits, what is missing, and what to do next.”
 
-Point out **Vecta v0.12.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
+Point out **Vecta v0.13.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
 
 ### 2. Establish the candidate context — 60 seconds
 
@@ -52,9 +52,9 @@ Point out **Vecta v0.12.0 Preview** in the header. Explain that the fit audit al
 
 ### 6. Close on trust and direction — 60 seconds
 
-**Do:** Open Governance and show export and erasure controls. Briefly mention the roadmap.
+**Do:** On the hosted preview, open the profile control and show the protected-profile status. If no copy exists, review the summary before choosing **Copy this profile to protected account**. Then open Governance and show the browser-only export and erasure controls. Briefly mention the roadmap.
 
-**Say:** “The private preview now recognizes its signed-in visitor and stores a protected account record. Career profiles and applications are still local-first and can be exported or erased; cross-device ownership, self-service account management, and an auditable admin workbench remain planned work.”
+**Say:** “The private preview recognizes its signed-in visitor and can protect a reviewed career profile and evidence under that server-owned account. It never overwrites a differing copy automatically. Saved roles and applications remain local, and today’s export and erase controls cover this browser only; complete account rights, recovery, and the admin workbench remain planned work.”
 
 Close with: “Vecta turns career evidence into a clearer next move, while keeping the candidate in control of every claim.”
 
@@ -74,7 +74,7 @@ Close with: “Vecta turns career evidence into a clearer next move, while keepi
 4. Use the profile control to select **Alex Mercer**.
 5. Confirm Direct Jobs and Pipeline show the expected starting state before the audience arrives.
 
-Erasure removes the current browser’s Vecta user, profile, résumé text, evidence, corrections, saved roles, favourites, pipeline, and consent state. It does not affect repository fixtures.
+Erasure removes the current browser’s Vecta user, profile, résumé text, evidence, corrections, saved roles, favourites, pipeline, and consent state. It does not affect repository fixtures or a protected D1 profile copy.
 
 ## Prototype boundaries
 
@@ -82,8 +82,8 @@ Do not present the prototype as having capabilities that are not implemented:
 
 - Jobs, companies, and market records are curated demonstration data, not a verified live feed.
 - Application and interview drafts are deterministic templates, not external-model output.
-- Browser storage is the primary career-data store. The private preview has an authenticated D1 account record, but durable multi-device profile ownership is not implemented.
-- The hosted preview keeps the same local-first model. Its optional synchronization endpoints do not persist data because the prototype SQLite adapter is intentionally excluded from the worker bundle.
+- Browser storage is the active working copy. The private preview has authenticated D1 account and protected-profile records, but synchronization is explicit rather than automatic.
+- Protected profile migration includes details, preferences, résumé text, evidence, and fit corrections. Saved roles, favourites, applications, notes, and consent remain local.
 - The profile switcher is not production user management, and there is no production admin workbench yet.
 - Vecta is for people searching for roles. It does not provide recruiter, employer, or vacancy-publishing accounts.
 - Image-only or scanned PDFs require manual text entry because OCR is not included.
@@ -97,9 +97,9 @@ Do not present the prototype as having capabilities that are not implemented:
 
 **What does a correction do?** It changes one requirement for one role, persists locally, and recalculates the audit. It does not update the global taxonomy or create supporting evidence.
 
-**Can several people use it?** Demonstration personas can be switched locally. Production accounts, authorization, recovery, and administrator operations are Phase 3 roadmap work.
+**Can several people use it?** The private Sites access boundary gives each signed-in visitor a server-owned subject and profile record. Public registration, recovery, session controls, and administrator operations are still Phase 3 roadmap work.
 
-**Where does résumé data go?** The current parser runs in the browser. Extracted content is only added after review and saved locally with the profile.
+**Where does résumé data go?** The parser runs in the browser. Extracted content is added only after review and saved to the browser profile; on the hosted preview, it enters D1 only when the user explicitly protects that profile.
 
 ## Fallbacks
 
