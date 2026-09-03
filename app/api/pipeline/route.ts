@@ -1,0 +1,9 @@
+import { NextResponse } from "next/server";
+import { upsertAuthenticatedAccount } from "@/lib/accountStore";
+import { parsePipeline } from "@/lib/pipelineProtection";
+import { loadAuthenticatedPipeline, saveAuthenticatedPipeline } from "@/lib/pipelineStore";
+import { readSitesIdentity, type SitesIdentity } from "@/lib/sitesIdentity";
+
+async function access(request:Request): Promise<{identity:SitesIdentity}|{error:NextResponse}> { const identity=readSitesIdentity(request.headers); if(!identity)return{error:NextResponse.json({authenticated:false},{status:401})}; const account=await upsertAuthenticatedAccount(identity); if(!account)return{error:NextResponse.json({authenticated:true,available:false},{status:503})}; if(account.status==="suspended")return{error:NextResponse.json({authenticated:true,suspended:true},{status:403})}; return{identity}; }
+export async function GET(request:Request) { try { const a=await access(request); if("error" in a)return a.error; return NextResponse.json({pipeline:await loadAuthenticatedPipeline(a.identity.id)}); } catch(error){ console.error("Unable to load protected pipeline:",error); return NextResponse.json({error:"Protected pipeline unavailable."},{status:503}); } }
+export async function PUT(request:Request) { try { const a=await access(request); if("error" in a)return a.error; const result=parsePipeline((await request.json())?.pipeline); if(!result.success)return NextResponse.json({error:"The pipeline contains invalid or unsupported fields."},{status:400}); await saveAuthenticatedPipeline(a.identity.id,result.data); return NextResponse.json({success:true,pipeline:result.data}); } catch(error){ console.error("Unable to save protected pipeline:",error); return NextResponse.json({error:"Protected pipeline could not be saved."},{status:503}); } }

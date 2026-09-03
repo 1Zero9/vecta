@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { ArrowLeft, Cloud, CloudUpload, Cpu, HardDrive, Loader2, Lock, ShieldCheck, Sparkles, UserCheck, UserPlus } from "lucide-react";
-import { AuthenticatedAccount, CandidateProfile, UserAccount } from "@/lib/types";
+import { ApplicationTrack, AuthenticatedAccount, CandidateProfile, UserAccount } from "@/lib/types";
 import type { ProfileProtectionState } from "@/lib/profileProtection";
 import type { SavedItemsProtectionState, SavedItemsSnapshot } from "@/lib/savedItems";
+import type { PipelineProtectionState } from "@/lib/pipelineProtection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogShell } from "@/components/ui/dialog-shell";
@@ -24,6 +25,9 @@ interface UserManagementModalProps {
   favouriteCompanyIds?: string[];
   protectedSavedItems?: SavedItemsSnapshot | null;
   savedItemsProtectionState?: SavedItemsProtectionState;
+  pipeline?: ApplicationTrack[];
+  protectedPipeline?: ApplicationTrack[] | null;
+  pipelineProtectionState?: PipelineProtectionState;
   isOpen: boolean;
   onClose: () => void;
   onSelectPersona: (personaKey: PersonaKey) => void;
@@ -32,6 +36,8 @@ interface UserManagementModalProps {
   onUseProtectedProfile?: () => void;
   onProtectSavedItems?: () => Promise<void>;
   onUseProtectedSavedItems?: () => void;
+  onProtectPipeline?: () => Promise<void>;
+  onUseProtectedPipeline?: () => void;
   onOpenGovernance: () => void;
 }
 
@@ -41,12 +47,13 @@ const personas: Array<{ key: PersonaKey; initials: string; name: string; descrip
   { key: "marcus-it", initials: "MS", name: "Marcus Sterling", description: "Principal cloud and enterprise IT architect", icon: Cpu, accent: "bg-indigo-50 text-indigo-700" },
 ];
 
-export function UserManagementModal({ currentUser, authenticatedAccount, profile, protectedProfile, profileProtectionState = "unavailable", savedJobIds = [], favouriteCompanyIds = [], protectedSavedItems, savedItemsProtectionState = "unavailable", isOpen, onClose, onSelectPersona, onSaveCustomUser, onProtectProfile, onUseProtectedProfile, onProtectSavedItems, onUseProtectedSavedItems, onOpenGovernance }: UserManagementModalProps) {
+export function UserManagementModal({ currentUser, authenticatedAccount, profile, protectedProfile, profileProtectionState = "unavailable", savedJobIds = [], favouriteCompanyIds = [], protectedSavedItems, savedItemsProtectionState = "unavailable", pipeline = [], protectedPipeline, pipelineProtectionState = "unavailable", isOpen, onClose, onSelectPersona, onSaveCustomUser, onProtectProfile, onUseProtectedProfile, onProtectSavedItems, onUseProtectedSavedItems, onProtectPipeline, onUseProtectedPipeline, onOpenGovernance }: UserManagementModalProps) {
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customEmail, setCustomEmail] = useState("");
   const [pendingResolution, setPendingResolution] = useState<"device" | "protected" | null>(null);
   const [pendingSavedItemsResolution, setPendingSavedItemsResolution] = useState<"device" | "protected" | null>(null);
+  const [pendingPipelineResolution, setPendingPipelineResolution] = useState<"device" | "protected" | null>(null);
 
   if (!isOpen) return null;
 
@@ -302,6 +309,17 @@ export function UserManagementModal({ currentUser, authenticatedAccount, profile
                   )}
                 </div>
               </div>
+            </section>
+          )}
+
+          {authenticatedAccount?.persisted && (
+            <section aria-labelledby="pipeline-protection-heading" className="rounded-2xl border border-slate-200 bg-white p-4">
+              <h3 id="pipeline-protection-heading" className="text-sm font-semibold text-slate-900">{pipelineProtectionState === "protected" ? "Application pipeline protected" : pipelineProtectionState === "conflict" ? "Choose which pipeline to keep" : "Protected application pipeline"}</h3>
+              {(pipelineProtectionState === "checking" || pipelineProtectionState === "saving") && <p className="mt-1 text-xs text-slate-600">{pipelineProtectionState === "saving" ? "Saving applications, notes, and activity…" : "Checking the protected pipeline…"}</p>}
+              {pipelineProtectionState === "local-only" && <div className="mt-2 space-y-3"><p className="text-xs leading-5 text-slate-600">Review before copying: this device has <strong>{pipeline.length} applications</strong>. Notes and activity history are included; an empty pipeline is preserved intentionally.</p><Button size="sm" variant="primary" onClick={() => void onProtectPipeline?.()}>Copy pipeline to protected account</Button></div>}
+              {pipelineProtectionState === "protected" && <p className="mt-1 text-xs text-slate-600">This device’s {pipeline.length} applications, notes, and activity records match the protected copy.</p>}
+              {pipelineProtectionState === "conflict" && protectedPipeline && <div className="mt-2 space-y-3"><p className="text-xs leading-5 text-slate-600">This device has <strong>{pipeline.length} applications</strong>; the protected account has <strong>{protectedPipeline.length}</strong>. Neither copy will be overwritten automatically.</p>{!pendingPipelineResolution ? <div className="flex flex-wrap gap-2"><Button size="sm" variant="primary" onClick={() => setPendingPipelineResolution("protected")}>Use protected pipeline</Button><Button size="sm" onClick={() => setPendingPipelineResolution("device")}>Keep this device pipeline</Button></div> : <div className="rounded-xl border border-amber-200 bg-amber-50 p-3"><p className="text-xs text-amber-900">Replace the {pendingPipelineResolution === "protected" ? "device pipeline with the protected copy" : "protected pipeline with this device copy"}?</p><div className="mt-2 flex gap-2"><Button size="sm" variant={pendingPipelineResolution === "device" ? "danger" : "primary"} onClick={() => { if (pendingPipelineResolution === "protected") onUseProtectedPipeline?.(); else void onProtectPipeline?.(); setPendingPipelineResolution(null); }}>Confirm replacement</Button><Button size="sm" variant="ghost" onClick={() => setPendingPipelineResolution(null)}>Cancel</Button></div></div>}</div>}
+              {pipelineProtectionState === "error" && <p className="mt-1 text-xs text-rose-700">The protected pipeline could not be checked. Your device pipeline is unchanged.</p>}
             </section>
           )}
 

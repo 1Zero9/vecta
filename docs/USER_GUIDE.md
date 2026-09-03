@@ -2,7 +2,7 @@
 
 Vecta is a candidate workspace for exploring specialist roles, understanding fit, preparing applications, and tracking progress. The current version uses curated demonstration data. Browser storage remains the working copy; the private hosted preview can also protect a reviewed career profile under its signed-in account.
 
-The current milestone is **Vecta v0.14.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
+The current milestone is **Vecta v0.15.0 Preview**, using skill taxonomy **v1.1.0** and export schema **v1**. These identifiers are shown in the interface and included in exports so a result can be traced to the rules that produced it.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. In Vecta, your experience, evidence, and ambitions come together to carry your career forward with clarity.
 
@@ -110,7 +110,7 @@ Always review drafts before use. Do not retain a statement that is not supported
 
 ## 6. Track applications
 
-Open **Pipeline** to manage applications across Saved, Drafting, Applied, Screening, Interviewing, Offer, and Archived stages. Pipeline state is stored on this device in the current prototype.
+Open **Pipeline** to manage applications across Saved, Drafting, Applied, Screening, Interviewing, Offer, and Archived stages. The browser holds the working copy. On Sites, use the account panel to review and protect the complete pipeline snapshot; differing copies require an explicit choice.
 
 When the pipeline is empty, use **Add application** or return to Jobs and track a role. Export remains unavailable until the pipeline contains at least one record.
 
@@ -128,7 +128,7 @@ This is still a prototype profile switcher, not a complete account-management sy
 - **Ready to copy:** no account copy exists yet; review the counts or profile summary before copying. An empty saved list is preserved intentionally.
 - **Choose which to keep:** the copies differ. Vecta preserves both until you choose one and confirm the replacement.
 
-Protected snapshots include profile details, preferences, résumé text, evidence, per-role fit corrections, saved roles, and favourite companies. Applications, pipeline notes, and consent remain device-local. Vecta has no recruiter or vacancy-publisher account type; session management, account recovery, and administrator support tools remain roadmap work.
+Protected snapshots include profile details, preferences, résumé text, evidence, per-role fit corrections, saved roles, favourite companies, applications, pipeline notes, stages, and activity history. Consent remains device-local. Vecta has no recruiter or vacancy-publisher account type; session management, account recovery, and administrator support tools remain roadmap work.
 
 Press **Cmd+K** on macOS or **Ctrl+K** elsewhere to open global search. Search results and quick navigation are standard keyboard-accessible actions; Tab moves through them and Escape closes the search.
 
@@ -143,7 +143,7 @@ These controls cover only the current browser state. They do not export or delet
 
 ## 9. Current limitations
 
-- The private hosted preview has server-trusted identity plus protected profile and saved-list snapshots, but no standalone public authentication, recovery, automatic cross-device synchronization, or complete account data-rights workflow.
+- The private hosted preview has server-trusted identity plus protected profile, saved-list, and pipeline snapshots, but no standalone public authentication, recovery, automatic cross-device synchronization, or complete account data-rights workflow.
 - No OCR for scanned résumés.
 - No verified live job-ingestion service.
 - No external AI drafting service.

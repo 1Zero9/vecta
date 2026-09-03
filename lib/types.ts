@@ -148,6 +148,14 @@ export interface ApplicationTrack {
   tailored_bullets?: string[];
   interview_dates?: string[];
   salary_target?: string;
+  activity?: ApplicationActivity[];
+}
+
+export interface ApplicationActivity {
+  id: string;
+  type: "created" | "stage_changed" | "notes_updated";
+  description: string;
+  occurred_at: string;
 }
 
 export type ProfileEvidenceType = "Employment" | "Project" | "Certification";

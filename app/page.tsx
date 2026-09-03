@@ -61,6 +61,7 @@ import { getProfileCompletion } from "@/lib/profileCompletion";
 import { addJobToPipeline } from "@/lib/pipeline";
 import { profilesAreEquivalent, type ProfileProtectionState } from "@/lib/profileProtection";
 import { savedItemsAreEquivalent, type SavedItemsProtectionState, type SavedItemsSnapshot } from "@/lib/savedItems";
+import { pipelinesAreEquivalent, type PipelineProtectionState } from "@/lib/pipelineProtection";
 
 const APPLICATION_STAGE_LABELS: Record<ApplicationStage, string> = {
   saved: "Saved / Evaluating",
@@ -95,6 +96,8 @@ export default function Home() {
   const [profileProtectionState, setProfileProtectionState] = useState<ProfileProtectionState>("unavailable");
   const [protectedSavedItems, setProtectedSavedItems] = useState<SavedItemsSnapshot | null>(null);
   const [savedItemsProtectionState, setSavedItemsProtectionState] = useState<SavedItemsProtectionState>("unavailable");
+  const [protectedPipeline, setProtectedPipeline] = useState<ApplicationTrack[] | null>(null);
+  const [pipelineProtectionState, setPipelineProtectionState] = useState<PipelineProtectionState>("unavailable");
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Modals & Drawers
@@ -129,7 +132,8 @@ export default function Home() {
     setConsent(getStoredConsent());
     setFavouriteCompanyIds(storedFavourites);
     setSavedJobIds(storedSavedJobs);
-    setPipeline(getStoredPipeline());
+    const storedPipeline = getStoredPipeline();
+    setPipeline(storedPipeline);
     setIsHydrated(true);
 
     void (async () => {
@@ -144,6 +148,7 @@ export default function Home() {
 
         setProfileProtectionState("checking");
         setSavedItemsProtectionState("checking");
+        setPipelineProtectionState("checking");
 
         void fetch("/api/profile")
           .then(async (response) => {
@@ -171,10 +176,12 @@ export default function Home() {
               : "local-only");
           })
           .catch(() => { if (!cancelled) setSavedItemsProtectionState("error"); });
+        void fetch("/api/pipeline").then(async(response)=>{ if(!response.ok)throw new Error(); const payload=await response.json(); if(cancelled)return; const remote=payload.pipeline as ApplicationTrack[]|null; setProtectedPipeline(remote); setPipelineProtectionState(remote ? pipelinesAreEquivalent(storedPipeline,remote)?"protected":"conflict" : "local-only"); }).catch(()=>{if(!cancelled)setPipelineProtectionState("error");});
       } catch {
         if (!cancelled) {
           setProfileProtectionState("error");
           setSavedItemsProtectionState("error");
+          setPipelineProtectionState("error");
         }
       }
     })();
@@ -204,6 +211,7 @@ export default function Home() {
       setSavedItemsProtectionState(savedItemsAreEquivalent(next, protectedSavedItems) ? "protected" : "conflict");
     }
   };
+  const reconcilePipelineProtection = (next: ApplicationTrack[]) => { if(!authenticatedAccount?.persisted)setPipelineProtectionState("unavailable"); else if(!protectedPipeline)setPipelineProtectionState("local-only"); else setPipelineProtectionState(pipelinesAreEquivalent(next,protectedPipeline)?"protected":"conflict"); };
 
   // Switch demo persona
   const handleSelectPersona = (personaKey: "alex-ai-sec" | "elena-grc" | "marcus-it") => {
@@ -294,6 +302,7 @@ export default function Home() {
     if (result.added) {
       setPipeline(result.pipeline);
       saveStoredPipeline(result.pipeline);
+      reconcilePipelineProtection(result.pipeline);
       showToast(`Added "${job.title}" to career pipeline.`);
     } else {
       showToast(`"${job.title}" is already in your career pipeline.`, "info");
@@ -303,19 +312,23 @@ export default function Home() {
 
   const handleUpdateStage = (id: string, newStage: ApplicationStage) => {
     const application = pipeline.find((item) => item.id === id);
+    const occurred_at = new Date().toISOString();
     const updated = pipeline.map((p) =>
-      p.id === id ? { ...p, stage: newStage, date_updated: new Date().toISOString().slice(0, 10) } : p
+      p.id === id ? { ...p, stage: newStage, date_updated: occurred_at.slice(0, 10), activity: [...(p.activity ?? []), { id:`activity-${Date.now()}`, type:"stage_changed" as const, description:`Moved to ${APPLICATION_STAGE_LABELS[newStage]}.`, occurred_at }] } : p
     );
     setPipeline(updated);
     saveStoredPipeline(updated);
+    reconcilePipelineProtection(updated);
     if (application) showToast(`Moved "${application.job_title}" to ${APPLICATION_STAGE_LABELS[newStage]}.`);
   };
 
   const handleUpdateNotes = (id: string, notes: string) => {
     const application = pipeline.find((item) => item.id === id);
-    const updated = pipeline.map((p) => (p.id === id ? { ...p, notes } : p));
+    const occurred_at = new Date().toISOString();
+    const updated = pipeline.map((p) => (p.id === id ? { ...p, notes, activity:[...(p.activity??[]),{id:`activity-${Date.now()}`,type:"notes_updated" as const,description:"Application notes updated.",occurred_at}] } : p));
     setPipeline(updated);
     saveStoredPipeline(updated);
+    reconcilePipelineProtection(updated);
     if (application) showToast(`Notes saved for "${application.job_title}".`);
   };
 
@@ -324,6 +337,7 @@ export default function Home() {
     const updated = pipeline.filter((p) => p.id !== id);
     setPipeline(updated);
     saveStoredPipeline(updated);
+    reconcilePipelineProtection(updated);
     if (application) showToast(`Removed "${application.job_title}" from your pipeline.`);
   };
 
@@ -340,10 +354,12 @@ export default function Home() {
       apply_url: app.apply_url,
       salary_target: app.salary_target,
       notes: app.notes || "Added manually to pipeline tracker.",
+      activity: [{ id:`activity-${Date.now()}`, type:"created", description:"Application added manually.", occurred_at:new Date().toISOString() }],
     };
     const updated = [newTrack, ...pipeline];
     setPipeline(updated);
     saveStoredPipeline(updated);
+    reconcilePipelineProtection(updated);
     showToast(`Added custom application to pipeline.`);
   };
 
@@ -384,6 +400,7 @@ export default function Home() {
     setConsent(null);
     reconcileProfileProtection(DEMO_PERSONAS["alex-ai-sec"].profile);
     reconcileSavedItemsProtection({ savedJobIds: [], favouriteCompanyIds: [] });
+    reconcilePipelineProtection([]);
     showToast("All user telemetry, resume text, and pipeline records permanently erased.");
   };
 
@@ -457,6 +474,8 @@ export default function Home() {
     setSavedItemsProtectionState("protected");
     showToast("Protected saved roles and companies restored to this device.");
   };
+  const handleProtectPipeline = async()=>{ setPipelineProtectionState("saving"); try{const response=await fetch("/api/pipeline",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({pipeline})});if(!response.ok)throw new Error();const payload=await response.json();setProtectedPipeline(payload.pipeline);setPipelineProtectionState("protected");showToast("Application pipeline copied to your protected account.");}catch{setPipelineProtectionState("error");showToast("The protected pipeline could not be updated. Your device copy is unchanged.","info");}};
+  const handleUseProtectedPipeline=()=>{if(!protectedPipeline)return;setPipeline(protectedPipeline);saveStoredPipeline(protectedPipeline);setPipelineProtectionState("protected");showToast("Protected application pipeline restored to this device.");};
 
   // Counts for metric cards
   const aiJobsCount = jobs.filter((j) => j.domain === "AI").length;
@@ -621,6 +640,9 @@ export default function Home() {
         favouriteCompanyIds={favouriteCompanyIds}
         protectedSavedItems={protectedSavedItems}
         savedItemsProtectionState={savedItemsProtectionState}
+        pipeline={pipeline}
+        protectedPipeline={protectedPipeline}
+        pipelineProtectionState={pipelineProtectionState}
         isOpen={isUserManagementOpen}
         onClose={() => setIsUserManagementOpen(false)}
         onSelectPersona={handleSelectPersona}
@@ -629,6 +651,8 @@ export default function Home() {
         onUseProtectedProfile={handleUseProtectedProfile}
         onProtectSavedItems={handleProtectSavedItems}
         onUseProtectedSavedItems={handleUseProtectedSavedItems}
+        onProtectPipeline={handleProtectPipeline}
+        onUseProtectedPipeline={handleUseProtectedPipeline}
         onOpenGovernance={() => setIsGovernanceModalOpen(true)}
       />
 

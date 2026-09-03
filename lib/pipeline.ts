@@ -27,6 +27,7 @@ export function addJobToPipeline(
     apply_url: job.apply_url,
     salary_target: job.salary_min ? `£${(job.salary_min / 1000).toFixed(0)}k` : undefined,
     notes: `Added from curated Jobs. Matching requirements: ${job.req_skills.slice(0, 3).join(", ")}.`,
+    activity: [{ id: `activity-${now.getTime()}`, type: "created", description: "Application added from Jobs.", occurred_at: now.toISOString() }],
   };
 
   return { pipeline: [application, ...pipeline], added: true };

@@ -161,7 +161,7 @@ export function PipelineBoard({
         <EmptyState
           icon={<Kanban className="h-5 w-5" />}
           title="Your pipeline is ready for its first role"
-          description="Track a role from Jobs or add an application you have already started. Vecta will keep its next stage and notes on this device."
+          description="Track a role from Jobs or add an application you have already started. The browser keeps the working copy; the account panel can protect the pipeline on Sites."
           action={<Button variant="primary" size="sm" onClick={() => setShowAddModal(true)}><Plus className="h-4 w-4" /> Add application</Button>}
         />
       ) : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 overflow-x-auto pb-4">
@@ -260,6 +260,12 @@ export function PipelineBoard({
                           title="Click to edit notes"
                         >
                           {app.notes ? app.notes : "+ Click to add notes..."}
+                        </div>
+                      )}
+
+                      {(app.activity?.length ?? 0) > 0 && (
+                        <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-2 text-[10px] text-slate-500">
+                          <span className="font-semibold text-slate-600">Latest activity:</span> {app.activity?.at(-1)?.description}
                         </div>
                       )}
 

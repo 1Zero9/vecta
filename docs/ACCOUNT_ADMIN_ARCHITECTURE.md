@@ -71,9 +71,10 @@ High-impact actions require a reason, fresh confirmation, least-privilege permis
 2. **Authenticated identity — complete in v0.12.0.** Read the Sites-authenticated subject server-side, create the D1 user record, reject missing identity, enforce suspended status, and add authorization tests.
 3. **Durable profile migration — complete in v0.13.0.** Add D1 schema and explicitly migrate the profile, evidence, preferences, résumé text, and match decisions after review; detect conflicts and never infer ownership from browser input.
 4. **Durable saved lists — complete in v0.14.0.** Add an explicit saved-list snapshot, including an intentional empty state, and migrate saved roles and favourite companies with authenticated ownership and confirmed conflict resolution.
-5. **Durable pipeline and rights.** Move applications, notes, and consent history, then implement complete export and deletion.
-6. **Admin foundation.** Add server-protected operator assignment, read-only queues, and audit recording before mutating support actions.
-7. **Operational actions.** Add individually approved actions with reason capture, confirmation, least privilege, and recovery paths.
+5. **Durable pipeline — complete in v0.15.0.** Migrate applications, notes, stages, and activity history with explicit empty-state and conflict handling.
+6. **Consent and rights.** Move consent history, then implement complete export and deletion.
+7. **Admin foundation.** Add server-protected operator assignment, read-only queues, and audit recording before mutating support actions.
+8. **Operational actions.** Add individually approved actions with reason capture, confirmation, least privilege, and recovery paths.
 
 ## Exit checks
 

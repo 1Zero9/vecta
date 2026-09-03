@@ -214,7 +214,7 @@ export function GovernanceModal({
                   Data Minimization & Local-First Architecture
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Your pipeline and consent choices are stored in this browser. On the private hosted preview, a signed-in user can explicitly protect a reviewed profile, résumé text, evidence, preferences, fit corrections, saved roles, and favourite companies in D1. These controls do not yet export or erase protected copies.
+                  Your consent choices are stored in this browser. On the private hosted preview, a signed-in user can explicitly protect a reviewed profile, saved lists, and application pipeline—including notes, stages, and activity history—in D1. These controls do not yet export or erase protected copies.
                 </p>
               </div>
 

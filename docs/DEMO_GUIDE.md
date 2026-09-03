@@ -24,7 +24,7 @@ The owner can alternatively use the private [hosted preview](https://vecta-caree
 
 **Say:** “Vecta helps specialist candidates move from scattered career information to a clear, evidence-led decision: which role fits, why it fits, what is missing, and what to do next.”
 
-Point out **Vecta v0.14.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
+Point out **Vecta v0.15.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
 
 ### 2. Establish the candidate context — 60 seconds
 
@@ -54,7 +54,7 @@ Point out **Vecta v0.14.0 Preview** in the header. Explain that the fit audit al
 
 **Do:** On the hosted preview, open the profile control and show the separate profile and saved-list protection states. If no saved-list copy exists, review its role/company counts before choosing **Copy saved lists to protected account**. Then open Governance and show the browser-only export and erasure controls. Briefly mention the roadmap.
 
-**Say:** “The private preview recognizes its signed-in visitor and can protect a reviewed career profile, saved roles, and favourite companies under that server-owned account. It never overwrites a differing copy automatically. Applications remain local, and today’s export and erase controls cover this browser only; complete account rights, recovery, and the admin workbench remain planned work.”
+**Say:** “The private preview recognizes its signed-in visitor and can protect a reviewed career profile, saved lists, and application pipeline under that server-owned account. It never overwrites a differing copy automatically. Today’s export and erase controls still cover this browser only; complete account rights, recovery, and the admin workbench remain planned work.”
 
 Close with: “Vecta turns career evidence into a clearer next move, while keeping the candidate in control of every claim.”
 
@@ -83,7 +83,7 @@ Do not present the prototype as having capabilities that are not implemented:
 - Jobs, companies, and market records are curated demonstration data, not a verified live feed.
 - Application and interview drafts are deterministic templates, not external-model output.
 - Browser storage is the active working copy. The private preview has authenticated D1 account, profile, and saved-list records, but synchronization is explicit rather than automatic.
-- Protected migration includes profile details, preferences, résumé text, evidence, fit corrections, saved roles, and favourite companies. Applications, notes, and consent remain local.
+- Protected migration includes profile details, preferences, résumé text, evidence, fit corrections, saved roles, favourite companies, applications, notes, stages, and activity history. Consent remains local.
 - The profile switcher is not production user management, and there is no production admin workbench yet.
 - Vecta is for people searching for roles. It does not provide recruiter, employer, or vacancy-publishing accounts.
 - Image-only or scanned PDFs require manual text entry because OCR is not included.
