@@ -60,6 +60,7 @@ import {
 import { getProfileCompletion } from "@/lib/profileCompletion";
 import { addJobToPipeline } from "@/lib/pipeline";
 import { profilesAreEquivalent, type ProfileProtectionState } from "@/lib/profileProtection";
+import { savedItemsAreEquivalent, type SavedItemsProtectionState, type SavedItemsSnapshot } from "@/lib/savedItems";
 
 const APPLICATION_STAGE_LABELS: Record<ApplicationStage, string> = {
   saved: "Saved / Evaluating",
@@ -92,6 +93,8 @@ export default function Home() {
   const [authenticatedAccount, setAuthenticatedAccount] = useState<AuthenticatedAccount | null>(null);
   const [protectedProfile, setProtectedProfile] = useState<CandidateProfile | null>(null);
   const [profileProtectionState, setProfileProtectionState] = useState<ProfileProtectionState>("unavailable");
+  const [protectedSavedItems, setProtectedSavedItems] = useState<SavedItemsSnapshot | null>(null);
+  const [savedItemsProtectionState, setSavedItemsProtectionState] = useState<SavedItemsProtectionState>("unavailable");
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Modals & Drawers
@@ -119,11 +122,13 @@ export default function Home() {
     let cancelled = false;
     const storedUser = getStoredUser();
     const storedProfile = getStoredProfile();
+    const storedFavourites = getStoredFavourites();
+    const storedSavedJobs = getStoredSavedJobs();
     setCurrentUser(storedUser);
     setProfile(storedProfile);
     setConsent(getStoredConsent());
-    setFavouriteCompanyIds(getStoredFavourites());
-    setSavedJobIds(getStoredSavedJobs());
+    setFavouriteCompanyIds(storedFavourites);
+    setSavedJobIds(storedSavedJobs);
     setPipeline(getStoredPipeline());
     setIsHydrated(true);
 
@@ -138,20 +143,39 @@ export default function Home() {
         if (!account.persisted) return;
 
         setProfileProtectionState("checking");
-        const profileResponse = await fetch("/api/profile");
-        if (!profileResponse.ok) throw new Error("Protected profile unavailable.");
-        const profilePayload = await profileResponse.json();
-        if (cancelled) return;
+        setSavedItemsProtectionState("checking");
 
-        const remoteProfile = profilePayload.profile as CandidateProfile | null;
-        setProtectedProfile(remoteProfile);
-        setProfileProtectionState(
-          remoteProfile
-            ? profilesAreEquivalent(storedProfile, remoteProfile) ? "protected" : "conflict"
-            : "local-only",
-        );
+        void fetch("/api/profile")
+          .then(async (response) => {
+            if (!response.ok) throw new Error("Protected profile unavailable.");
+            const payload = await response.json();
+            if (cancelled) return;
+            const remoteProfile = payload.profile as CandidateProfile | null;
+            setProtectedProfile(remoteProfile);
+            setProfileProtectionState(remoteProfile
+              ? profilesAreEquivalent(storedProfile, remoteProfile) ? "protected" : "conflict"
+              : "local-only");
+          })
+          .catch(() => { if (!cancelled) setProfileProtectionState("error"); });
+
+        void fetch("/api/saved-items")
+          .then(async (response) => {
+            if (!response.ok) throw new Error("Protected saved items unavailable.");
+            const payload = await response.json();
+            if (cancelled) return;
+            const remoteSnapshot = payload.snapshot as SavedItemsSnapshot | null;
+            const localSnapshot = { savedJobIds: storedSavedJobs, favouriteCompanyIds: storedFavourites };
+            setProtectedSavedItems(remoteSnapshot);
+            setSavedItemsProtectionState(remoteSnapshot
+              ? savedItemsAreEquivalent(localSnapshot, remoteSnapshot) ? "protected" : "conflict"
+              : "local-only");
+          })
+          .catch(() => { if (!cancelled) setSavedItemsProtectionState("error"); });
       } catch {
-        if (!cancelled) setProfileProtectionState("error");
+        if (!cancelled) {
+          setProfileProtectionState("error");
+          setSavedItemsProtectionState("error");
+        }
       }
     })();
 
@@ -168,6 +192,16 @@ export default function Home() {
       setProfileProtectionState("local-only");
     } else {
       setProfileProtectionState(profilesAreEquivalent(nextProfile, protectedProfile) ? "protected" : "conflict");
+    }
+  };
+
+  const reconcileSavedItemsProtection = (next: SavedItemsSnapshot) => {
+    if (!authenticatedAccount?.persisted) {
+      setSavedItemsProtectionState("unavailable");
+    } else if (!protectedSavedItems) {
+      setSavedItemsProtectionState("local-only");
+    } else {
+      setSavedItemsProtectionState(savedItemsAreEquivalent(next, protectedSavedItems) ? "protected" : "conflict");
     }
   };
 
@@ -238,6 +272,7 @@ export default function Home() {
       : [...favouriteCompanyIds, companyId];
     setFavouriteCompanyIds(next);
     saveStoredFavourites(next);
+    reconcileSavedItemsProtection({ savedJobIds, favouriteCompanyIds: next });
     const company = companies.find((item) => item.id === companyId);
     if (company) showToast(`${wasFavourite ? "Removed" : "Saved"} ${company.name} ${wasFavourite ? "from" : "to"} your company list.`);
   };
@@ -249,6 +284,7 @@ export default function Home() {
       : [...savedJobIds, jobId];
     setSavedJobIds(next);
     saveStoredSavedJobs(next);
+    reconcileSavedItemsProtection({ savedJobIds: next, favouriteCompanyIds });
     const job = jobs.find((item) => item.id === jobId);
     if (job) showToast(`${wasSaved ? "Removed" : "Saved"} "${job.title}" ${wasSaved ? "from" : "to"} your role list.`);
   };
@@ -347,6 +383,7 @@ export default function Home() {
     setPipeline([]);
     setConsent(null);
     reconcileProfileProtection(DEMO_PERSONAS["alex-ai-sec"].profile);
+    reconcileSavedItemsProtection({ savedJobIds: [], favouriteCompanyIds: [] });
     showToast("All user telemetry, resume text, and pipeline records permanently erased.");
   };
 
@@ -389,6 +426,36 @@ export default function Home() {
     saveStoredProfile(protectedProfile);
     setProfileProtectionState("protected");
     showToast("Protected career profile restored to this device.");
+  };
+
+  const handleProtectSavedItems = async () => {
+    const snapshot = { savedJobIds, favouriteCompanyIds };
+    setSavedItemsProtectionState("saving");
+    try {
+      const response = await fetch("/api/saved-items", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ snapshot }),
+      });
+      if (!response.ok) throw new Error("Saved-item protection failed.");
+      const payload = await response.json();
+      setProtectedSavedItems(payload.snapshot as SavedItemsSnapshot);
+      setSavedItemsProtectionState("protected");
+      showToast("Saved roles and companies copied to your protected account.");
+    } catch {
+      setSavedItemsProtectionState("error");
+      showToast("Protected saved items could not be updated. Your device lists are unchanged.", "info");
+    }
+  };
+
+  const handleUseProtectedSavedItems = () => {
+    if (!protectedSavedItems) return;
+    setSavedJobIds(protectedSavedItems.savedJobIds);
+    setFavouriteCompanyIds(protectedSavedItems.favouriteCompanyIds);
+    saveStoredSavedJobs(protectedSavedItems.savedJobIds);
+    saveStoredFavourites(protectedSavedItems.favouriteCompanyIds);
+    setSavedItemsProtectionState("protected");
+    showToast("Protected saved roles and companies restored to this device.");
   };
 
   // Counts for metric cards
@@ -550,12 +617,18 @@ export default function Home() {
         profile={profile}
         protectedProfile={protectedProfile}
         profileProtectionState={profileProtectionState}
+        savedJobIds={savedJobIds}
+        favouriteCompanyIds={favouriteCompanyIds}
+        protectedSavedItems={protectedSavedItems}
+        savedItemsProtectionState={savedItemsProtectionState}
         isOpen={isUserManagementOpen}
         onClose={() => setIsUserManagementOpen(false)}
         onSelectPersona={handleSelectPersona}
         onSaveCustomUser={handleSaveCustomUser}
         onProtectProfile={handleProtectProfile}
         onUseProtectedProfile={handleUseProtectedProfile}
+        onProtectSavedItems={handleProtectSavedItems}
+        onUseProtectedSavedItems={handleUseProtectedSavedItems}
         onOpenGovernance={() => setIsGovernanceModalOpen(true)}
       />
 

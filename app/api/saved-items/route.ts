@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { upsertAuthenticatedAccount } from "@/lib/accountStore";
-import { loadAuthenticatedProfile, saveAuthenticatedProfile } from "@/lib/profileStore";
-import { parseCandidateProfile } from "@/lib/profileValidation";
+import { parseSavedItemsSnapshot } from "@/lib/savedItems";
+import { loadAuthenticatedSavedItems, saveAuthenticatedSavedItems } from "@/lib/savedItemsStore";
 import { readSitesIdentity } from "@/lib/sitesIdentity";
 import type { SitesIdentity } from "@/lib/sitesIdentity";
 
@@ -14,7 +14,6 @@ async function requireActiveAccount(request: Request): Promise<{ identity: Sites
   if (account.status === "suspended") {
     return { error: NextResponse.json({ authenticated: true, suspended: true }, { status: 403 }) };
   }
-
   return { identity };
 }
 
@@ -22,11 +21,10 @@ export async function GET(request: Request) {
   try {
     const access = await requireActiveAccount(request);
     if ("error" in access) return access.error;
-    const profile = await loadAuthenticatedProfile(access.identity.id);
-    return NextResponse.json({ profile });
+    return NextResponse.json({ snapshot: await loadAuthenticatedSavedItems(access.identity.id) });
   } catch (error) {
-    console.error("Unable to load the protected profile:", error);
-    return NextResponse.json({ error: "Protected profile unavailable." }, { status: 503 });
+    console.error("Unable to load protected saved items:", error);
+    return NextResponse.json({ error: "Protected saved items unavailable." }, { status: 503 });
   }
 }
 
@@ -36,15 +34,15 @@ export async function PUT(request: Request) {
     if ("error" in access) return access.error;
 
     const body = await request.json();
-    const result = parseCandidateProfile(body?.profile);
+    const result = parseSavedItemsSnapshot(body?.snapshot);
     if (!result.success) {
-      return NextResponse.json({ error: "The profile contains invalid or unsupported fields." }, { status: 400 });
+      return NextResponse.json({ error: "The saved-item list contains invalid or unsupported fields." }, { status: 400 });
     }
 
-    await saveAuthenticatedProfile(access.identity.id, result.data);
-    return NextResponse.json({ success: true, profile: result.data });
+    await saveAuthenticatedSavedItems(access.identity.id, result.data);
+    return NextResponse.json({ success: true, snapshot: result.data });
   } catch (error) {
-    console.error("Unable to save the protected profile:", error);
-    return NextResponse.json({ error: "Protected profile could not be saved." }, { status: 503 });
+    console.error("Unable to save protected saved items:", error);
+    return NextResponse.json({ error: "Protected saved items could not be saved." }, { status: 503 });
   }
 }

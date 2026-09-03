@@ -20,7 +20,7 @@ The prototype already provides:
 
 - A responsive, light-only application shell with jobs as the primary working surface.
 - Curated job, company, salary, and talent-archetype datasets.
-- Local candidate profiles, saved roles, favourites, and application pipeline state, plus an explicit authenticated D1 copy of the reviewed profile and evidence on Sites.
+- Local working copies for candidate data and pipeline state, plus explicit authenticated D1 snapshots of the reviewed profile, evidence, saved roles, and favourite companies on Sites.
 - Deterministic fit scoring and ATS résumé checks.
 - Template-based application and interview preparation.
 - Local data export and erasure controls, plus optional Prisma synchronization.
@@ -33,7 +33,7 @@ Before presenting these features as production-ready, the product still needs a 
 | ---: | --- | --- | --- |
 | 1 | Fit and profile reliability | Active | Real-world résumé fixtures and ongoing measured taxonomy maintenance. |
 | 2 | UI and delivery hardening | Active | Remaining legacy controls, accessibility and responsive checks, and repository lint cleanup. The owner-only hosted preview is operational. |
-| 3 | Accounts, user management, and admin operations | In progress | Server-trusted identity plus D1 account, profile, evidence, preferences, résumé text, and fit corrections are complete; saved roles, pipeline, the admin workbench, cross-device recovery, and complete export/erasure remain. |
+| 3 | Accounts, user management, and admin operations | In progress | Server-trusted identity plus D1 account, profile, evidence, preferences, résumé text, fit corrections, saved roles, and favourite companies are complete; pipeline, the admin workbench, recovery, and complete export/erasure remain. |
 | 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
 | 5 | Grounded application assistance | Not started | Evidence-grounded generation, user review, version history, and audit records. |
 | 6 | Candidate market intelligence | Deferred | Sourced compensation and role-market data with provenance and useful candidate comparisons. |
@@ -126,7 +126,7 @@ Before presenting these features as production-ready, the product still needs a 
 
 **Goal:** Make Vecta safe to use across sessions and devices, while giving users control of their accounts and operators the minimum tools needed to support the service.
 
-**Status:** In progress. The User/Administrator boundary, server-trusted Sites identity, D1 account record, and explicit protected-profile migration are implemented. Saved roles, favourites, pipeline, and consent remain device-local; see [ACCOUNT_ADMIN_ARCHITECTURE.md](ACCOUNT_ADMIN_ARCHITECTURE.md).
+**Status:** In progress. The User/Administrator boundary, server-trusted Sites identity, D1 account record, and explicit protected snapshots for profiles and saved lists are implemented. Applications, notes, and consent remain device-local; see [ACCOUNT_ADMIN_ARCHITECTURE.md](ACCOUNT_ADMIN_ARCHITECTURE.md).
 
 ### Identity and access
 
@@ -160,7 +160,8 @@ Before presenting these features as production-ready, the product still needs a 
 - [x] Add server-owned D1 records for a user’s profile, evidence, preferences, résumé text, and role-specific match corrections.
 - [x] Require explicit review before the first device-to-account copy, detect divergent copies, and require confirmation before either version is replaced.
 - [x] Derive profile ownership from the server-authenticated subject and reject unsupported browser fields at the API boundary.
-- Move saved jobs, favourites, applications, notes, and consent records to server-owned D1 storage, with R2 reserved for original résumé files and other blobs.
+- [x] Add authenticated D1 snapshots for saved roles and favourite companies, preserving intentional empty lists and requiring confirmation when copies differ.
+- Move applications, notes, and consent records to server-owned D1 storage, with R2 reserved for original résumé files and other blobs.
 - Add authenticated ownership and authorization checks to every remaining query and mutation.
 - Implement genuine account export and deletion across browser and database storage.
 - Add application reminders, activity history, follow-up dates, and archive/reopen actions.
@@ -237,7 +238,7 @@ Before presenting these features as production-ready, the product still needs a 
 ## Immediate next sprint
 
 1. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-2. Move saved roles and favourites into authenticated D1 ownership, preserving an explicit device migration and conflict boundary.
+2. Move pipeline applications and notes into authenticated D1 ownership, preserving history and explicit device migration.
 3. Clean up the repository-wide lint baseline and make it a release quality gate.
 4. Extend protected-account export and deletion across browser and D1 data before describing data rights as complete.
 5. Test the Prisma major-version migration needed to clear the current development-only dependency advisory chain.
@@ -245,7 +246,7 @@ Before presenting these features as production-ready, the product still needs a 
 ### Dependencies and decisions
 
 - Real-world parser validation needs anonymized PDF and DOCX samples that may be safely retained as test fixtures.
-- The hosted preview now has D1-backed authenticated account and protected-profile records. Saved roles, favourites, pipeline, and consent remain local-first until each record type gains explicit ownership, migration, authorization, export, and erasure coverage.
+- The hosted preview now has D1-backed authenticated account, protected-profile, saved-role, and favourite-company records. Pipeline and consent remain local-first until each record type gains explicit ownership, migration, authorization, export, and erasure coverage.
 - Durable persistence should not expand until authentication, ownership, authorization, administrator powers, audit retention, export, and erasure boundaries are agreed together.
 
 ## Product principles

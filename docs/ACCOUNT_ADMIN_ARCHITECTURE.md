@@ -70,9 +70,10 @@ High-impact actions require a reason, fresh confirmation, least-privilege permis
 1. **Boundary and preview UI — complete in v0.11.0.** Remove recruiter roles and vocabulary, migrate legacy local roles to User, label account state honestly, and document this model.
 2. **Authenticated identity — complete in v0.12.0.** Read the Sites-authenticated subject server-side, create the D1 user record, reject missing identity, enforce suspended status, and add authorization tests.
 3. **Durable profile migration — complete in v0.13.0.** Add D1 schema and explicitly migrate the profile, evidence, preferences, résumé text, and match decisions after review; detect conflicts and never infer ownership from browser input.
-4. **Durable saved roles, pipeline, and rights.** Move saved roles, favourites, applications, notes, and consent history, then implement complete export and deletion.
-5. **Admin foundation.** Add server-protected operator assignment, read-only queues, and audit recording before mutating support actions.
-6. **Operational actions.** Add individually approved actions with reason capture, confirmation, least privilege, and recovery paths.
+4. **Durable saved lists — complete in v0.14.0.** Add an explicit saved-list snapshot, including an intentional empty state, and migrate saved roles and favourite companies with authenticated ownership and confirmed conflict resolution.
+5. **Durable pipeline and rights.** Move applications, notes, and consent history, then implement complete export and deletion.
+6. **Admin foundation.** Add server-protected operator assignment, read-only queues, and audit recording before mutating support actions.
+7. **Operational actions.** Add individually approved actions with reason capture, confirmation, least privilege, and recovery paths.
 
 ## Exit checks
 

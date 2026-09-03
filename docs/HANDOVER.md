@@ -4,13 +4,13 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
-Current identifiers are Vecta **v0.13.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
+Current identifiers are Vecta **v0.14.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
 
 The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
 
-The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. The private Sites runtime creates a D1 account record from authenticated platform headers and can store an explicitly reviewed profile snapshot with evidence. Saved roles, favourites, applications, notes, and consent remain device-local.
+The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. The private Sites runtime creates a D1 account record from authenticated platform headers and can store explicitly reviewed profile and saved-list snapshots. Applications, notes, and consent remain device-local.
 
-`UserManagementModal` is a demonstration-persona switcher, local custom-profile form, and protected-profile migration surface. It is not a complete production user-management or administrator system.
+`UserManagementModal` is a demonstration-persona switcher, local custom-profile form, and protected profile/saved-list migration surface. It is not a complete production user-management or administrator system.
 
 Vecta has two future access roles: User and Administrator. Career discipline remains profile data; recruiter and employer vacancy-management workflows are outside the product. See [ACCOUNT_ADMIN_ARCHITECTURE.md](ACCOUNT_ADMIN_ARCHITECTURE.md).
 
@@ -55,6 +55,9 @@ flowchart TD
     Page --> ProfileAPI[/api/profile]
     ProfileAPI --> Identity
     ProfileAPI --> D1Profiles[(Sites D1 profiles and evidence)]
+    Page --> SavedItemsAPI[/api/saved-items]
+    SavedItemsAPI --> Identity
+    SavedItemsAPI --> D1Saved[(Sites D1 saved roles and companies)]
 ```
 
 ## Important files
@@ -83,6 +86,7 @@ flowchart TD
 | Optional synchronization | `lib/profileSync.ts`, `lib/prismaClient.sites.ts` | Keeps Prisma/SQLite available to standard Next development while replacing it with a worker-safe no-op in the Sites build. |
 | Hosted account | `app/api/account/route.ts`, `lib/sitesIdentity.ts`, `lib/d1AccountStore.ts` | Reads server-provided Sites identity, creates or refreshes the D1 user record, and enforces account status. |
 | Protected profile | `app/api/profile/route.ts`, `lib/profileValidation.ts`, `lib/d1ProfileStore.ts` | Validates a complete profile, derives ownership from authenticated identity, and reads or writes the matching D1 profile and evidence records. |
+| Protected saved lists | `app/api/saved-items/route.ts`, `lib/savedItems.ts`, `lib/d1SavedItemsStore.ts` | Validates role/company ID snapshots, preserves an intentional empty set, derives ownership from authenticated identity, and replaces only the matching user’s records. |
 | D1 schema | `db/schema.ts`, `drizzle/*.sql` | Defines and migrates authenticated users, profiles, and normalized profile evidence. |
 | Sites delivery | `vite.config.mts`, `wrangler.jsonc`, `.openai/hosting.json` | Selects vinext's Worker fetch entry and emits the required worker and client assets while preserving the local-first persistence boundary. |
 | Types | `lib/types.ts` | Candidate, evidence, job, application, and result contracts. |
@@ -97,7 +101,8 @@ flowchart TD
 6. Candidate match corrections are stored against a role ID and requirement, then immediately recalculate role fit.
 7. Saving updates browser storage and immediately recalculates role fit.
 8. On Sites, the profile panel fetches the authenticated D1 snapshot and classifies it as absent, matching, or conflicting. Upload or replacement happens only after the user confirms it.
-9. JSON export includes the browser profile, résumé text, evidence records, and match corrections; local erasure removes them. Neither action currently covers the D1 snapshot.
+9. Saved roles and favourite companies use the same absent, matching, or conflicting snapshot workflow. A `saved_item_sets` parent record distinguishes an intentional empty protected list from no migration.
+10. JSON export includes the browser profile, résumé text, evidence records, match corrections, and saved lists; local erasure removes them. Neither action currently covers D1 snapshots.
 
 The file bytes themselves are not persisted or sent to an API.
 
@@ -124,9 +129,9 @@ Gap talking points must describe transferable experience and learning plans hone
 
 ## Persistence boundary
 
-The authenticated Sites account identity and explicitly protected `CandidateProfile` snapshot are persisted in D1. Evidence uses child records with the authenticated subject in its composite key; profile preferences, résumé text, and match corrections are stored with the owned profile. The API never accepts a user ID or role from the profile payload.
+The authenticated Sites account identity and explicitly protected `CandidateProfile` and saved-list snapshots are persisted in D1. Evidence, saved roles, and favourite companies use child records with the authenticated subject in their composite keys. The APIs never accept a user ID or role from these payloads.
 
-Browser storage remains the active working copy. There is no automatic synchronization: a missing protected copy requires an explicit upload, and divergent copies require a confirmed choice. Saved roles, favourites, applications, notes, and consent remain browser-only. Export and erasure also remain browser-only, so do not describe the account as fully portable or the data-rights workflow as complete.
+Browser storage remains the active working copy. There is no automatic synchronization: a missing protected copy requires an explicit upload, and divergent copies require a confirmed choice. Applications, notes, and consent remain browser-only. Export and erasure also remain browser-only, so do not describe the account as fully portable or the data-rights workflow as complete.
 
 ## Operational notes
 
@@ -134,8 +139,8 @@ Browser storage remains the active working copy. There is no automatic synchroni
 - Résumé files are limited to 10 MB.
 - Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- The Sites build aliases native Prisma to a worker-safe no-op for legacy sync. The authenticated account and protected-profile endpoints use D1.
-- Vitest covers 71 domain, identity, protected-profile, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, delivery-boundary, and component scenarios across twenty-one test files.
+- The Sites build aliases native Prisma to a worker-safe no-op for legacy sync. The authenticated account, protected-profile, and protected-saved-list endpoints use D1.
+- Vitest covers 79 domain, identity, protected-profile, saved-list, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, delivery-boundary, and component scenarios across twenty-three test files.
 - Four Playwright journeys cover role search and tracking, complete onboarding persistence, fit review with reversible corrections, and persisted pipeline-stage movement with visible confirmation.
 - Jobs, Companies, Market, and Pipeline have been checked at 360 px, 768 px, and 1440 px without document-level horizontal overflow. Search, local profiles, governance, fit review, application preparation, candidate profile, and onboarding now use shared dialogs that lock background scroll, contain Tab focus, close with Escape, and restore the invoking control.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).
@@ -143,6 +148,6 @@ Browser storage remains the active working copy. There is no automatic synchroni
 ## Next engineering priorities
 
 1. Validate extraction against anonymized real-world PDF/DOCX samples when safe fixtures are available.
-2. Move saved roles and favourites into authenticated D1 ownership with the same explicit migration and authorization boundary.
+2. Move pipeline applications and notes into authenticated D1 ownership with history and explicit migration.
 3. Clean up the repository-wide lint baseline and make it a release quality gate.
 4. Implement complete browser-and-D1 export and deletion before expanding privacy claims.

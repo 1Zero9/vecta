@@ -43,3 +43,29 @@ export const createProfileEvidenceTableSql = `
     PRIMARY KEY (user_id, id)
   )
 `;
+
+export const createSavedItemSetsTableSql = `
+  CREATE TABLE IF NOT EXISTS saved_item_sets (
+    user_id TEXT PRIMARY KEY NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  )
+`;
+
+export const createSavedJobsTableSql = `
+  CREATE TABLE IF NOT EXISTS saved_jobs (
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    job_id TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (user_id, job_id)
+  )
+`;
+
+export const createFavouriteCompaniesTableSql = `
+  CREATE TABLE IF NOT EXISTS favourite_companies (
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    company_id TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (user_id, company_id)
+  )
+`;

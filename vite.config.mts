@@ -23,6 +23,7 @@ export default defineConfig({
       "@prisma/client": fileURLToPath(new URL("./lib/prismaClient.sites.ts", import.meta.url)),
       "@/lib/accountStore": fileURLToPath(new URL("./lib/accountStore.sites.ts", import.meta.url)),
       "@/lib/profileStore": fileURLToPath(new URL("./lib/profileStore.sites.ts", import.meta.url)),
+      "@/lib/savedItemsStore": fileURLToPath(new URL("./lib/savedItemsStore.sites.ts", import.meta.url)),
       tailwindcss: fileURLToPath(new URL("./node_modules/tailwindcss/index.css", import.meta.url)),
     },
   },

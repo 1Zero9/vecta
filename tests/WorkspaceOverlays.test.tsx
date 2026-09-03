@@ -107,6 +107,34 @@ describe("workspace overlays", () => {
     expect(onProtectProfile).toHaveBeenCalledOnce();
   });
 
+  it("requires confirmation before replacing protected saved lists", async () => {
+    const user = userEvent.setup();
+    const onProtectSavedItems = vi.fn().mockResolvedValue(undefined);
+    render(
+      <UserManagementModal
+        currentUser={DEFAULT_USER}
+        profile={makeProfile()}
+        savedJobIds={["job-device"]}
+        favouriteCompanyIds={["company-device"]}
+        protectedSavedItems={{ savedJobIds: ["job-protected"], favouriteCompanyIds: [] }}
+        authenticatedAccount={{ id: "account-1", email: "jordan@example.com", name: "Jordan Quinn", persisted: true }}
+        savedItemsProtectionState="conflict"
+        isOpen
+        onClose={vi.fn()}
+        onSelectPersona={vi.fn()}
+        onSaveCustomUser={vi.fn()}
+        onProtectSavedItems={onProtectSavedItems}
+        onOpenGovernance={vi.fn()}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Keep this device’s saved lists" }));
+    expect(onProtectSavedItems).not.toHaveBeenCalled();
+    expect(screen.getByText(/Replace the protected role and company lists/)).toBeDefined();
+    await user.click(screen.getByRole("button", { name: "Confirm replacement" }));
+    expect(onProtectSavedItems).toHaveBeenCalledOnce();
+  });
+
   it("edits and saves a candidate profile from the accessible drawer", async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

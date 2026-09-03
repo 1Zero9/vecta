@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ArrowLeft, Cloud, CloudUpload, Cpu, HardDrive, Loader2, Lock, ShieldCheck, Sparkles, UserCheck, UserPlus } from "lucide-react";
 import { AuthenticatedAccount, CandidateProfile, UserAccount } from "@/lib/types";
 import type { ProfileProtectionState } from "@/lib/profileProtection";
+import type { SavedItemsProtectionState, SavedItemsSnapshot } from "@/lib/savedItems";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogShell } from "@/components/ui/dialog-shell";
@@ -19,12 +20,18 @@ interface UserManagementModalProps {
   profile: CandidateProfile;
   protectedProfile?: CandidateProfile | null;
   profileProtectionState?: ProfileProtectionState;
+  savedJobIds?: string[];
+  favouriteCompanyIds?: string[];
+  protectedSavedItems?: SavedItemsSnapshot | null;
+  savedItemsProtectionState?: SavedItemsProtectionState;
   isOpen: boolean;
   onClose: () => void;
   onSelectPersona: (personaKey: PersonaKey) => void;
   onSaveCustomUser: (user: UserAccount, profile: CandidateProfile) => void;
   onProtectProfile?: () => Promise<void>;
   onUseProtectedProfile?: () => void;
+  onProtectSavedItems?: () => Promise<void>;
+  onUseProtectedSavedItems?: () => void;
   onOpenGovernance: () => void;
 }
 
@@ -34,11 +41,12 @@ const personas: Array<{ key: PersonaKey; initials: string; name: string; descrip
   { key: "marcus-it", initials: "MS", name: "Marcus Sterling", description: "Principal cloud and enterprise IT architect", icon: Cpu, accent: "bg-indigo-50 text-indigo-700" },
 ];
 
-export function UserManagementModal({ currentUser, authenticatedAccount, profile, protectedProfile, profileProtectionState = "unavailable", isOpen, onClose, onSelectPersona, onSaveCustomUser, onProtectProfile, onUseProtectedProfile, onOpenGovernance }: UserManagementModalProps) {
+export function UserManagementModal({ currentUser, authenticatedAccount, profile, protectedProfile, profileProtectionState = "unavailable", savedJobIds = [], favouriteCompanyIds = [], protectedSavedItems, savedItemsProtectionState = "unavailable", isOpen, onClose, onSelectPersona, onSaveCustomUser, onProtectProfile, onUseProtectedProfile, onProtectSavedItems, onUseProtectedSavedItems, onOpenGovernance }: UserManagementModalProps) {
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customEmail, setCustomEmail] = useState("");
   const [pendingResolution, setPendingResolution] = useState<"device" | "protected" | null>(null);
+  const [pendingSavedItemsResolution, setPendingSavedItemsResolution] = useState<"device" | "protected" | null>(null);
 
   if (!isOpen) return null;
 
@@ -219,6 +227,78 @@ export function UserManagementModal({ currentUser, authenticatedAccount, profile
 
                   {profileProtectionState === "error" && (
                     <p className="mt-1 text-xs leading-5 text-rose-700">The protected copy could not be checked. Nothing on this device was changed; try again later before replacing either version.</p>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {authenticatedAccount?.persisted && (
+            <section aria-labelledby="saved-items-protection-heading" className="rounded-2xl border border-slate-200 bg-white p-4">
+              <div className="flex items-start gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
+                  {savedItemsProtectionState === "checking" || savedItemsProtectionState === "saving"
+                    ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    : <CloudUpload className="h-4 w-4" aria-hidden="true" />}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3 id="saved-items-protection-heading" className="text-sm font-semibold text-slate-900">
+                    {savedItemsProtectionState === "protected" ? "Saved lists protected" : savedItemsProtectionState === "conflict" ? "Choose which saved lists to keep" : "Protected saved lists"}
+                  </h3>
+
+                  {(savedItemsProtectionState === "checking" || savedItemsProtectionState === "saving") && (
+                    <p className="mt-1 text-xs leading-5 text-slate-600">{savedItemsProtectionState === "saving" ? "Saving your reviewed role and company lists…" : "Checking this device against your protected saved lists…"}</p>
+                  )}
+
+                  {savedItemsProtectionState === "local-only" && (
+                    <div className="mt-2 space-y-3">
+                      <p className="text-xs leading-5 text-slate-600">Review before copying: this device has <strong>{savedJobIds.length} saved roles</strong> and <strong>{favouriteCompanyIds.length} saved companies</strong>. An empty list is saved intentionally.</p>
+                      <Button size="sm" variant="primary" onClick={() => void onProtectSavedItems?.()}>
+                        Copy saved lists to protected account
+                      </Button>
+                    </div>
+                  )}
+
+                  {savedItemsProtectionState === "protected" && (
+                    <p className="mt-1 text-xs leading-5 text-slate-600">This device’s {savedJobIds.length} saved roles and {favouriteCompanyIds.length} saved companies match the protected account copy.</p>
+                  )}
+
+                  {savedItemsProtectionState === "conflict" && protectedSavedItems && (
+                    <div className="mt-2 space-y-3">
+                      <p className="text-xs leading-5 text-slate-600">This device has <strong>{savedJobIds.length} roles / {favouriteCompanyIds.length} companies</strong>; the protected account has <strong>{protectedSavedItems.savedJobIds.length} roles / {protectedSavedItems.favouriteCompanyIds.length} companies</strong>. Neither copy will be overwritten automatically.</p>
+                      {!pendingSavedItemsResolution ? (
+                        <div className="flex flex-wrap gap-2">
+                          <Button size="sm" variant="primary" onClick={() => setPendingSavedItemsResolution("protected")}>Use protected saved lists</Button>
+                          <Button size="sm" onClick={() => setPendingSavedItemsResolution("device")}>Keep this device’s saved lists</Button>
+                        </div>
+                      ) : (
+                        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3">
+                          <p className="text-xs leading-5 text-amber-900">
+                            {pendingSavedItemsResolution === "protected"
+                              ? "Replace this device’s saved roles and companies with the protected lists?"
+                              : "Replace the protected role and company lists with this device’s lists?"}
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            <Button
+                              size="sm"
+                              variant={pendingSavedItemsResolution === "device" ? "danger" : "primary"}
+                              onClick={() => {
+                                if (pendingSavedItemsResolution === "protected") onUseProtectedSavedItems?.();
+                                else void onProtectSavedItems?.();
+                                setPendingSavedItemsResolution(null);
+                              }}
+                            >
+                              Confirm replacement
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => setPendingSavedItemsResolution(null)}>Cancel</Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {savedItemsProtectionState === "error" && (
+                    <p className="mt-1 text-xs leading-5 text-rose-700">The protected saved lists could not be checked. Nothing on this device was changed; try again before replacing either version.</p>
                   )}
                 </div>
               </div>
