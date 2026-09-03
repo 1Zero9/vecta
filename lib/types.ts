@@ -4,6 +4,15 @@ export type AccountRole = "User" | "Administrator";
 
 export type WorkspaceTab = "jobs" | "radar" | "market" | "pipeline" | "governance";
 
+export interface AuthenticatedAccount {
+  id: string;
+  email: string;
+  name: string | null;
+  persisted: boolean;
+  createdAt?: string;
+  lastSeenAt?: string;
+}
+
 export type ScaleTier = "Startup (1-20)" | "Scaleup (20-100)" | "Mid-Market (100-500)" | "Enterprise / FDI (500+)";
 
 export type WorkMode = "Remote" | "Hybrid" | "Onsite";

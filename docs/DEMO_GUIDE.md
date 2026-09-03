@@ -24,7 +24,7 @@ The owner can alternatively use the private [hosted preview](https://vecta-caree
 
 **Say:** “Vecta helps specialist candidates move from scattered career information to a clear, evidence-led decision: which role fits, why it fits, what is missing, and what to do next.”
 
-Point out **Vecta v0.11.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
+Point out **Vecta v0.12.0 Preview** in the header. Explain that the fit audit also names its taxonomy version, making demonstrations and exported results reproducible.
 
 ### 2. Establish the candidate context — 60 seconds
 
@@ -54,7 +54,7 @@ Point out **Vecta v0.11.0 Preview** in the header. Explain that the fit audit al
 
 **Do:** Open Governance and show export and erasure controls. Briefly mention the roadmap.
 
-**Say:** “Candidate data is currently local-first and can be exported or erased. Production authentication, cross-device ownership, self-service user management, and an auditable admin workbench are planned work—not hidden claims about the prototype.”
+**Say:** “The private preview now recognizes its signed-in visitor and stores a protected account record. Career profiles and applications are still local-first and can be exported or erased; cross-device ownership, self-service account management, and an auditable admin workbench remain planned work.”
 
 Close with: “Vecta turns career evidence into a clearer next move, while keeping the candidate in control of every claim.”
 
@@ -82,7 +82,7 @@ Do not present the prototype as having capabilities that are not implemented:
 
 - Jobs, companies, and market records are curated demonstration data, not a verified live feed.
 - Application and interview drafts are deterministic templates, not external-model output.
-- Browser storage is the primary candidate store; production authentication and durable multi-device ownership are not implemented.
+- Browser storage is the primary career-data store. The private preview has an authenticated D1 account record, but durable multi-device profile ownership is not implemented.
 - The hosted preview keeps the same local-first model. Its optional synchronization endpoints do not persist data because the prototype SQLite adapter is intentionally excluded from the worker bundle.
 - The profile switcher is not production user management, and there is no production admin workbench yet.
 - Vecta is for people searching for roles. It does not provide recruiter, employer, or vacancy-publishing accounts.

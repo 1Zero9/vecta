@@ -2,11 +2,11 @@
 
 Vecta is a light-only recruitment workspace for specialist candidates in AI, cybersecurity, governance, and cloud/IT. It combines a curated role catalogue, a local-first candidate profile, explainable fit estimates, résumé review, evidence linking, and an application pipeline.
 
-Current release: **Vecta v0.11.0 Preview** · Skill taxonomy **v1.1.0** · Export schema **v1**.
+Current release: **Vecta v0.12.0 Preview** · Skill taxonomy **v1.1.0** · Export schema **v1**.
 
 The name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. For the product, it means bringing experience, evidence, and ambition together to carry a career forward with clarity.
 
-This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. Production authentication, self-service user management, an auditable admin workbench, durable multi-device ownership, and verified job ingestion remain roadmap work.
+This repository is currently a product prototype. Job and market records are curated demonstration data, drafting is deterministic, and local browser storage is the primary candidate-data store. The private Sites build now creates a server-owned account from its authenticated visitor headers, but self-service account management, an auditable admin workbench, durable career-data ownership, and verified job ingestion remain roadmap work.
 
 The local and production Next.js builds pass. A separate vinext/Vite/Cloudflare build powers an owner-only [hosted preview](https://vecta-career.dexincognito.chatgpt.site). Because Sites cannot run the prototype's native SQLite client, that build preserves the documented device-local workflow and returns an explicit offline response from optional synchronization APIs.
 
@@ -22,6 +22,7 @@ The local and production Next.js builds pass. A separate vinext/Vite/Cloudflare 
 - See evidence coverage, unsupported claims, confidence limitations, and insufficient-information states.
 - Save roles and manage applications through a local pipeline.
 - Export or erase locally stored candidate data.
+- Connect the authenticated private Sites visitor to a server-owned account record without trusting browser-provided identity or roles.
 
 ## Technology
 
@@ -31,6 +32,7 @@ The local and production Next.js builds pass. A separate vinext/Vite/Cloudflare 
 - vinext, Vite, and the Sites plugin for the worker-compatible hosted build
 - PDF.js and Mammoth for local PDF/DOCX text extraction
 - Browser `localStorage` for the prototype’s device-local profile and pipeline state
+- Cloudflare D1 for the authenticated Sites account record
 - Vitest, Testing Library, and V8 coverage for deterministic logic and core profile interactions
 
 ## Local setup

@@ -4,7 +4,7 @@ Version identifiers make demos, exports, matching behaviour, and roadmap progres
 
 | Surface | Current | Source | Meaning |
 | --- | --- | --- | --- |
-| Product | `0.11.0` | `package.json` | The complete Vecta application milestone. |
+| Product | `0.12.0` | `package.json` | The complete Vecta application milestone. |
 | Skill taxonomy | `1.1.0` | `lib/skillTaxonomy.ts` | The canonical skill concepts and explicit aliases used by matching. |
 | Export schema | `1` | `lib/version.ts` | The shape of the downloaded user-data bundle. |
 
@@ -22,6 +22,7 @@ Vecta uses semantic versions:
 
 ### Milestone history
 
+- `0.12.0` — Server-trusted Sites identity, a D1-backed user record, suspended-account enforcement, and a clear hosted-account connection state.
 - `0.11.0` — Candidate-only product boundary, User/Administrator access model, clearer device-local account state, and candidate-focused Market terminology.
 - `0.10.0` — Sites-compatible vinext/Vite/Cloudflare Worker delivery, with an explicit worker-safe local-first persistence boundary and documented build path.
 - `0.9.0` — Evidence-grounded application templates and accurate prototype language for curated data, privacy controls, deterministic fit, and future governance work.

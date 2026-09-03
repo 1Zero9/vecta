@@ -33,7 +33,7 @@ Before presenting these features as production-ready, the product still needs re
 | ---: | --- | --- | --- |
 | 1 | Fit and profile reliability | Active | Real-world résumé fixtures and ongoing measured taxonomy maintenance. |
 | 2 | UI and delivery hardening | Active | Remaining legacy controls, accessibility and responsive checks, and repository lint cleanup. The owner-only hosted preview is operational. |
-| 3 | Accounts, user management, and admin operations | In progress | Product roles and security boundaries are defined; authenticated identity, server-owned records, the auditable admin workbench, cross-device recovery, and complete export/erasure remain. |
+| 3 | Accounts, user management, and admin operations | In progress | Product roles, server-trusted identity, and the initial D1 user record are complete; durable career records, the auditable admin workbench, cross-device recovery, and complete export/erasure remain. |
 | 4 | Verified opportunity data | Not started | ATS ingestion, provenance, normalization, deduplication, freshness checks, and monitoring. |
 | 5 | Grounded application assistance | Not started | Evidence-grounded generation, user review, version history, and audit records. |
 | 6 | Candidate market intelligence | Deferred | Sourced compensation and role-market data with provenance and useful candidate comparisons. |
@@ -126,14 +126,15 @@ Before presenting these features as production-ready, the product still needs re
 
 **Goal:** Make Vecta safe to use across sessions and devices, while giving users control of their accounts and operators the minimum tools needed to support the service.
 
-**Status:** In progress. The User/Administrator boundary and first device-local account state are defined in [ACCOUNT_ADMIN_ARCHITECTURE.md](ACCOUNT_ADMIN_ARCHITECTURE.md). Authenticated identity and durable ownership remain unimplemented.
+**Status:** In progress. The User/Administrator boundary, server-trusted Sites identity, initial D1 account record, and hosted connection state are implemented. Career-profile and pipeline ownership remain device-local; see [ACCOUNT_ADMIN_ARCHITECTURE.md](ACCOUNT_ADMIN_ARCHITECTURE.md).
 
 ### Identity and access
 
-- Use the Sites-provided authenticated subject for the private hosted product; confirm a separate external identity path before any public standalone launch.
+- [x] Use the Sites-provided authenticated subject for the private hosted product; confirm a separate external identity path before any public standalone launch.
 - Keep exactly two access roles: User and Administrator. Career discipline is profile data, not permission data.
 - Add email verification, session management, recovery, optional MFA, rate limits, and abuse protection.
-- Enforce least-privilege role checks on the server rather than relying on hidden interface controls.
+- [x] Reject missing server identity, prevent client-provided role assignment, and enforce suspended-account status at the account boundary.
+- Enforce least-privilege administrator checks on every future admin query and action.
 - Do not introduce employer, recruiter, tenant, or organisation workflows into the candidate product.
 
 ### User management system
@@ -233,7 +234,7 @@ Before presenting these features as production-ready, the product still needs re
 ## Immediate next sprint
 
 1. Validate résumé extraction against anonymized real-world PDF and DOCX samples when suitable fixtures are available.
-2. Implement authenticated Sites identity and the initial D1 user record defined in `ACCOUNT_ADMIN_ARCHITECTURE.md`, with server-side ownership and authorization tests.
+2. Migrate the first candidate profile and its evidence into authenticated D1 ownership with explicit review, conflict handling, and cross-user authorization tests.
 3. Clean up the repository-wide lint baseline and make it a release quality gate.
 4. Extend state-specific handling when real network-backed Companies, Market, profile, and governance workflows are introduced.
 5. Test the Prisma major-version migration needed to clear the current development-only dependency advisory chain.
@@ -241,7 +242,7 @@ Before presenting these features as production-ready, the product still needs re
 ### Dependencies and decisions
 
 - Real-world parser validation needs anonymized PDF and DOCX samples that may be safely retained as test fixtures.
-- The hosted preview is local-first by design. Durable server persistence requires a worker-compatible data store plus the Phase 3 identity, ownership, authorization, export, erasure, and audit model.
+- The hosted preview now has a D1-backed authenticated account record. Career data remains local-first until each record type gains explicit ownership, migration, authorization, export, and erasure coverage.
 - Durable persistence should not expand until authentication, ownership, authorization, administrator powers, audit retention, export, and erasure boundaries are agreed together.
 
 ## Product principles

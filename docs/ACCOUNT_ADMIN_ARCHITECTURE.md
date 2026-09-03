@@ -19,7 +19,7 @@ There is no recruiter, employer, hiring-manager, or auditor product role. Admini
 
 ## Authentication decision
 
-The owner-only Sites preview should use the platform-provided authenticated-user identity when Phase 3 persistence begins. `oai-authenticated-user-id` is the stable per-Site ownership key; email and optional name are display attributes, not authorization inputs. The hosting access policy remains the preview membership boundary.
+The owner-only Sites preview uses the platform-provided authenticated-user identity for its first Phase 3 account record. `oai-authenticated-user-id` is the stable per-Site ownership key; email and optional name are display attributes, not authorization inputs. The hosting access policy remains the preview membership boundary.
 
 If Vecta later becomes a public standalone service, its external identity-provider path must be confirmed separately before implementation. Browser state, email query parameters, and hidden navigation controls must never authenticate or authorize a user.
 
@@ -68,7 +68,7 @@ High-impact actions require a reason, fresh confirmation, least-privilege permis
 ## Delivery slices
 
 1. **Boundary and preview UI — complete in v0.11.0.** Remove recruiter roles and vocabulary, migrate legacy local roles to User, label account state honestly, and document this model.
-2. **Authenticated identity.** Read the Sites-authenticated subject server-side, create the user record, and add authorization tests.
+2. **Authenticated identity — complete in v0.12.0.** Read the Sites-authenticated subject server-side, create the D1 user record, reject missing identity, enforce suspended status, and add authorization tests.
 3. **Durable profile migration.** Add D1 schema and migrate profile, evidence, preferences, saved roles, and match decisions with an explicit user review.
 4. **Durable pipeline and rights.** Move applications and consent history, then implement complete export and deletion.
 5. **Admin foundation.** Add server-protected operator assignment, read-only queues, and audit recording before mutating support actions.

@@ -60,6 +60,24 @@ describe("workspace overlays", () => {
     );
   });
 
+  it("shows a protected hosted account separately from the active career profile", () => {
+    render(
+      <UserManagementModal
+        currentUser={DEFAULT_USER}
+        authenticatedAccount={{ id: "account-1", email: "jordan@example.com", name: "Jordan Quinn", persisted: true }}
+        isOpen
+        onClose={vi.fn()}
+        onSelectPersona={vi.fn()}
+        onSaveCustomUser={vi.fn()}
+        onOpenGovernance={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("Protected account connected")).toBeDefined();
+    expect(screen.getByText(/Signed in as Jordan Quinn/)).toBeDefined();
+    expect(screen.getAllByText("Alex Mercer")).toHaveLength(2);
+  });
+
   it("edits and saves a candidate profile from the accessible drawer", async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

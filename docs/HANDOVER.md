@@ -4,11 +4,11 @@
 
 Vecta is a Next.js 16 candidate-workspace prototype. The current milestone is Candidate Profile v1: guided onboarding, local résumé extraction, explicit review, claim-level evidence, explainable fit, evidence coverage, and confidence states.
 
-Current identifiers are Vecta **v0.11.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
+Current identifiers are Vecta **v0.12.0 Preview**, skill taxonomy **v1.1.0**, and export schema **v1**. `package.json` is the application-version source; `lib/skillTaxonomy.ts` owns taxonomy metadata; `lib/version.ts` exposes application and export-schema identifiers. See [VERSIONING.md](VERSIONING.md).
 
 The product name is inspired by the Latin *vecta* — “carried forward” or “conveyed”. The working brand definition is: **Your career, carried forward with clarity.**
 
-The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. Candidate state is primarily device-local until authentication and durable ownership are implemented.
+The catalogue, market records, and drafting outputs are curated or deterministic. They are not live feeds or model-generated services. The private Sites runtime creates a D1 account record from authenticated platform headers; career-profile and pipeline state remain device-local until durable ownership is implemented.
 
 `UserManagementModal` is currently a demonstration-persona switcher and local custom-profile form. It is not a production identity, user-management, or administrator system.
 
@@ -49,6 +49,9 @@ flowchart TD
     UserAPI --> Sync[lib/profileSync.ts]
     Sync --> Prisma[Next: Prisma / SQLite]
     Sync --> WorkerFallback[Sites: local-first fallback]
+    Page --> AccountAPI[/api/account]
+    AccountAPI --> Identity[Server-provided Sites identity]
+    AccountAPI --> D1[(Sites D1 users)]
 ```
 
 ## Important files
@@ -75,6 +78,8 @@ flowchart TD
 | Profile quality | `lib/profileCompletion.ts` | Weighted completeness and missing profile areas. |
 | Persistence | `lib/storage.ts` | Local save/load, backward-compatible profile hydration, export, and erasure. |
 | Optional synchronization | `lib/profileSync.ts`, `lib/prismaClient.sites.ts` | Keeps Prisma/SQLite available to standard Next development while replacing it with a worker-safe no-op in the Sites build. |
+| Hosted account | `app/api/account/route.ts`, `lib/sitesIdentity.ts`, `lib/d1AccountStore.ts` | Reads server-provided Sites identity, creates or refreshes the D1 user record, and enforces account status. |
+| D1 schema | `db/schema.ts`, `drizzle/0000_create_users.sql` | Defines and migrates the initial authenticated user record. |
 | Sites delivery | `vite.config.mts`, `wrangler.jsonc`, `.openai/hosting.json` | Selects vinext's Worker fetch entry and emits the required worker and client assets while preserving the local-first persistence boundary. |
 | Types | `lib/types.ts` | Candidate, evidence, job, application, and result contracts. |
 
@@ -114,7 +119,7 @@ Gap talking points must describe transferable experience and learning plans hone
 
 ## Persistence boundary
 
-`CandidateProfile.evidence` and `CandidateProfile.skill_match_overrides` are currently part of the browser-stored TypeScript profile. The existing Prisma `Profile` model does not yet persist evidence records, preferred locations, or match corrections. Do not describe the current prototype as multi-device or fully database-backed.
+The authenticated Sites account identity is persisted in D1. `CandidateProfile.evidence` and `CandidateProfile.skill_match_overrides` are still part of the browser-stored TypeScript profile. The existing Prisma `Profile` model does not yet persist evidence records, preferred locations, or match corrections. Do not describe career data as multi-device or fully database-backed.
 
 The Phase 3 data-model work should normalize profile evidence with ownership and authorization checks before production use.
 
@@ -124,8 +129,8 @@ The Phase 3 data-model work should normalize profile evidence with ownership and
 - Résumé files are limited to 10 MB.
 - Older saved profiles are hydrated with empty `preferred_locations`, `evidence`, and `skill_match_overrides` collections.
 - PDF parsing uses a worker bundled by the Next.js build.
-- The Sites build aliases native Prisma to a worker-safe no-op. Optional API writes return `{ success: true, offline: true }`; durable hosted persistence remains Phase 3 work.
-- Vitest covers 58 domain, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, delivery-boundary, and component scenarios across seventeen test files.
+- The Sites build aliases native Prisma to a worker-safe no-op for legacy profile sync. The authenticated account endpoint uses D1; career records remain local-first.
+- Vitest covers 63 domain, identity, persistence, parser-boundary, matching, drafting, versioning, interface-foundation, state-feedback, overlay-accessibility, delivery-boundary, and component scenarios across eighteen test files.
 - Four Playwright journeys cover role search and tracking, complete onboarding persistence, fit review with reversible corrections, and persisted pipeline-stage movement with visible confirmation.
 - Jobs, Companies, Market, and Pipeline have been checked at 360 px, 768 px, and 1440 px without document-level horizontal overflow. Search, local profiles, governance, fit review, application preparation, candidate profile, and onboarding now use shared dialogs that lock background scroll, contain Tab focus, close with Escape, and restore the invoking control.
 - Full repository lint still includes legacy issues outside the Candidate Profile v1 files; see [BUILD.md](BUILD.md).

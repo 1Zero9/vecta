@@ -37,7 +37,8 @@ import {
   CandidateProfile,
   UserAccount,
   WorkspaceTab,
-  ConsentSettings
+  ConsentSettings,
+  AuthenticatedAccount,
 } from "@/lib/types";
 
 import { 
@@ -87,6 +88,7 @@ export default function Home() {
   const [favouriteCompanyIds, setFavouriteCompanyIds] = useState<string[]>([]);
   const [savedJobIds, setSavedJobIds] = useState<string[]>([]);
   const [pipeline, setPipeline] = useState<ApplicationTrack[]>([]);
+  const [authenticatedAccount, setAuthenticatedAccount] = useState<AuthenticatedAccount | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Modals & Drawers
@@ -111,6 +113,7 @@ export default function Home() {
 
   // Hydrate persistent state on client mount
   useEffect(() => {
+    let cancelled = false;
     setCurrentUser(getStoredUser());
     setProfile(getStoredProfile());
     setConsent(getStoredConsent());
@@ -119,7 +122,17 @@ export default function Home() {
     setPipeline(getStoredPipeline());
     setIsHydrated(true);
 
+    fetch("/api/account", { method: "POST" })
+      .then(async (response) => response.ok ? response.json() : null)
+      .then((payload) => {
+        if (!cancelled && payload?.authenticated && payload.account) {
+          setAuthenticatedAccount(payload.account as AuthenticatedAccount);
+        }
+      })
+      .catch(() => undefined);
+
     return () => {
+      cancelled = true;
       if (notificationTimeout.current) clearTimeout(notificationTimeout.current);
     };
   }, []);
@@ -434,7 +447,7 @@ export default function Home() {
               Active Account: {currentUser.name}
             </button>
             <span>•</span>
-            <span className="text-emerald-700">Local-first workspace</span>
+            <span className="text-emerald-700">{authenticatedAccount?.persisted ? "Protected account connected" : "Local-first workspace"}</span>
             <span>•</span>
             <span title={`Skill taxonomy v${SKILL_TAXONOMY_VERSION} · Export schema v${EXPORT_SCHEMA_VERSION}`}>Vecta v{APP_VERSION}</span>
           </div>
@@ -453,6 +466,7 @@ export default function Home() {
       {/* User Management & Demo Persona Switcher Modal */}
       <UserManagementModal
         currentUser={currentUser}
+        authenticatedAccount={authenticatedAccount}
         isOpen={isUserManagementOpen}
         onClose={() => setIsUserManagementOpen(false)}
         onSelectPersona={handleSelectPersona}

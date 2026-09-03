@@ -82,7 +82,7 @@ export function Header({
             <button
               onClick={openUserManagement}
               className="flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 pr-3 text-sm shadow-sm transition-colors hover:border-slate-300"
-              title="Switch profile"
+              title="Account and profiles"
             >
               <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-xs font-bold text-blue-700">{currentUser.avatar}</span>
               <span className="hidden max-w-32 truncate font-medium text-slate-800 sm:block">{currentUser.name}</span>

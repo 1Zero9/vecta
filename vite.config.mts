@@ -21,6 +21,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@prisma/client": fileURLToPath(new URL("./lib/prismaClient.sites.ts", import.meta.url)),
+      "@/lib/accountStore": fileURLToPath(new URL("./lib/accountStore.sites.ts", import.meta.url)),
       tailwindcss: fileURLToPath(new URL("./node_modules/tailwindcss/index.css", import.meta.url)),
     },
   },

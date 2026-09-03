@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, Cpu, HardDrive, Lock, ShieldCheck, Sparkles, UserCheck, UserPlus } from "lucide-react";
-import { CandidateProfile, UserAccount } from "@/lib/types";
+import { ArrowLeft, Cloud, Cpu, HardDrive, Lock, ShieldCheck, Sparkles, UserCheck, UserPlus } from "lucide-react";
+import { AuthenticatedAccount, CandidateProfile, UserAccount } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogShell } from "@/components/ui/dialog-shell";
@@ -14,6 +14,7 @@ type PersonaKey = "alex-ai-sec" | "elena-grc" | "marcus-it";
 
 interface UserManagementModalProps {
   currentUser: UserAccount;
+  authenticatedAccount?: AuthenticatedAccount | null;
   isOpen: boolean;
   onClose: () => void;
   onSelectPersona: (personaKey: PersonaKey) => void;
@@ -27,7 +28,7 @@ const personas: Array<{ key: PersonaKey; initials: string; name: string; descrip
   { key: "marcus-it", initials: "MS", name: "Marcus Sterling", description: "Principal cloud and enterprise IT architect", icon: Cpu, accent: "bg-indigo-50 text-indigo-700" },
 ];
 
-export function UserManagementModal({ currentUser, isOpen, onClose, onSelectPersona, onSaveCustomUser, onOpenGovernance }: UserManagementModalProps) {
+export function UserManagementModal({ currentUser, authenticatedAccount, isOpen, onClose, onSelectPersona, onSaveCustomUser, onOpenGovernance }: UserManagementModalProps) {
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customEmail, setCustomEmail] = useState("");
@@ -129,14 +130,18 @@ export function UserManagementModal({ currentUser, isOpen, onClose, onSelectPers
             </div>
           </section>
 
-          <section aria-labelledby="account-status-heading" className="rounded-2xl border border-blue-100 bg-blue-50/60 p-4">
+          <section aria-labelledby="account-status-heading" className={`rounded-2xl border p-4 ${authenticatedAccount?.persisted ? "border-emerald-200 bg-emerald-50/70" : "border-blue-100 bg-blue-50/60"}`}>
             <div className="flex items-start gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-blue-700 shadow-sm">
-                <HardDrive className="h-4 w-4" aria-hidden="true" />
+              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ${authenticatedAccount?.persisted ? "text-emerald-700" : "text-blue-700"}`}>
+                {authenticatedAccount?.persisted ? <Cloud className="h-4 w-4" aria-hidden="true" /> : <HardDrive className="h-4 w-4" aria-hidden="true" />}
               </span>
               <div>
-                <h3 id="account-status-heading" className="text-sm font-semibold text-slate-900">Device-local preview</h3>
-                <p className="mt-1 text-xs leading-5 text-slate-600">This profile and its career data are stored in this browser. Secure sign-in, recovery, and cross-device access are the next account milestone.</p>
+                <h3 id="account-status-heading" className="text-sm font-semibold text-slate-900">{authenticatedAccount?.persisted ? "Protected account connected" : "Device-local preview"}</h3>
+                <p className="mt-1 text-xs leading-5 text-slate-600">
+                  {authenticatedAccount?.persisted
+                    ? `Signed in as ${authenticatedAccount.name || authenticatedAccount.email}. Your account identity is stored securely; this career profile remains on this device until the migration step.`
+                    : "This profile and its career data are stored in this browser. Secure sign-in, recovery, and cross-device access are the next account milestone."}
+                </p>
               </div>
             </div>
           </section>
